@@ -55,7 +55,6 @@ h1 {
     font-size: 14px;
 }
 
-/* 你的原始内容区域 */
 .my-content {
     background: #fff;
     border: 1px solid #e1e4e8;
@@ -81,7 +80,6 @@ h1 {
     text-decoration: underline;
 }
 
-/* 软件卡片列表 */
 .software-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -122,7 +120,6 @@ h1 {
 <body>
 
 <div class="container">
-    <!-- 顶部区域（原始风格） -->
     <div class="header">
         <div class="nav">
             <button class="btn-back" onclick="history.back()">← 返回上一页</button>
@@ -131,9 +128,7 @@ h1 {
         <p class="desc">软件测试版 & 历史版本归档 | 仅供学习研究使用</p>
     </div>
 
-    <!-- ====================== -->
-    <!-- 你的原始全部内容（已完整保留） -->
-    <!-- ====================== -->
+    <!-- 你的原始全部内容（新增 Windows 系统下载入口） -->
     <div class="my-content">
         <p>欢迎来到南段的小站，原计划是使用SharePoint的(就是出了点小毛病)</p>
         <p>当然这里是资源汇总的地方</p>
@@ -147,40 +142,40 @@ h1 {
         <p>           Windows On ARM Version</p>
         <p>Windows RT 8.0</p>
         <ul>
-          <li> <a href="https://DF4D3110.github.io/RT8.html">Windows RT下载</a> </li>
+          <li> <a href="https://DF4D3110.github.io/Windows_RT.html">Windows RT下载</a> </li>
         </ul>
         <p>Windows RT 8.1</p>
         <ul>
           <li> <a href="https://DF4D3110.github.io/RT81.html">Windows RT 8.1下载</a> </li>
         </ul>
+        
+        <!-- 新增：Windows 系统下载入口 -->
+        <p>Windows 系统下载</p>
+        <ul>
+          <li> <a href="https://DF4D3110.github.io/system.html">Windows 各版本系统下载汇总</a> </li>
+        </ul>
+        
         <p>Microsoft测试版软件</p>
         <ul>
           <li> <a href="https://DF4D3110.github.io/software.html">软件下载</a> </li>
         </ul>
     </div>
 
-    <!-- ====================== -->
-    <!-- 软件卡片区域（已添加） -->
-    <!-- ====================== -->
+    <!-- 软件卡片 -->
     <div class="software-list">
-
-        <!-- Office 2007 (o12) -->
         <div class="card">
             <a href="https://DF4D3110.github.io/officebeta/o12.html" class="card-title">Microsoft Office 2007 (o12)</a>
             <div class="card-meta">测试版 | Alpha / Beta / DVD</div>
             <div class="card-desc">Office 12 早期测试版本归档，包含多个 Beta 与原始 DVD 镜像。</div>
         </div>
 
-        <!-- Office 2010 (o14) -->
         <div class="card">
             <a href="https://DF4D3110.github.io/officebeta/o14.html" class="card-title">Microsoft Office 2010 (o14)</a>
             <div class="card-meta">测试版 | Beta1 / Beta2 / SP1 Beta</div>
             <div class="card-desc">Office 14 技术预览版与 Beta 版本归档，按 Build 号分类整理。</div>
         </div>
-
     </div>
 
 </div>
-
 </body>
 </html>
