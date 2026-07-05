@@ -1,12 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Office 2010 Beta (o14) 下载</title>
-<meta name="description" content="">
-<meta name="keywords" content="">
-<style id="ext-inline-css-import-0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Office o15 | Office 2013 全版本归档</title>
+<style>
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,171 +14,342 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif;
     background: #f6f8fa;
     color: #24292e;
-    line-height: 1.5;
     padding: 20px;
+    line-height: 1.6;
 }
 .container {
     max-width: 1000px;
     margin: 0 auto;
+}
+.header {
     background: #fff;
     border: 1px solid #e1e4e8;
     border-radius: 6px;
-    overflow: hidden;
-}
-.header {
     padding: 20px;
-    border-bottom: 1px solid #e1e4e8;
-    background: #fafbfc;
-}
-.nav {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 .btn-back {
     display: inline-block;
     padding: 6px 12px;
-    margin-right: 8px;
-    background: #ffffff;
+    background: #fff;
     border: 1px solid #d1d5da;
     border-radius: 6px;
     color: #0366d6;
     text-decoration: none;
     font-size: 14px;
-    cursor: pointer;
+    margin-right: 8px;
 }
 .btn-back:hover {
     background: #f6f8fa;
 }
 h1 {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 600;
-    color: #24292e;
+    margin-top: 10px;
 }
-.desc {
-    color: #586069;
-    margin-top: 5px;
-    font-size: 14px;
-}
-.group {
+.disclaimer {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-left: 6px solid red;
+    border-radius: 6px;
     padding: 16px 20px;
-    border-bottom: 1px solid #e1e4e8;
+    margin-bottom: 20px;
 }
-.group-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #24292e;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #eaecef;
+.disclaimer p {
+    color: red;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
 }
-.asset {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f3f6;
-}
-.asset:last-child {
-    border-bottom: none;
-}
-.icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
-    fill: #6a737d;
-}
-.info {
-    flex: 1;
-}
-.name {
-    font-weight: 500;
-    color: #0366d6;
-    text-decoration: none;
-    word-break: break-all;
-}
-.name:hover {
-    text-decoration: underline;
-}
-.tag {
-    display: inline-block;
-    padding: 2px 6px;
-    margin-left: 8px;
-    border-radius: 3px;
-    font-size: 12px;
-    background: #f1f8ff;
-    color: #0366d6;
-}
-.download {
-    padding: 6px 12px;
-    background: #f6f8fa;
+.content-box {
+    background: #fff;
     border: 1px solid #e1e4e8;
     border-radius: 6px;
-    color: #24292e;
-    text-decoration: none;
-    font-size: 14px;
-    white-space: nowrap;
+    padding: 25px;
 }
-.download:hover {
-    background: #eaecef;
+.group-desc {
+    background: #eef7ff;
+    padding: 14px;
+    border-radius: 5px;
+    margin-bottom: 22px;
+    color: #024080;
+    line-height: 1.7;
 }
-.footer {
-    padding: 15px 20px;
-    text-align: center;
-    color: #586069;
+.install-tip {
+    background: #fff3e0;
+    padding: 16px;
+    border-radius: 5px;
+    margin: 20px 0;
+    color: #993300;
+    line-height: 1.7;
+}
+.install-tip strong {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+}
+.install-tip code {
+    background: #ffe8cc;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+.group-desc strong {
+    color: #002c5c;
+}
+.item {
+    padding: 13px 0;
+    border-bottom: 1px dashed #dddddd;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+.item:last-child {
+    border-bottom: none;
+}
+.ver-name {
+    font-size: 16px;
+    font-weight: 600;
+}
+.arch-lang-tag {
     font-size: 13px;
+    background: #e8f4ff;
+    color: #035fc9;
+    padding: 2px 7px;
+    border-radius: 3px;
 }
-</style>
-<style id="htmlpage-inline-styles">* {
-  box-sizing: border-box;
+.tool-tag {
+    font-size: 13px;
+    background: #ffe8cc;
+    color: #b84b00;
+    padding: 2px 7px;
+    border-radius: 3px;
 }
-
-body {
-  margin: 0;
+.oem-tag {
+    font-size: 13px;
+    background: #dfffdf;
+    color: #007022;
+    padding: 2px 7px;
+    border-radius: 3px;
 }
-
-#ientz {
-  background-image: none;
-  background-color: rgb(234, 236, 239);
+.download-btn {
+    padding: 5px 12px;
+    background: #0366d6;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
 }
-
-#iq8ps {
-  background-image: none;
-  background-color: rgb(241, 248, 255);
+.download-btn:hover {
+    background: #0250b3;
 }
-
-#irf34 {
-  background-image: none;
-}
-
-#inkny {
-  background-image: none;
-  background-color: rgb(234, 236, 239);
-}
-
-.c11761 {
-  background-image: none;
-  background-color: rgb(241, 248, 255);
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 30px 0 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
 }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-      <div class="nav"><button class="btn-back">← 返回上一页</button><a href="../" class="btn-back">↖ 返回上一级</a></div>
-      <h1>Microsoft Office 2013 (o15) 资源下载</h1>
-      <p class="desc">所有安装包均已归档至 GitHub OfficeArchive 库，按 Build 版本、架构、测试阶段整理</p>
-    </div><!-- Web Apps 2010 Beta2 -->
-    <div class="group">
-      <div class="group-title">Office 2013&nbsp;Build 4454.1510 (MS_Asset_5383143) | x86</div>
-      <div class="asset"><svg viewBox="0 0 16 16" class="icon">
-          <path d="M8 4a.75.75 0 01.75.75v4.69l1.97-1.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 111.06-1.06l1.97 1.97V4.75A.75.75 0 018 4z">
-          </path>
-        </svg>
-        <div class="info"><a href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/Microsoft.Office.2013.Professional.Build.15.0.4454.1510.dump_MS_Asset_5383143_Red.zip" class="name"><span class="download" style="background-image:none;background-color:rgb(234, 236, 239);">Office 2013 Build
-              4454.1510</span></a><span class="tag" style="background-image:none;background-color:rgb(241, 248, 255);">x86</span><span class="tag c11761" style="background-image:none;">OEMTools</span></div><a href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/Microsoft.Office.2013.Professional.Build.15.0.4454.1510.dump_MS_Asset_5383143_Red.zip" class="download" style="background-image:none;background-color:rgb(234, 236, 239);">下载</a>
-      </div>
+        <a href="index.html" class="btn-back">← 返回首页</a>
+        <a href="software.html" class="btn-back">← 软件汇总页面</a>
+        <h1>Office 15 (Office 2013) 安装包归档</h1>
     </div>
-    <div class="footer">
-      归档库：DF4D3110/OfficeArchive | 所有文件保留原始哈希与文件名
+
+    <div class="disclaimer">
+        <p>仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
     </div>
-  </div>
+
+    <div class="content-box">
+        <div class="group-desc">
+            <strong>说明：</strong>
+            <br>1. 所有资源仅支持 x86 / x64 架构，无ARMv7版本；
+            <br>2. 文件名包含 en-us（英文）、ja-jp（日文）标注语言，无标注为通用包；
+            <br>3. setup系列为Office部署工具，4454.1510为OEM专用工具包；
+        </div>
+
+        <div class="install-tip">
+            <strong>打包特殊安装操作须知</strong>
+            由于打包限制，部分早期测试版安装需要遵循指定操作流程：
+            <br>1. 安装所有版本均需使用Office 2013早期归档部署工具；
+            <br>2. 4302之前的早期版本，官方原版部署工具未归档，必须使用提供的修改版setup.CP部署工具；
+            <br>3. 4302前版本额外前置操作：
+            <br>　• x64 en-US版本：将s641033.cab解压至 <code>C:\Program Files\Microsoft Office 15\ClientX64\</code>
+            <br>　• x64 ja-JP版本：将s641041.cab解压至 <code>C:\Program Files\Microsoft Office 15\ClientX64\</code>
+            <br>　• x86版本对应s32系列cab文件，路径参考x64对应目录；
+            <br>4. 执行安装命令必须使用配置文件完整绝对路径，示例：
+            <br><code>setup /configure C:\configuration.xml</code>
+            <br>5. 页面附带x64英文版Office Mondo示例配置文件，可按需修改SourcePath、版本、语言参数，仅填写压缩包包含的语言。
+        </div>
+
+        <!-- OEM官方工具包（正式版 MS_Asset_5383143） -->
+        <div class="section-title">OEM官方工具包（正式版 MS_Asset_5383143）</div>
+        <div class="item">
+            <div class="ver-name">Office 2013 Build 4454.1510</div>
+            <span class="arch-lang-tag">x86</span>
+            <span class="oem-tag">OEM tools | MS_Asset_5383143</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/4454.1510_x86_OEM.zip">下载</a>
+        </div>
+
+        <!-- 通用部署工具集合 -->
+        <div class="section-title">Office部署工具集合</div>
+        <div class="item">
+            <div class="ver-name">setup.PRERTM.zip</div>
+            <span class="tool-tag">标准Office部署工具</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/setup.PRERTM.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">setup.CP.zip</div>
+            <span class="tool-tag">修改版部署工具（4302前版本专用）</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/setup.CP.zip">下载</a>
+        </div>
+
+        <!-- Office主程序（版本从高到低） -->
+        <div class="section-title">Office 2013 主安装包</div>
+        <div class="item">
+            <div class="ver-name">15.0.4317.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4317.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4317.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4317.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4316.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4316.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4316.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4316.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4312.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4312.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4312.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4312.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4311.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.4311.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4311.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4311.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4309.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4309.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4309.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4309.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4306.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4306.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4306.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4306.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4303.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4303.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4303.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4303.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4302.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4302.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4302.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4302.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4123.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4123.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4123.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4123.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4116.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4116.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4116.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4116.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4109.1000</div>
+            <span class="arch-lang-tag">x64</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4109.1000_x64.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4109.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4109.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4102.1000</div>
+            <span class="arch-lang-tag">x64 en-us</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4102.1000_x64en-us.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4102.1000</div>
+            <span class="arch-lang-tag">x64 ja-jp</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4102.1000_x64ja-jp.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4102.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4102.1000_x86.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4025.1000</div>
+            <span class="arch-lang-tag">x64 en-us</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4025.1000_x64EN-US.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4025.1000</div>
+            <span class="arch-lang-tag">x64 ja-jp</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4025.1000_x64JA-JP.zip">下载</a>
+        </div>
+        <div class="item">
+            <div class="ver-name">15.0.4025.1000</div>
+            <span class="arch-lang-tag">x86</span>
+            <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/OfficeArchive/releases/download/o15/15.0.4025.1000_x86.zip">下载</a>
+        </div>
+    </div>
 </body>
 </html>
