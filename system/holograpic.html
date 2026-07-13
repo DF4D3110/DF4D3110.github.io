@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Holographic 构建归档</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .disclaimer {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-left: 6px solid red;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+        .disclaimer p {
+            color: red;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .external-link-bar {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+        }
+        .external-link-bar .label {
+            font-weight: 600;
+            color: #24292e;
+            font-size: 14px;
+        }
+        .external-link-bar .label i {
+            color: #0366d6;
+            margin-right: 6px;
+        }
+        .external-link-bar .link-placeholder {
+            background: #f0f6fe;
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px dashed #7a9bcb;
+            color: #1f4a70;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .external-link-bar .link-placeholder:hover {
+            background: #e3edfc;
+        }
+        .external-link-bar .link-placeholder i {
+            color: #0366d6;
+        }
+        .external-link-bar .link-placeholder .edit-hint {
+            font-size: 12px;
+            color: #6f8fb0;
+            font-weight: 400;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .group-desc {
+            background: #eef7ff;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 22px;
+            color: #024080;
+            line-height: 1.7;
+        }
+        .group-desc strong {
+            color: #002c5c;
+        }
+        .install-tip {
+            background: #fff3e0;
+            padding: 16px;
+            border-radius: 5px;
+            margin: 20px 0;
+            color: #993300;
+            line-height: 1.7;
+        }
+        .install-tip strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .install-tip code {
+            background: #ffe8cc;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .item {
+            padding: 13px 0;
+            border-bottom: 1px dashed #dddddd;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .ver-name {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 200px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .arch-lang-tag {
+            font-size: 13px;
+            background: #e8f4ff;
+            color: #035fc9;
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+        .arch-x86 {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .format-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .lang-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .status-download {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 3px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-download.yes {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .status-download.yes i {
+            color: #20a87a;
+        }
+        .status-download.no {
+            background: #fdedf0;
+            color: #a3485a;
+            border: 1px solid #f5c2cc;
+        }
+        .status-download.no i {
+            color: #d8687c;
+        }
+        .status-emulator {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 3px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .status-emulator.available {
+            background: #e3f0fa;
+            color: #1f4a70;
+            border: 1px solid #9fc3e0;
+        }
+        .status-emulator.available i {
+            color: #2a7bcb;
+        }
+        .status-emulator.unavailable {
+            background: #fdedf0;
+            color: #a3485a;
+            border: 1px solid #f5c2cc;
+        }
+        .status-emulator.unavailable i {
+            color: #d8687c;
+        }
+        .emulator-link-row {
+            font-size: 13px;
+            color: #0366d6;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .emulator-link-row i {
+            color: #0366d6;
+            font-size: 13px;
+        }
+        .emulator-link-row a {
+            color: #0366d6;
+            text-decoration: none;
+            border-bottom: 1px dotted #8ab3d6;
+        }
+        .emulator-link-row a:hover {
+            border-bottom: 1px solid #0366d6;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .stage-badge {
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 10px;
+        }
+        .count-badge {
+            font-size: 13px;
+            color: #586069;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+        .ffu-file-row {
+            font-size: 13px;
+            color: #22863a;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .ffu-file-row i {
+            color: #22863a;
+            font-size: 13px;
+        }
+        @media (max-width: 700px) {
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .ver-name {
+                min-width: unset;
+                font-size: 14px;
+            }
+            .external-link-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <a href="https://df4d3110.github.io/" class="btn-back">← 返回首页</a>
+        <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← wcos系统汇总页面</a>
+        <h1><i class="fas fa-database"></i>Windows Holographic 构建归档</h1>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+        <p>⚠️ 仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
+    </div>
+
+    <!-- 外部下载跳转 -->
+    <div class="external-link-bar">
+        <span class="label"><i class="fas fa-external-link-alt"></i>外部下载跳转：</span>
+<span class="link-placeholder">
+    <i class="fas fa-link"></i> 
+    <a href="https://1drv.ms/f/c/78b1999a9360c9d8/IgBJIa_bP_ctS6gRZxGlXtezAdcD2azHlD4qWEeFXhLUrdw?e=fGznTa" target="_blank">OneDrive外部FFU下载</a>
+</span>
+        <span style="font-size:13px;color:#586069;margin-left:auto;"><i class="far fa-clock"></i> 链接可编辑</span>
+    </div>
+
+    <div class="content-box">
+        <!-- 说明区域 -->
+        <div class="group-desc">
+            <strong>📖 说明：</strong>
+            <br>1. 所有资源基于已知内容整理，涵盖 HoloLens (第1代) 与 HoloLens 2 所有公开构建；
+            <br>2. 架构标识：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 8px;border-radius:3px;border:1px solid #8ed4ba;">x86</span> 绿色 (HoloLens 第1代) ，<span style="background:#fdedf0;color:#a3485a;padding:1px 8px;border-radius:3px;border:1px solid #f5c2cc;">ARM64</span> 红色 (HoloLens 2)；
+            <br>3. 每个构建均标注 <span style="background:#f0f6fe;padding:1px 8px;border-radius:3px;border:1px solid #cbd9ec;">FFU</span> 格式及 <span style="background:#e3f0fa;padding:1px 8px;border-radius:3px;border:1px solid #9fc3e0;">模拟器可用</span> 状态；
+            <br>4. 版本按阶段分组 (Preview for Developers, Insider Preview, Release to Manufacturing 等)，部分采用更新时间分段；
+            <br>5. 下载状态：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">可下载</span> 表示有 FFU 文件，<span style="background:#fdedf0;color:#a3485a;padding:1px 10px;border-radius:30px;border:1px solid #f5c2cc;font-weight:600;">不可下载</span> 表示暂无；
+            <br>6. 仅当 Build 有 Microsoft 官方模拟器在线安装程序时，下方会显示蓝色小字链接行；
+            <br>7. 绿色小字行显示该 Build 已归档的 FFU 文件名及语言。
+        </div>
+
+        <!-- 安装操作须知 -->
+        <div class="install-tip">
+            <strong>⚙️ 安装操作须知</strong>
+            由于特殊系统存在特殊部署限制，请清楚以下内容：
+            <br>1. 模拟器部署建议使用 Microsoft Emulator 或 实体设备加载镜像；
+            <br>2. 部分 ffu 镜像可能不能加载到模拟器；
+            <br>3. FFU 镜像部署命令示例：<code>dism /Apply-Image /ImageFile:xxx.ffu /ApplyDrive:\\.\PhysicalDriveX</code>
+            <br>4. 所有资源仅供学习研究，请于下载后 24 小时内删除。
+        </div>
+
+        <!-- ============================================================ -->
+        <!--         HoloLens 第1代 (RS5 及之前) 所有构建                   -->
+        <!-- ============================================================ -->
+
+        <!-- ================== Preview for Developers ================== -->
+        <div class="section-title">
+            <i class="fas fa-flask"></i>Preview for Developers
+            <span class="stage-badge">HoloLens 第1代 开发预览</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.10502.1000.th2_analog1_dev_mfg.150816-1900</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+            <!-- FFU 文件不存在 -->
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.10551.1007.th2_analog1_dev.150924-1830</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.10551.1007.th2_analog1_dev.150924-1830_en-US.zip</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (RS1) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (RS1)
+            <span class="stage-badge">Redstone 1 内测版</span>
+            <span class="count-badge">共 10 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.11082.1032.rs1_release_hl.160120-1812</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.11082.1033.rs1_release_hl.160201-1452</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件不存在 -->
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?LinkID=724053" target="_blank">https://go.microsoft.com/fwlink/?LinkID=724053</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.11082.1034.rs1_release_hl_prev.160204-1014</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.11082.1039.rs1_release_hl_prev.160319-0231</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14260.1000.rs1_release.160203-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14279.1000.rs1_release.160229-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14291.1006.rs1_release_hl.160319-0950</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14291.1007.rs1_release_hl.160321-1143</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14342.1016.rs1_release_hl.160522-1404</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14342.1018.rs1_release_hl.160526-1636</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件不存在 -->
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?LinkID=823018" target="_blank">https://go.microsoft.com/fwlink/?LinkID=823018</a>
+            </div>
+        </div>
+
+        <!-- ================== Release to Manufacturing (RS1) ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>Release to Manufacturing (RS1)
+            <span class="stage-badge">Redstone 1 正式版</span>
+            <span class="count-badge">共 3 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14393.0.rs1_release.160715-1616</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件不存在 -->
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?LinkID=823018" target="_blank">https://go.microsoft.com/fwlink/?LinkID=823018</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14393.1358.rs1_release.170602-2252</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件不存在 -->
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=852626" target="_blank">https://go.microsoft.com/fwlink/?linkid=852626</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.14393.1884.rs1_release.171101-1233</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (RS2) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (RS2)
+            <span class="stage-badge">Redstone 2 内测版</span>
+            <span class="count-badge">共 1 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.15027.1000.rs_prerelease.170131-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (RS3) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (RS3)
+            <span class="stage-badge">Redstone 3 内测版</span>
+            <span class="count-badge">共 1 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.16212.1000.rs_onecore_sigma.170531-1746</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (RS4) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (RS4)
+            <span class="stage-badge">Redstone 4 内测版</span>
+            <span class="count-badge">共 7 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17123.1004.rs4_release_svc_analog.180322-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件存在 -->
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17123.1004.rs4_release_svc_analog.180322-1700_en-US.zip</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17133.1004.rs4_release_svc_analog.180329-2127</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17133.1009.rs4_release_svc_analog.180406-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17134.1000.rs4_release_svc_analog.180412-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17134.1004.rs4_release_svc_analog.180420-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件存在 -->
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17134.1004.rs4_release_svc_analog.180420-1700_en-US.zip</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17134.1008.rs4_release_svc_analog.180427-1732</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17134.1011.rs4_release_svc_analog.180503-1700</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Release to Manufacturing (RS4) ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>Release to Manufacturing (RS4)
+            <span class="stage-badge">Redstone 4 正式版</span>
+            <span class="count-badge">共 1 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17134.80.rs4_release_svc_prod2.180516-1508</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件存在 -->
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17134.80.rs4_release_svc_prod2.180516-1508_en-US.zip</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=874531" target="_blank">https://go.microsoft.com/fwlink/?linkid=874531</a>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (RS5) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (RS5)
+            <span class="stage-badge">Redstone 5 内测版</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17686.1003.rs_prerelease.180603-1447</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17720.1000.rs5_release.180717-1436</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件存在 -->
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17720.1000.rs5_release.180717-1436_ja-JP.zip</span>
+            </div>
+        </div>
+
+        <!-- ================== Release to Manufacturing (RS5) ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>Release to Manufacturing (RS5)
+            <span class="stage-badge">Redstone 5 正式版</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17763.1.rs5_release.180914-1434</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.17763.134.rs5_release_svc_prod1.181101-1643</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <!-- FFU 文件存在 -->
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17763.134.rs5_release_svc_prod1.181101-1643_en-US.zip</span>
+            </div>
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.17763.134.rs5_release_svc_prod1.181101-1643_zh-CN.zip</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2065980" target="_blank">https://go.microsoft.com/fwlink/?linkid=2065980</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!--            HoloLens 2 (1903, 2004, 20H2)                       -->
+        <!-- ============================================================ -->
+
+        <!-- ================== 1903 (19H1) ================== -->
+        <div class="section-title">
+            <i class="fas fa-vr-cardboard"></i>1903 (19H1)
+            <span class="stage-badge">HoloLens 2 首发版本</span>
+            <span class="count-badge">共 3 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.18362.1002.19h1_release_svc_sydney_prod.190402-1514</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.18362.1005.19h1_release_svc_sydney_prod.190411-1612</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2087187" target="_blank">https://go.microsoft.com/fwlink/?linkid=2087187</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.18362.1005.19h1_release_svc_sydney_prod_1906b.191007-1808</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (Vibranium) 2004 ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (Vibranium) — 2004
+            <span class="stage-badge">Vibranium 内测版</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1103.vb_release_svc_sydney_rel_prod.200423-1547</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2129088" target="_blank">https://go.microsoft.com/fwlink/?linkid=2129088</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1124.vb_release_svc_sydney_rel_prod.201007-1118</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2145829" target="_blank">https://go.microsoft.com/fwlink/?linkid=2145829</a>
+            </div>
+        </div>
+
+        <!-- ================== 20H2 ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>20H2
+            <span class="stage-badge">Vibranium 正式版</span>
+            <span class="count-badge">共 10 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1128.vb_release_svc_sydney_rel_prod.201104-1026</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1131.vb_release_svc_sydney_rel_prod.201203-1140</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2151523" target="_blank">https://go.microsoft.com/fwlink/?linkid=2151523</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1134.vb_release_svc_sydney_rel_prod.210111-1541</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2152389" target="_blank">https://go.microsoft.com/fwlink/?linkid=2152389</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1136.vb_release_svc_sydney_rel_prod.210202-1429</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2154784" target="_blank">https://go.microsoft.com/fwlink/?linkid=2154784</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1140.vb_release_svc_sydney_rel_prod.210303-1015</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2156684" target="_blank">https://go.microsoft.com/fwlink/?linkid=2156684</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1144.vb_release_svc_sydney_rel_prod.210405-1628</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2160829" target="_blank">https://go.microsoft.com/fwlink/?linkid=2160829</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1146.vb_release_svc_sydney_rel_prod.210504-1219</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2162751" target="_blank">https://go.microsoft.com/fwlink/?linkid=2162751</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1154.vb_release_svc_sydney_rel_prod.210606-1752</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2165269" target="_blank">https://go.microsoft.com/fwlink/?linkid=2165269</a>
+            </div>
+        </div>
+
+        <!-- ================== Post-Release to Manufacturing Insider Preview (Vibranium) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Post-Release to Manufacturing (Vibranium)
+            <span class="stage-badge">Vibranium 后正式版内测</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1402.vb_release_svc_sydney.201216-1123</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1404.vb_release_svc_sydney.210121-1052</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== Insider Preview (Iron) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (Iron)
+            <span class="stage-badge">Iron 内测版</span>
+            <span class="count-badge">共 18 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20279.1006.fe_release_svc_sydney.210108-1600</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.20279.1006.fe_release_svc_sydney.210108-1600_en-US.zip</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20286.1000.fe_release_svc_sydney.210120-1358</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.20286.1000.fe_release_svc_sydney.210120-1358_en-US.zip</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20287.1001.fe_release_svc_sydney.210125-1400</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="ffu-file-row">
+                <i class="fas fa-file-archive"></i>
+                <span>10.0.20287.1001.fe_release_svc_sydney.210125-1400_en-US.zip</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20289.1000.fe_release_svc_sydney.210130-1835</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20291.1000.fe_release_svc_sydney.210205-1817</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20293.1000.fe_release_svc_sydney.210212-1719</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20301.1000.fe_release_svc_sydney.210225-1824</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20303.1000.fe_release_svc_sydney.210301-1611</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20308.1000.fe_release_svc_sydney.210308-1016</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20313.1000.fe_release_svc_sydney.210316-1055</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20319.1000.fe_release_svc_sydney.210322-1138</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20325.1000.fe_release_svc_sydney.210331-1208</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20329.1000.fe_release_svc_sydney.210405-1351</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20330.1000.fe_release_svc_sydney.210407-1432</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20335.1000.fe_release_svc_sydney.210413-1556</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20339.1000.fe_release_svc_sydney.210419-1227</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20340.1000.fe_release_svc_sydney.210420-1500</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20341.1000.fe_release_svc_sydney.210423-1109</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== 21H1 ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>21H1
+            <span class="stage-badge">Iron 正式版</span>
+            <span class="count-badge">共 4 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20346.1002.fe_release_svc_sydney_rel_prod.210501-1004</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2162581" target="_blank">https://go.microsoft.com/fwlink/?linkid=2162581</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1007.fe_release_svc_sydney_rel_prod.210607-1453</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2165258" target="_blank">https://go.microsoft.com/fwlink/?linkid=2165258</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1010.fe_release_svc_sydney_rel_prod.210705-1642</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2167725" target="_blank">https://go.microsoft.com/fwlink/?linkid=2167725</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1014.fe_release_svc_sydney_rel_prod.210805-1444</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2169418" target="_blank">https://go.microsoft.com/fwlink/?linkid=2169418</a>
+            </div>
+        </div>
+
+        <!-- ================== Post-Release to Manufacturing Insider Preview (Iron) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Post-Release to Manufacturing (Iron)
+            <span class="stage-badge">Iron 后正式版内测</span>
+            <span class="count-badge">共 16 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20346.1402.fe_release_svc_sydney.210511-1040</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20346.1403.fe_release_svc_sydney.210518-1040</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20346.1404.fe_release_svc_sydney.210524-1357</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1401.fe_release_svc_sydney.210609-1735</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1402.fe_release_svc_sydney.210615-0943</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1403.fe_release_svc_sydney.210621-1556</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1404.fe_release_svc_sydney.210625-1451</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1405.fe_release_svc_sydney.210630-1509</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1406.fe_release_svc_sydney.210707-1517</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1408.fe_release_svc_sydney.210714-1440</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1411.fe_release_svc_sydney.210721-1615</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1412.fe_release_svc_sydney.210729-1552</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1413.fe_release_svc_sydney.210804-1506</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1414.fe_release_svc_sydney.210811-1413</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1417.fe_release_svc_sydney.210821-2025</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+
+        <!-- ================== 21H2 ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>21H2
+            <span class="stage-badge">Iron 正式版</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1432.fe_release_svc_sydney_rel_prod.211005-1308</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2174356" target="_blank">https://go.microsoft.com/fwlink/?linkid=2174356</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1168.vb_release_svc_sydney_rel_prod.211012-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2174359" target="_blank">https://go.microsoft.com/fwlink/?linkid=2174359</a>
+            </div>
+        </div>
+
+        <!-- ================== 22H1 ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>22H1
+            <span class="stage-badge">Iron 正式版</span>
+            <span class="count-badge">共 6 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1501.fe_release_svc_sydney_rel_prod.220330-1820</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2193111" target="_blank">https://go.microsoft.com/fwlink/?linkid=2193111</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1183.vb_release_svc_sydney_rel_prod.220412-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2193110" target="_blank">https://go.microsoft.com/fwlink/?linkid=2193110</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1503.fe_release_svc_sydney_rel_prod.220510-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2194808" target="_blank">https://go.microsoft.com/fwlink/?linkid=2194808</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1185.vb_release_svc_sydney_rel_prod.220510-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2194809" target="_blank">https://go.microsoft.com/fwlink/?linkid=2194809</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1503.fe_release_svc_sydney_rel_prod.220614-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2198236" target="_blank">https://go.microsoft.com/fwlink/?linkid=2198236</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.19041.1185.vb_release_svc_sydney_rel_prod.220614-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2198409" target="_blank">https://go.microsoft.com/fwlink/?linkid=2198409</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!--            HoloLens 2 (22000+ 全系列)                          -->
+        <!-- ============================================================ -->
+
+        <!-- ================== Insider Preview (Nickel) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Insider Preview (Nickel)
+            <span class="stage-badge">Nickel 内测版</span>
+            <span class="count-badge">共 12 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1038.ni_release_svc_sydney.221204-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1051.ni_release_svc_sydney.230130-1630</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1054.ni_release_svc_sydney.230212-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1057.ni_release_svc_sydney.230222-1630</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1061.ni_release_svc_sydney.230308-1917</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1079.ni_release_svc_sydney.230430-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator unavailable"><i class="fas fa-times-circle"></i> 模拟器不可用</span>
+                <span class="status-download no"><i class="fas fa-times-circle"></i> 不可下载</span>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1113.ni_release_svc_sydney.230613-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2238769" target="_blank">https://go.microsoft.com/fwlink/?linkid=2238769</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1120.ni_release_svc_sydney_rel_prod.230707-1012</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2241233" target="_blank">https://go.microsoft.com/fwlink/?linkid=2241233</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1125.ni_release_svc_sydney.230808-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2244110" target="_blank">https://go.microsoft.com/fwlink/?linkid=2244110</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1133.ni_release_svc_sydney.230912-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2246966" target="_blank">https://go.microsoft.com/fwlink/?linkid=2246966</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1244.ni_release_svc_sydney.231010-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2248589" target="_blank">https://go.microsoft.com/fwlink/?linkid=2248589</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1252.ni_release_svc_sydney.231114-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2252188" target="_blank">https://go.microsoft.com/fwlink/?linkid=2252188</a>
+            </div>
+        </div>
+
+        <!-- ================== 23H1 及后续月度更新 ================== -->
+        <div class="section-title">
+            <i class="fas fa-check-circle"></i>23H1 及后续月度更新
+            <span class="stage-badge">Nickel 正式版</span>
+            <span class="count-badge">共 24 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1254.ni_release_svc_sydney.231212-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2255470" target="_blank">https://go.microsoft.com/fwlink/?linkid=2255470</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1258.ni_release_svc_sydney.240109-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2257515" target="_blank">https://go.microsoft.com/fwlink/?linkid=2257515</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1263.ni_release_svc_sydney.240213-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2260721" target="_blank">https://go.microsoft.com/fwlink/?linkid=2260721</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1266.ni_release_svc_sydney.240312-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2263070" target="_blank">https://go.microsoft.com/fwlink/?linkid=2263070</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1272.ni_release_svc_sydney.240409-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2267337" target="_blank">https://go.microsoft.com/fwlink/?linkid=2267337</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1376.ni_release_svc_sydney.240514-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2271450" target="_blank">https://go.microsoft.com/fwlink/?linkid=2271450</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1383.ni_release_svc_sydney.240611-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2274860" target="_blank">https://go.microsoft.com/fwlink/?linkid=2274860</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1390.ni_release_svc_sydney.240709-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2279512" target="_blank">https://go.microsoft.com/fwlink/?linkid=2279512</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1397.ni_release_svc_sydney.240813-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2282258" target="_blank">https://go.microsoft.com/fwlink/?linkid=2282258</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1399.ni_release_svc_sydney.240910-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2285782" target="_blank">https://go.microsoft.com/fwlink/?linkid=2285782</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.22621.1402.ni_release_svc_sydney.241008-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2290700" target="_blank">https://go.microsoft.com/fwlink/?linkid=2290700</a>
+            </div>
+        </div>
+
+        <!-- ================== 20348 系列 (配套更新) ================== -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>20348 系列 (配套更新)
+            <span class="stage-badge">Nickel 配套版本</span>
+            <span class="count-badge">共 17 个</span>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1545.ni_release_svc_sydney.230613-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2238767" target="_blank">https://go.microsoft.com/fwlink/?linkid=2238767</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1567.ni_release_svc_sydney.230711-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2241090" target="_blank">https://go.microsoft.com/fwlink/?linkid=2241090</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1570.ni_release_svc_sydney.230808-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2244109" target="_blank">https://go.microsoft.com/fwlink/?linkid=2244109</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1572.ni_release_svc_sydney.230912-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2246796" target="_blank">https://go.microsoft.com/fwlink/?linkid=2246796</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1575.ni_release_svc_sydney.231010-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2249002" target="_blank">https://go.microsoft.com/fwlink/?linkid=2249002</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1583.ni_release_svc_sydney.231114-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2252360" target="_blank">https://go.microsoft.com/fwlink/?linkid=2252360</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1584.ni_release_svc_sydney.231212-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2255553" target="_blank">https://go.microsoft.com/fwlink/?linkid=2255553</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1590.ni_release_svc_sydney.240109-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2257277" target="_blank">https://go.microsoft.com/fwlink/?linkid=2257277</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1593.ni_release_svc_sydney.240213-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2260720" target="_blank">https://go.microsoft.com/fwlink/?linkid=2260720</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1596.ni_release_svc_sydney.240312-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2263168" target="_blank">https://go.microsoft.com/fwlink/?linkid=2263168</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1600.ni_release_svc_sydney.240409-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2267336" target="_blank">https://go.microsoft.com/fwlink/?linkid=2267336</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1603.ni_release_svc_sydney.240514-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2272211" target="_blank">https://go.microsoft.com/fwlink/?linkid=2272211</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1611.ni_release_svc_sydney.240611-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2275313" target="_blank">https://go.microsoft.com/fwlink/?linkid=2275313</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1618.ni_release_svc_sydney.240709-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2279613" target="_blank">https://go.microsoft.com/fwlink/?linkid=2279613</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1625.ni_release_svc_sydney.240813-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2282611" target="_blank">https://go.microsoft.com/fwlink/?linkid=2282611</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1627.ni_release_svc_sydney.240910-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2285781" target="_blank">https://go.microsoft.com/fwlink/?linkid=2285781</a>
+            </div>
+        </div>
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">10.0.20348.1618.ni_release_svc_sydney.241008-1300</span>
+                <span class="arch-lang-tag arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="arch-lang-tag arch-x86"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="format-tag"><i class="fas fa-file"></i> FFU</span>
+                <span class="status-emulator available"><i class="fas fa-check-circle"></i> 模拟器可用</span>
+                <span class="status-download yes"><i class="fas fa-check-circle"></i> 可下载</span>
+            </div>
+            <div class="emulator-link-row">
+                <i class="fas fa-download"></i>
+                <span>Microsoft Windows HoloLens模拟器下载(在线安装程序)：</span>
+                <a href="https://go.microsoft.com/fwlink/?linkid=2289986" target="_blank">https://go.microsoft.com/fwlink/?linkid=2289986</a>
+            </div>
+        </div>
+
+        <!-- 底部信息 -->
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
+            <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; 已展示 HoloLens 所有构建</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-13</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
