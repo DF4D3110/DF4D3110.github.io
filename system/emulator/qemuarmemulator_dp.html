@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：在 QEMU 中安装 Windows RT 中期版本 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* 头部 */
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        /* 正文卡片 */
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        /* 目录 */
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        /* 章节标题 */
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        /* 文件准备列表 */
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .file-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e1e4e8;
+        }
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+        .file-list li i {
+            color: #0366d6;
+            width: 20px;
+            margin-right: 8px;
+        }
+        .file-list li a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .file-list li a:hover {
+            text-decoration: underline;
+        }
+        /* 注意事项 */
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        /* 代码块 */
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        /* 图片和版本列表并排 */
+        .side-by-side {
+            display: flex;
+            gap: 24px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        .side-by-side .image-box {
+            flex: 1 1 300px;
+            min-width: 200px;
+        }
+        .side-by-side .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #d0d7de;
+        }
+        .side-by-side .image-box .caption {
+            font-size: 13px;
+            color: #586069;
+            text-align: center;
+            margin-top: 4px;
+        }
+        .side-by-side .version-box {
+            flex: 2 1 400px;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .side-by-side .version-box .version-item {
+            padding: 3px 0;
+            border-bottom: 1px dashed #e1e4e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .side-by-side .version-box .version-item:last-child {
+            border-bottom: none;
+        }
+        .side-by-side .version-box .version-item .lang-tag {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            background: #e8f4ff;
+            color: #035fc9;
+            padding: 1px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        /* 键盘快捷键 */
+        kbd {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-size: 12px;
+            font-family: inherit;
+            box-shadow: 0 1px 0 #bbb;
+        }
+        /* 底部 */
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .side-by-side {
+                flex-direction: column;
+            }
+            .side-by-side .version-box {
+                max-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← 返回 Windows Core OS 汇总</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-book"></i>文档：在 QEMU 中安装 Windows RT 中期版本</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 适用版本：Build 8038 及以上
+            <span class="badge">QEMU v9.1.50.0</span>
+            <span class="badge">ARM32</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare">1. 文件准备</a></li>
+                <li><a href="#notes">2. 注意事项</a></li>
+                <li><a href="#deploy">3. 系统部署</a></li>
+                <li><a href="#sysprep">4. sysprep 以及 OOBE 跳过（可选）</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 文件准备                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-box"></i>文件准备</h2>
+        <p>以下是我们需要准备的文件：</p>
+        <ul class="file-list">
+            <li><i class="fas fa-file-archive"></i> <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website/QEMU.v9.2.50-a6c0f25.ucrt64.dynamic.build.zip" target="_blank">专门针对 Windows RT 进行修改的 QEMU v9.1.50.0</a></li>
+            <li><i class="fas fa-file-archive"></i> <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website/ArmVirtQemu.ARM.RELEASE.Ubuntu.24.04.Build.90100.zip" target="_blank">专门针对 Windows RT 进行修改的 edk2 固件</a></li>
+            <li><i class="fas fa-hdd"></i> 虚拟磁盘映像（用于存储操作系统以便进行模拟）</li>
+            <li><i class="fas fa-cd"></i> Windows RT 镜像，用于安装操作系统（要求版本必须是 <strong>8038 及以上版本</strong>）</li>
+        </ul>
+
+        <!-- ============================================================ -->
+        <!-- 2. 注意事项                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
+
+        <!-- 图片与版本列表并排 -->
+        <div class="side-by-side">
+            <div class="image-box">
+                <img src="https://df4d3110.github.io/picture/WindowsRT-HalFailure0xc221.png" alt="由于 hal.dll 导致的启动失败">
+                <div class="caption">图示：由于 hal.dll 导致的启动失败</div>
+            </div>
+            <div class="version-box">
+                <div style="font-weight:600; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; margin-bottom:6px; color:#024080;">
+                    <i class="fas fa-triangle-exclamation"></i> 需要删除 OEM 驱动的版本：
+                </div>
+                <div class="version-item">6.2.8186.0.fbl_core1_soc.120118-1700</div>
+                <div class="version-item">6.2.8288.0.fbl_core1_soc.120226-1700</div>
+                <div class="version-item">6.2.8302.0.fbl_core1_soc.120319-1700</div>
+                <div class="version-item">6.2.8318.0.fbl_core1_soc.120409-2355</div>
+                <div class="version-item">6.2.8375.0.winmain_win8rc.120504-1900</div>
+                <div class="version-item">6.2.8419.0.winmain.120521-1835</div>
+                <div class="version-item">6.2.8437.0.winmain.120618-1325</div>
+                <div class="version-item">6.2.8437.1.fbl_dev_dp8.120621-2300</div>
+                <div class="version-item">6.2.8520.0.fbl_eeap.120722-1632 <span class="lang-tag">zh-cn</span> <span class="lang-tag">en-us</span></div>
+                <div class="version-item">6.3.9354.0.winmain.130301-1710</div>
+                <div class="version-item">6.3.9468.0.winblue_rtm.130725-1203</div>
+                <div class="version-item">6.3.9471.0.fbl_partner_out30.130726-2004</div>
+                <div class="version-item">6.3.9477.0.fbl_partner_out31.130803-0736</div>
+                <div class="version-item">6.3.9477.0.fbl_partner_out21.130803-1037</div>
+                <div class="version-item">6.3.9478.0.winblue_rtm.130804-1505</div>
+                <div class="version-item">6.3.9600.16596.winblues14_gdr_lean.140112-2038</div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-info-circle"></i> 提示：</strong>
+            由于在 Windows RT 中期以及部分后期版本中无法正确加载 <code>hal.dll</code>，可能需要多次按 <kbd>Enter</kbd> 键进行重试。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> USB 输入失效问题：</strong>
+            QEMU 的 USB 输入仿真在某些情况下可能会出现失效的情况。若要解决这个问题，需要切换到 QEMU 兼容性监视器（<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd>）并输入运行以下指令：
+            <pre><code>device_del kbd
+device_add usb-kbd,id=kbd</code></pre>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 已知问题：</strong>
+            由于 <strong>Build 8038</strong> 以及 <strong>Build 8061</strong>、<strong>Build 8129</strong> 在 SD 设备启动时会出现 SD 设备锁死导致系统无法启动，需要对 <code>sdbus.sys</code> 进行修改（或者直接使用 8061 的初次泄露中的文件替换）。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. 系统部署                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="deploy"><i class="fas fa-hdd"></i>系统部署</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 1：使用 diskpart 创建 VHD</strong>
+            <p style="margin-top:6px;">使用 <code>diskpart</code> 对 vhd 进行创建并命名为 <code>ARM8</code>。接下来将会对 EFIESP 分区以及主系统分区分别分配盘符为 F 与 P。</p>
+            <p style="font-size:13px;color:#586069;">注：<code>maximum=</code> 后的数字必须分配磁盘大小为 16 GB 的整数倍（指令中单位为 MB）</p>
+        </div>
+
+        <pre><code>create vdisk file="C:\ARM8\HDD.vhd" maximum=65536 type=expandable
+select vdisk file="C:\ARM8\HDD.vhd"
+attach vdisk
+convert gpt
+create partition efi size=100
+format quick fs=fat32
+assign letter=F
+create partition primary
+format quick fs=ntfs
+assign letter=P
+exit</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 2：手动安装系统</strong>
+            <p style="margin-top:6px;">手动安装系统并为系统修复引导到 <code>F:</code>：</p>
+        </div>
+
+        <pre><code>DISM /Apply-Image /ImageFile:"X:\path\to\install.wim" /ApplyDir:P:\ /Index:1
+bcdboot "P:\Windows" /s F: /f UEFI</code></pre>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 注意：</strong>
+            如果为 Unstaged 系统需要通过原有安装程序进行安装或者手动使用 Dism 进行构建。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 3：创建启动脚本</strong>
+            <p style="margin-top:6px;">弹出虚拟磁盘并创建 bat 脚本到 QEMU 安装目录内，将以下内容复制到 bat 内，并对 <code>YYYY-MM-DD</code> 进行修改以避免 Windows 的时间炸弹被触发。</p>
+            <p style="margin-top:4px;font-size:13px;color:#586069;">假定我们的 QEMU 主程序位于 <code>D:\QEMU v9.1.50.0\qemu-system-arm.exe</code>，edk2 存放于 <code>D:\EFISHELL\QEMU_EFI_ArmVirtQemu_ARM_RELEASE.fd</code>，虚拟磁盘位于 <code>C:\ARM8\HDD.vhd</code></p>
+            <p style="margin-top:4px;font-size:13px;color:#586069;">由于中期阶段部分系统无法使用 USB 设备进行启动，这里使用 SD 设备配置以确保可以正常启动。</p>
+        </div>
+
+        <p style="font-weight:600;margin-top:8px;">SD 卡启动配置：</p>
+        <pre><code>@echo off
+cd /d %~dp0
+"D:\QEMU v9.1.50.0\qemu-system-arm.exe" ^
+-M virt,force_el3=true,force_psci=on,pci=false,highmem=false ^
+-cpu cortex-a15 ^
+-smp cores=1,threads=1 ^
+--accel tcg,thread=multi ^
+-m 2048 ^
+-bios "D:\EFISHELL\QEMU_EFI_ArmVirtQemu_ARM_RELEASE.fd" ^
+-device VGA ^
+-device usb-kbd,id=kbd ^
+-device usb-tablet,id=mice ^
+-drive id=sys,if=none,file="C:\ARM8\HDD.vhd" ^
+-device sd-card,drive=sys ^
+-device qemu-xhci ^
+-rtc base=YYYY-MM-DD,clock=vm ^
+-serial tcp::9090,server,nowait</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-flag-checkered"></i> 接下来可运行 bat 以继续安装 Windows</strong>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. sysprep 以及 OOBE 跳过（可选）                             -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="sysprep"><i class="fas fa-wrench"></i>sysprep 以及 OOBE 跳过（可选）</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            出于某些系统会出现无法继续第二阶段安装，我们可以直接通过修改注册表进行部署。
+            <p style="margin-top:6px;">挂载配置单元 <code>SYSTEM</code> 与 <code>SAM</code> 到本地计算机</p>
+            <p style="font-size:13px;color:#586069;">假设分别挂载为 <code>HKEY_LOCAL_MACHINE\RT-SYS</code>、<code>HKEY_LOCAL_MACHINE\RT-SAM</code></p>
+        </div>
+
+        <p style="font-weight:600;margin-top:8px;">分别创建注册表项以进行下一步操作：</p>
+        <pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\RT-SYS\Setup]
+"SystemSetupInProgress"=dword:00000000
+"SetupPhase"=dword:00000000
+"CmdLine"=""
+"SetupType"=dword:00000000
+"OOBEInProgress"=dword:00000000</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-user"></i> 对于 Administrator 用户：</strong>
+            我们可以在对应路径及注册表项将 11 改为 10，或者导入以下注册表项：
+        </div>
+
+        <pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\RT-SAM\SAM\Domains\Account\Users\000001F4]
+"F"=hex:02,00,01,00,00,00,00,00,38,7f,6a,e2,35,6a,cd,01,00,00,00,00,00,00,00,\
+00,58,3c,23,69,37,6a,cd,01,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+f4,01,00,00,01,02,00,00,10,02,00,00,00,00,00,00,00,00,01,00,01,00,00,00,00,\
+  00,00,00,00,00,00,00</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-check-circle"></i> 完成：</strong>
+            在分别导入后卸载配置单元，随后再卸载 VHD，并启动 bat。
+            <p style="margin-top:6px;font-size:13px;color:#586069;">由于 QEMU 模拟的性能问题系统运行效率较低，需要耐心进行等待</p>
+            <p style="margin-top:4px;font-size:13px;color:#586069;">此教程适用于 <strong>Windows RT Build 8038</strong> 以及以上的版本</p>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 1.0</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
