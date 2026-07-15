@@ -1,182 +1,373 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Software Archive | DF4D3110</title>
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-body {
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif;
-    background: #f6f8fa;
-    color: #24292e;
-    padding: 20px;
-    line-height: 1.6;
-}
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.header {
-    background: #fff;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-.nav {
-    margin-bottom: 10px;
-}
-.btn-back {
-    display: inline-block;
-    padding: 6px 12px;
-    background: #fff;
-    border: 1px solid #d1d5da;
-    border-radius: 6px;
-    color: #0366d6;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
-}
-.btn-back:hover {
-    background: #f6f8fa;
-}
-h1 {
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-.desc {
-    color: #586069;
-    font-size: 14px;
-}
-.my-content {
-    background: #fff;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 25px;
-}
-.my-content p {
-    margin: 10px 0;
-}
-.my-content ul {
-    padding-left: 22px;
-    margin: 8px 0;
-}
-.my-content li {
-    margin: 4px 0;
-}
-.my-content a {
-    color: #0366d6;
-    text-decoration: none;
-}
-.my-content a:hover {
-    text-decoration: underline;
-}
-.software-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-}
-.card {
-    background: #fff;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    padding: 18px;
-    transition: border-color 0.2s;
-}
-.card:hover {
-    border-color: #0366d6;
-}
-.card-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #0366d6;
-    text-decoration: none;
-}
-.card-title:hover {
-    text-decoration: underline;
-}
-.card-meta {
-    font-size: 12px;
-    color: #6a737d;
-    margin-bottom: 10px;
-}
-.card-desc {
-    font-size: 14px;
-    color: #24292e;
-    line-height: 1.4;
-}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Archive | DF4D3110</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* 头部 */
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        /* 内容卡片 */
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        /* 说明区域 */
+        .group-desc {
+            background: #eef7ff;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 22px;
+            color: #024080;
+            line-height: 1.7;
+        }
+        .group-desc strong {
+            color: #002c5c;
+        }
+        /* 链接列表 */
+        .link-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 10px 0;
+        }
+        .link-item {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            color: #24292e;
+            display: block;
+        }
+        .link-item:hover {
+            border-color: #0366d6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .link-item .link-title {
+            font-weight: 600;
+            color: #0366d6;
+            font-size: 15px;
+        }
+        .link-item .link-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .link-item .link-desc {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 4px;
+        }
+        .link-item .link-tag {
+            display: inline-block;
+            font-size: 11px;
+            background: #e8f4ff;
+            color: #035fc9;
+            padding: 1px 10px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            margin-top: 6px;
+        }
+        .link-item .link-tag.new {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border-color: #8ed4ba;
+        }
+        .link-item .link-tag.guide {
+            background: #fff3e0;
+            color: #b84b00;
+            border-color: #e6c9a8;
+        }
+        .link-item .link-tag.arm {
+            background: #fdedf0;
+            color: #a3485a;
+            border-color: #f5c2cc;
+        }
+        /* 软件卡片网格 */
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .software-card {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 18px;
+            transition: all 0.15s ease;
+        }
+        .software-card:hover {
+            border-color: #0366d6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .software-card .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .software-card .card-title:hover {
+            text-decoration: underline;
+        }
+        .software-card .card-meta {
+            font-size: 12px;
+            color: #6a737d;
+            margin: 4px 0 8px 0;
+        }
+        .software-card .card-desc {
+            font-size: 14px;
+            color: #24292e;
+            line-height: 1.5;
+        }
+        .software-card .card-tag {
+            display: inline-block;
+            font-size: 11px;
+            background: #e8f4ff;
+            color: #035fc9;
+            padding: 1px 10px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            margin-top: 8px;
+        }
+        .software-card .card-tag.new {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border-color: #8ed4ba;
+        }
+        .software-card .card-tag.guide {
+            background: #fff3e0;
+            color: #b84b00;
+            border-color: #e6c9a8;
+        }
+        /* 底部 */
+        .footer-meta {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 20px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        @media (max-width: 700px) {
+            .link-list,
+            .software-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <div class="nav">
-            <button class="btn-back" onclick="history.back()">← 返回上一页</button>
-        </div>
-        <h1>Software Archive | DF4D3110</h1>
-        <p class="desc">软件测试版 & 历史版本归档 | 仅供学习研究使用</p>
-    </div>
-    <!-- 你的原始全部内容（新增 Windows 系统下载入口） -->
-    <div class="my-content">
-        <p>欢迎来到南段的小站，原计划是使用SharePoint的(就是出了点小毛病)</p>
-        <p>很高兴你来到这里, 你可以在以下的网站找到我</p>
-        <ul>
-          <li> <a href="https://space.bilibili.com/382512900?spm_id_from=333.1007.0.0">B站</a> </li>
-        </ul>
-        <p>下面就让我列举我们所需的build吧</p>
-        <p>           Windows On ARM Version</p>
-        <p>Windows RT 8.0</p>
-        <ul>
-          <li> <a href="https://DF4D3110.github.io/Windows_RT.html">Windows RT下载</a> </li>
-        </ul>
-        <p>Windows Preinstallation Environment On ARMv7</p>
-        <ul>
-          <li> <a href="https://DF4D3110.github.io/winpe_armv7.html">Windows PE On ARMv7下载</a> </li>
-        </ul>
-        
-        <!-- 新增：Windows 系统下载入口 -->
-        <p>基于wcos内核的系统下载</p>
-        <ul>
-          <li> <a href="https://DF4D3110.github.io/system/wcos.html">基于wcos内核的系统下载汇总</a> </li>
-        </ul>
-        
-        <p>Microsoft测试版软件</p>
-        <ul>
-          <li> <a href="https://DF4D3110.github.io/software.html">软件下载</a> </li>
-        </ul>
 
-        <!-- 新增：Windows内置Inbox应用包入口 -->
-        <p>Windows内置Inbox应用APPX合集</p>
-        <ul>
-          <li> <a href="https://df4d3110.github.io/inboxappx/inboxappx.html">InboxAppX各架构安装包清单</a> </li>
-        </ul>
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-top">
+            <button class="btn-back" onclick="history.back()">← 返回上一页</button>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-archive"></i> Software Archive</span>
+        </div>
+        <h1><i class="fas fa-database"></i>Software Archive | DF4D3110</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 软件测试版 &amp; 历史版本归档
+            <span class="badge">仅供学习研究</span>
+            <span class="badge">24小时内删除</span>
+        </div>
     </div>
-    <!-- 软件卡片 -->
-    <div class="software-list">
-        <div class="card">
-            <a href="https://DF4D3110.github.io/officebeta/o12.html" class="card-title">Microsoft Office 2007 (o12)</a>
-            <div class="card-meta">测试版 | Alpha / Beta / DVD</div>
-            <div class="card-desc">Office 12 早期测试版本归档，包含多个 Beta 与原始 DVD 镜像。</div>
+
+    <div class="content-box">
+
+        <!-- 说明区域 -->
+        <div class="group-desc">
+            <strong>📖 说明：</strong>
+            <br>1. 本站点用于归档 Windows、Office 等软件的测试版与历史版本；
+            <br>2. 所有资源均来自互联网收集，仅供学习研究使用；
+            <br>3. 请于下载后 <strong>24 小时内删除</strong>，严禁用于商业用途；
+            <br>4. 部分资源需要特定模拟器或环境才能运行，请仔细阅读相关说明。
         </div>
-        <div class="card">
-            <a href="https://DF4D3110.github.io/officebeta/o14.html" class="card-title">Microsoft Office 2010 (o14)</a>
-            <div class="card-meta">测试版 | Beta1 / Beta2 / SP1 Beta</div>
-            <div class="card-desc">Office 14 技术预览版与 Beta 版本归档，按 Build 号分类整理。</div>
+
+        <!-- ============================================================ -->
+        <!-- 快速导航链接 -->
+        <!-- ============================================================ -->
+        <div class="section-title"><i class="fas fa-compass"></i>快速导航</div>
+        <div class="link-list">
+
+            <a href="https://DF4D3110.github.io/Windows_RT.html" class="link-item">
+                <div class="link-title"><i class="fab fa-windows"></i>Windows RT 下载</div>
+                <div class="link-desc">Windows RT 8.0 镜像与部署工具</div>
+                <span class="link-tag">ARM32</span>
+            </a>
+
+            <a href="https://DF4D3110.github.io/winpe_armv7.html" class="link-item">
+                <div class="link-title"><i class="fas fa-bolt"></i>Windows PE On ARMv7</div>
+                <div class="link-desc">Windows 预安装环境 ARMv7 版本</div>
+                <span class="link-tag">ARM32</span>
+            </a>
+
+            <a href="https://DF4D3110.github.io/system/wcos.html" class="link-item">
+                <div class="link-title"><i class="fas fa-cube"></i>基于 WCOS 内核的系统</div>
+                <div class="link-desc">Windows Core OS 内核系统下载汇总</div>
+                <span class="link-tag">ARM32</span>
+                <span class="link-tag">AMD64</span>
+            </a>
+
+            <a href="https://DF4D3110.github.io/emulator.html" class="link-item">
+                <div class="link-title"><i class="fas fa-microchip"></i>模拟器方案向导页</div>
+                <div class="link-desc">在 QEMU 中安装 Windows RT / Core OS</div>
+                <span class="link-tag guide">指南</span>
+                <span class="link-tag new">新增</span>
+            </a>
+
+            <a href="https://DF4D3110.github.io/software.html" class="link-item">
+                <div class="link-title"><i class="fas fa-flask"></i>Microsoft 测试版软件</div>
+                <div class="link-desc">各类 Microsoft 软件测试版归档</div>
+                <span class="link-tag">测试版</span>
+            </a>
+
+            <a href="https://df4d3110.github.io/inboxappx/inboxappx.html" class="link-item">
+                <div class="link-title"><i class="fas fa-box"></i>InboxAppX 合集</div>
+                <div class="link-desc">Windows 内置 Inbox 应用 APPX 各架构安装包</div>
+                <span class="link-tag">APPX</span>
+            </a>
+
         </div>
-        <div class="card">
-            <a href="https://DF4D3110.github.io/officebeta/o15.html" class="card-title">Microsoft Office 2013 (o15)</a>
-            <div class="card-meta">测试版</div>
-            <div class="card-desc">Office 15 消费者预览版归档，按 Build 号分类整理。</div>
+
+        <!-- ============================================================ -->
+        <!-- 软件卡片 -->
+        <!-- ============================================================ -->
+        <div class="section-title"><i class="fas fa-archive"></i>软件归档</div>
+        <div class="software-grid">
+
+            <!-- 模拟器方案向导（置顶卡片） -->
+            <div class="software-card">
+                <a href="https://DF4D3110.github.io/emulator.html" class="card-title">QEMU ARM 模拟器方案向导</a>
+                <div class="card-meta">QEMU v10.1.0 · ARM32 · 部署指南</div>
+                <div class="card-desc">
+                    在 QEMU 中安装 Windows RT（中期/后期）及 Windows Core OS 16236 的完整模拟部署方案向导。
+                </div>
+                <span class="card-tag guide">📖 指南</span>
+                <span class="card-tag new">✨ 新增</span>
+            </div>
+
+            <div class="software-card">
+                <a href="https://DF4D3110.github.io/officebeta/o12.html" class="card-title">Microsoft Office 2007 (o12)</a>
+                <div class="card-meta">测试版 · Alpha / Beta / DVD</div>
+                <div class="card-desc">Office 12 早期测试版本归档，包含多个 Beta 与原始 DVD 镜像。</div>
+                <span class="card-tag">Office</span>
+            </div>
+
+            <div class="software-card">
+                <a href="https://DF4D3110.github.io/officebeta/o14.html" class="card-title">Microsoft Office 2010 (o14)</a>
+                <div class="card-meta">测试版 · Beta1 / Beta2 / SP1 Beta</div>
+                <div class="card-desc">Office 14 技术预览版与 Beta 版本归档，按 Build 号分类整理。</div>
+                <span class="card-tag">Office</span>
+            </div>
+
+            <div class="software-card">
+                <a href="https://DF4D3110.github.io/officebeta/o15.html" class="card-title">Microsoft Office 2013 (o15)</a>
+                <div class="card-meta">测试版 · 消费者预览版</div>
+                <div class="card-desc">Office 15 消费者预览版归档，按 Build 号分类整理。</div>
+                <span class="card-tag">Office</span>
+            </div>
+
         </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: 互联网收集 &nbsp;|&nbsp; DF4D3110</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+        </div>
+
     </div>
 </div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </body>
 </html>
