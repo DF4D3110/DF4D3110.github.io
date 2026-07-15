@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 10 Mobile 镜像下载清单</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .desc-header {
+            color: #586069;
+            margin-top: 6px;
+        }
+        .disclaimer {
+            background: #fff;
+            border-left: 6px solid red;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+        .disclaimer p {
+            color: red;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .group-desc {
+            background: #eef7ff;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 22px;
+            color: #024080;
+            line-height: 1.7;
+        }
+        .group-desc strong {
+            color: #002c5c;
+        }
+        .install-tip {
+            background: #fff3e0;
+            padding: 16px;
+            border-radius: 5px;
+            margin: 20px 0;
+            color: #993300;
+            line-height: 1.7;
+        }
+        .install-tip strong {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .install-tip code {
+            background: #ffe8cc;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .build-group {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .build-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .build-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .build-title .count-badge {
+            font-size: 13px;
+            color: #586069;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+        .item {
+            padding: 13px 0;
+            border-bottom: 1px dashed #dddddd;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .ver-name {
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .tag {
+            font-size: 13px;
+            background: #e8f4ff;
+            color: #035fc9;
+            padding: 2px 10px;
+            border-radius: 3px;
+        }
+        .tag-arch-x86 {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .tag-arch-amd64 {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .tag-arch-arm {
+            background: #fdedf0;
+            color: #a3485a;
+            border: 1px solid #f5c2cc;
+        }
+        .tag-arch-arm64 {
+            background: #fdedf0;
+            color: #a3485a;
+            border: 1px solid #f5c2cc;
+        }
+        .tag-bios {
+            background: #ffe8cc;
+            color: #b84b00;
+            border: 1px solid #e6c9a8;
+        }
+        .tag-uefi {
+            background: #dfffdf;
+            color: #007022;
+            border: 1px solid #8ed4ba;
+        }
+        .tag-emulator {
+            background: #e3f0fa;
+            color: #1f4a70;
+            border: 1px solid #9fc3e0;
+        }
+        .tag-wdk {
+            background: #f0e6ff;
+            color: #6a1b9a;
+            border: 1px solid #ce93d8;
+        }
+        .tag i {
+            margin-right: 4px;
+        }
+        .download-btn {
+            padding: 5px 14px;
+            background: #0366d6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        .download-btn:hover {
+            background: #0250b3;
+        }
+        /* 部署说明表格样式 */
+        .deploy-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .deploy-table th {
+            background: #ffe8cc;
+            padding: 6px 12px;
+            text-align: left;
+            border: 1px solid #f0d5b0;
+        }
+        .deploy-table td {
+            padding: 6px 12px;
+            border: 1px solid #f0d5b0;
+        }
+        .deploy-table .arch-tag {
+            padding: 1px 8px;
+            border-radius: 3px;
+            border: 1px solid;
+        }
+        .deploy-table .arch-tag.x86 {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border-color: #8ed4ba;
+        }
+        .deploy-table .arch-tag.arm {
+            background: #fdedf0;
+            color: #a3485a;
+            border-color: #f5c2cc;
+        }
+        .tip-list {
+            padding-left: 20px;
+            margin: 6px 0 0 0;
+        }
+        .tip-list li {
+            margin-bottom: 2px;
+        }
+        .tip-sub {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .tip-sub strong {
+            color: #993300;
+        }
+        @media (max-width: 700px) {
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .download-btn {
+                margin-left: 0;
+            }
+            .deploy-table {
+                font-size: 13px;
+            }
+            .deploy-table th,
+            .deploy-table td {
+                padding: 4px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+        <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← 返回 Windows Core OS 汇总</a>
+        <h1><i class="fas fa-mobile-alt"></i>Windows 10 Mobile 镜像下载清单</h1>
+        <p class="desc-header">Windows 10 Mobile / Windows Phone 10 开发版镜像归档（TH1 分支）</p>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+        <p>⚠️ 仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
+    </div>
+
+    <div class="content-box">
+        <!-- 说明区域 -->
+        <div class="group-desc">
+            <strong>📖 说明：</strong>
+            <br>1. 所有资源基于 Windows 10 Mobile开发版镜像；
+            <br>2. 架构标识：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 8px;border-radius:3px;border:1px solid #8ed4ba;">x86</span> / <span style="background:#e6f7ef;color:#0d6b4f;padding:1px 8px;border-radius:3px;border:1px solid #8ed4ba;">AMD64</span> 绿色，<span style="background:#fdedf0;color:#a3485a;padding:1px 8px;border-radius:3px;border:1px solid #f5c2cc;">ARM</span> / <span style="background:#fdedf0;color:#a3485a;padding:1px 8px;border-radius:3px;border:1px solid #f5c2cc;">ARM64</span> 红色；
+            <br>3. 文件名无架构后缀的 Build，默认适配 <span style="background:#e6f7ef;color:#0d6b4f;padding:1px 8px;border-radius:3px;border:1px solid #8ed4ba;">x86</span> + <span style="background:#ffe8cc;color:#b84b00;padding:1px 8px;border-radius:3px;border:1px solid #e6c9a8;">BIOS</span> 启动；
+            <br>4. 文件名有架构后缀的 Build，仅标注对应架构，不标注启动方式；
+            <br>5. <span style="background:#e3f0fa;color:#1f4a70;padding:1px 8px;border-radius:3px;border:1px solid #9fc3e0;">Emulator</span> 标识表示该镜像为模拟器专用版本；
+            <br>6. <span style="background:#f0e6ff;color:#6a1b9a;padding:1px 8px;border-radius:3px;border:1px solid #ce93d8;">WDK</span> 标识表示该镜像为 WDK（Windows Driver Kit）提取版本，部分启动可能仅显示黑屏；
+            <br>7. 所有资源仅供学习研究，请于下载后 24 小时内删除。
+        </div>
+
+        <!-- 安装操作须知 -->
+        <div class="install-tip">
+            <strong>⚙️ 部署说明</strong>
+            <div style="margin-top: 8px;">
+                <p style="font-weight: 600; color: #993300; margin-bottom: 6px;">📌 目标平台对照</p>
+                <table class="deploy-table">
+                    <tr>
+                        <th>架构</th>
+                        <th>适用平台</th>
+                        <th>推荐部署方式</th>
+                    </tr>
+                    <tr>
+                        <td><span class="arch-tag x86">x86</span> / <span class="arch-tag x86">AMD64</span></td>
+                        <td>PC 模拟器 / x86 平板</td>
+                        <td>Visual Studio 模拟器 / QEMU</td>
+                    </tr>
+                    <tr>
+                        <td><span class="arch-tag arm">ARM</span> / <span class="arch-tag arm">ARM64</span></td>
+                        <td>Windows Phone 实体机</td>
+                        <td>Lumia 系列 / ARM 模拟器</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="tip-sub">
+                <p style="font-weight: 600; color: #993300; margin-bottom: 4px;">📝 注意事项</p>
+                <ul class="tip-list">
+                    <li>建议使用 QEMU 或 Visual Studio 模拟器进行部署测试；</li>
+                    <li>实体机部署前请确认设备具备刷机条件；</li>
+                    <li>所有资源仅供学习研究，请于下载后24 小时内删除；</li>
+                    <li>目前 ARM 架构的系统仅可在实体机启动，QEMU 模拟器支持敬请期待；</li>
+                    <li>10036 和 10075 的四个架构版本均为 WDK 提取版本，支持双启动但启动后可能仅为黑屏。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Build 10.0.9927.0                                             -->
+        <!-- ============================================================ -->
+        <div class="build-group">
+            <div class="build-title">Build 10.0.9927.0.fbl_awesome1501.150120-1726 <span class="count-badge">共 1 个</span></div>
+            <div class="item">
+                <div class="ver-name">10.0.9927.0.fbl_awesome1501.150120-1726.zip</div>
+                <span class="tag tag-arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="tag tag-bios"><i class="fas fa-desktop"></i> BIOS 启动</span>
+                <span class="tag tag-emulator"><i class="fas fa-desktop"></i> Emulator</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.9927.0.fbl_awesome1501.150120-1726.zip">下载</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Build 10.0.10030.0                                            -->
+        <!-- ============================================================ -->
+        <div class="build-group">
+            <div class="build-title">Build 10.0.10030.0.winmain_prs.150226-1653 <span class="count-badge">共 1 个</span></div>
+            <div class="item">
+                <div class="ver-name">10.0.10030.0.winmain_prs.150226-1653.zip</div>
+                <span class="tag tag-arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="tag tag-bios"><i class="fas fa-desktop"></i> BIOS 启动</span>
+                <span class="tag tag-emulator"><i class="fas fa-desktop"></i> Emulator</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10030.0.winmain_prs.150226-1653.zip">下载</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Build 10.0.10036.0                                            -->
+        <!-- ============================================================ -->
+        <div class="build-group">
+            <div class="build-title">Build 10.0.10036.0.fbl_impressive.150306-2322 <span class="count-badge">共 4 个</span></div>
+            <!-- amd64 -->
+            <div class="item">
+                <div class="ver-name">10.0.10036.0.fbl_impressive.150306-2322_amd64.zip</div>
+                <span class="tag tag-arch-amd64"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10036.0.fbl_impressive.150306-2322_amd64.zip">下载</a>
+            </div>
+            <!-- arm -->
+            <div class="item">
+                <div class="ver-name">10.0.10036.0.fbl_impressive.150306-2322_arm.zip</div>
+                <span class="tag tag-arch-arm"><i class="fas fa-microchip"></i> ARM</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10036.0.fbl_impressive.150306-2322_arm.zip">下载</a>
+            </div>
+            <!-- arm64 -->
+            <div class="item">
+                <div class="ver-name">10.0.10036.0.fbl_impressive.150306-2322_arm64.zip</div>
+                <span class="tag tag-arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10036.0.fbl_impressive.150306-2322_arm64.zip">下载</a>
+            </div>
+            <!-- x86 -->
+            <div class="item">
+                <div class="ver-name">10.0.10036.0.fbl_impressive.150306-2322_x86.zip</div>
+                <span class="tag tag-arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10036.0.fbl_impressive.150306-2322_x86.zip">下载</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Build 10.0.10075.0                                            -->
+        <!-- ============================================================ -->
+        <div class="build-group">
+            <div class="build-title">Build 10.0.10075.0.fbl_impressive_p1.150428-1902 <span class="count-badge">共 4 个</span></div>
+            <!-- amd64 -->
+            <div class="item">
+                <div class="ver-name">10.0.10075.0.fbl_impressive_p1.150428-1902_amd64.zip</div>
+                <span class="tag tag-arch-amd64"><i class="fas fa-microchip"></i> AMD64</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10075.0.fbl_impressive_p1.150428-1902_amd64.zip">下载</a>
+            </div>
+            <!-- arm -->
+            <div class="item">
+                <div class="ver-name">10.0.10075.0.fbl_impressive_p1.150428-1902_arm.zip</div>
+                <span class="tag tag-arch-arm"><i class="fas fa-microchip"></i> ARM</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10075.0.fbl_impressive_p1.150428-1902_arm.zip">下载</a>
+            </div>
+            <!-- arm64 -->
+            <div class="item">
+                <div class="ver-name">10.0.10075.0.fbl_impressive_p1.150428-1902_arm64.zip</div>
+                <span class="tag tag-arch-arm64"><i class="fas fa-microchip"></i> ARM64</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10075.0.fbl_impressive_p1.150428-1902_arm64.zip">下载</a>
+            </div>
+            <!-- x86 -->
+            <div class="item">
+                <div class="ver-name">10.0.10075.0.fbl_impressive_p1.150428-1902_x86.zip</div>
+                <span class="tag tag-arch-x86"><i class="fas fa-microchip"></i> x86</span>
+                <span class="tag tag-wdk"><i class="fas fa-code"></i> WDK</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-10-Mobile-Archive-x86-/releases/download/th1/10.0.10075.0.fbl_impressive_p1.150428-1902_x86.zip">下载</a>
+            </div>
+        </div>
+
+        <!-- 底部信息 -->
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
+            <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; Windows 10 Mobile</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
