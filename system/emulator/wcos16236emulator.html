@@ -78,6 +78,11 @@
             border-color: #f5c2cc;
             color: #a3485a;
         }
+        .header .badge.recommended {
+            background: #e6f7ef;
+            border-color: #8ed4ba;
+            color: #0d6b4f;
+        }
         /* 正文卡片 */
         .content-box {
             background: #fff;
@@ -127,6 +132,24 @@
             margin-right: 8px;
             color: #0366d6;
         }
+        .section-title .method-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 30px;
+            margin-left: 10px;
+        }
+        .section-title .method-badge.recommended {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .section-title .method-badge.alternative {
+            background: #f0f6fe;
+            color: #1f4a70;
+            border: 1px solid #cbd9ec;
+        }
         /* 文件准备列表 */
         .file-list {
             list-style: none;
@@ -158,6 +181,11 @@
             border-radius: 3px;
             font-size: 13px;
         }
+        .file-list li .file-size {
+            color: #586069;
+            font-size: 12px;
+            margin-left: 6px;
+        }
         /* 注意事项 */
         .note-box {
             background: #fff8f0;
@@ -174,6 +202,10 @@
             border-left-color: #0366d6;
             background: #f0f6ff;
         }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
         .note-box strong {
             color: #993300;
         }
@@ -182,6 +214,9 @@
         }
         .note-box.info strong {
             color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
         }
         /* 代码块 */
         pre {
@@ -242,6 +277,38 @@
         .warning-box i {
             margin-right: 8px;
         }
+        .method-divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0 20px 0;
+            color: #586069;
+            font-size: 14px;
+        }
+        .method-divider::before,
+        .method-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e1e4e8;
+        }
+        .method-divider::before {
+            margin-right: 16px;
+        }
+        .method-divider::after {
+            margin-left: 16px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
         @media (max-width: 700px) {
             .toc ul li {
                 display: block;
@@ -270,6 +337,7 @@
             <span class="badge">QEMU v10.1.0</span>
             <span class="badge">ARM32</span>
             <span class="badge warning">⚠️ 仅限模拟器</span>
+            <span class="badge recommended">✅ 推荐方案已更新</span>
         </div>
     </div>
 
@@ -279,17 +347,143 @@
         <div class="toc">
             <strong><i class="fas fa-list"></i> 目录</strong>
             <ul>
-                <li><a href="#prepare">1. 文件准备</a></li>
-                <li><a href="#notes">2. 注意事项</a></li>
-                <li><a href="#deploy">3. 系统部署</a></li>
+                <li><a href="#method-ffu">方案一：FFU 镜像部署（推荐）</a></li>
+                <li><a href="#method-wim">方案二：WIM 镜像部署（备选）</a></li>
             </ul>
         </div>
 
         <!-- ============================================================ -->
-        <!-- 1. 文件准备                                                   -->
+        <!-- 方案一：FFU 镜像部署（推荐）                                   -->
         <!-- ============================================================ -->
-        <h2 class="section-title" id="prepare"><i class="fas fa-box"></i>文件准备</h2>
-        <p>以下是我们需要准备的文件：</p>
+        <h2 class="section-title" id="method-ffu">
+            <i class="fas fa-star" style="color: #28a745;"></i>方案一：FFU 镜像部署
+            <span class="method-badge recommended">推荐</span>
+        </h2>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 推荐说明：</strong>
+            此方案使用预构建的 FFU 镜像，无需手动释放 WIM 和配置分区，部署更简单快捷。适用于 QEMU 模拟器环境。
+        </div>
+
+        <!-- 文件准备 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-box" style="color: #0366d6;"></i> 文件准备</h3>
+        <ul class="file-list">
+            <li><i class="fas fa-file-archive"></i> <a href="https://github.com/DF4D3110/WCOS16236QEMU/releases" target="_blank">WCOS16236QEMU 发布页</a> <span class="file-size">（包含 FFU、QEMU、edk2 及启动脚本）</span></li>
+            <li><i class="fas fa-file-archive"></i> <a href="https://github.com/lzw29107/qemu" target="_blank">专门为 Windows RT 修改的 QEMU 源码</a> <span class="file-size">（@lzw29107）</span></li>
+            <li><i class="fas fa-file-archive"></i> <a href="https://github.com/lzw29107/edk2" target="_blank">专门为 Windows RT 修改的 edk2 固件源码</a> <span class="file-size">（@lzw29107）</span></li>
+            <li><i class="fas fa-hdd"></i> 一个虚拟磁盘镜像（建议大小 32GB，用于存储操作系统）</li>
+        </ul>
+
+        <!-- 注意事项 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-exclamation-triangle" style="color: #e6a700;"></i> 注意事项</h3>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-circle"></i> 此 FFU 镜像仅在 QEMU 模拟器上测试过，未在实体机上测试。直接在实体机上使用风险极高，请慎重考虑！
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 重要：</strong>
+            一定不能使用任何来自 Windows 10 Mobile 的 EFIESP 分区文件，否则将会无限重启。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> USB 输入失效问题：</strong>
+            QEMU 的 USB 输入仿真在某些情况下可能会出现失效的情况。若要解决这个问题，需要切换到 QEMU 兼容性监视器（<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd>）并输入运行以下指令：
+            <pre><code>device_del kbd
+device_add usb-kbd,id=kbd</code></pre>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> EFIESP 分区说明：</strong>
+            此方案使用来自类似版本 Windows 10 IoT Core 的 EFIESP 分区文件以满足启动需求。
+        </div>
+
+        <!-- 部署步骤 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-hdd" style="color: #0366d6;"></i> 部署步骤</h3>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 1：准备 VHD 虚拟磁盘</strong>
+            <p style="margin-top:6px;">使用 <code>diskpart</code> 创建 VHD 虚拟磁盘。由于使用 USB 设备，VHD 大小不强制要求是 16GB 的倍数（但推荐使用 32GB）。</p>
+        </div>
+
+        <pre><code>create vdisk file="C:\WCOS16236\WCOS16236.vhd" maximum=32768 type=expandable
+select vdisk file="C:\WCOS16236\WCOS16236.vhd"
+attach vdisk
+convert gpt
+create partition efi size=100
+format quick fs=fat32
+assign letter=F
+create partition primary
+format quick fs=ntfs
+assign letter=G
+exit</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 2：释放 FFU 镜像</strong>
+            <p style="margin-top:6px;">以管理员权限启动 CMD，使用 DISM 将 FFU 镜像释放到挂载的 VHD 磁盘上。</p>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">假设 VHD 挂载为 <code>Disk 1</code>，请将 <code>\\.\PhysicalDrive1</code> 替换为您实际的磁盘编号。</p>
+        </div>
+
+        <pre><code>DISM.exe /Apply-Ffu /ImageFile:flash.ffu /ApplyDrive:\\.\PhysicalDrive1</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 3：卸载 VHD 并启动</strong>
+            <p style="margin-top:6px;">释放完成后，卸载 VHD 磁盘，然后运行 <code>ARM32.bat</code> 启动脚本。</p>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">使用前请根据实际路径修改脚本中的 <code>HDD</code>、<code>-bios</code> 和 QEMU 程序路径。</p>
+        </div>
+
+        <pre><code>@echo off
+cd /d %~dp0
+set HDD="C:\WCOS16236\WCOS16236.vhd"
+"D:\QEMU v10.0.50-b8218f7 (clang64 dynamic build)\qemu-system-arm.exe" ^
+-M virt,force_el3=true,force_psci=on,pci=false,highmem=false ^
+-cpu cortex-a15 ^
+-smp cores=2,threads=4 ^
+--accel tcg,thread=multi ^
+-m 2048 ^
+-bios "D:\EFISHELL\QEMU_EFI_ArmVirtQemu_ARM_RELEASE.fd" ^
+-device VGA ^
+-device usb-kbd,id=kbd ^
+-device usb-tablet,id=mice ^
+-drive id=USB0,if=none,file=%HDD% ^
+-device usb-storage,drive=USB0 ^
+-device qemu-xhci ^
+-rtc base=YYYY-MM-DD,clock=vm ^
+-serial tcp::9090,server,nowait</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 性能提示：</strong>
+            QEMU 模拟效率不理想，启动可能需要一些时间，请耐心等待。
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 来源：<a href="https://github.com/DF4D3110/WCOS16236QEMU/releases" target="_blank">DF4D3110/WCOS16236QEMU Releases</a> ｜
+            视频演示：<a href="https://www.bilibili.com/video/BV1xst5z6EmV/" target="_blank">Bilibili</a> ｜
+            感谢 <a href="https://github.com/lzw29107" target="_blank">@lzw29107</a> 对 QEMU 和 edk2 的支持
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 分隔线                                                       -->
+        <!-- ============================================================ -->
+        <div class="method-divider">
+            <span style="background: #fff; padding: 0 12px; color: #586069;">备选方案</span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 方案二：WIM 镜像部署（备选）                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="method-wim">
+            <i class="fas fa-code-branch"></i>方案二：WIM 镜像部署
+            <span class="method-badge alternative">备选</span>
+        </h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            此方案使用原始的 WIM 镜像手动部署，步骤较为复杂，适合需要自定义分区或深入了解系统结构的用户。来源为 <a href="https://github.com/Empyreal96/WP-16236-Inkman-Guide/releases/tag/0.1" target="_blank">Empyreal96 的 Inkman 部署指南</a>。
+        </div>
+
+        <!-- 文件准备 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-box" style="color: #0366d6;"></i> 文件准备</h3>
         <ul class="file-list">
             <li><i class="fas fa-file-archive"></i> <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website/QEMU.v10.0.50-b8218f7.clang64.dynamic.build.zip" target="_blank">专门为 Windows RT 进行修改的 QEMU v10.1.0</a></li>
             <li><i class="fas fa-file-archive"></i> <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website/ArmVirtQemu.ARM.RELEASE.Ubuntu.24.04.Build.zip" target="_blank">专门为 Windows RT 进行修改的 edk2 固件</a></li>
@@ -299,10 +493,8 @@
             <li><i class="fas fa-file"></i> 已经对数字签名检查修改过的 <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website/winload16236.efi" target="_blank">winload.efi</a></li>
         </ul>
 
-        <!-- ============================================================ -->
-        <!-- 2. 注意事项                                                   -->
-        <!-- ============================================================ -->
-        <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
+        <!-- 注意事项 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-exclamation-triangle" style="color: #e6a700;"></i> 注意事项</h3>
 
         <div class="warning-box">
             <i class="fas fa-exclamation-circle"></i> 此教程不适合于任何实体机设备进行，请勿使用本教程对实体机进行操作！
@@ -325,10 +517,8 @@ device_add usb-kbd,id=kbd</code></pre>
             由于原始的 <code>Winload.efi</code> 数字签名损坏且 ARM32 系统需要强制检查文件数字签名，在此对 <code>Winload.efi</code> 进行修改以绕过数字签名检查。
         </div>
 
-        <!-- ============================================================ -->
-        <!-- 3. 系统部署                                                   -->
-        <!-- ============================================================ -->
-        <h2 class="section-title" id="deploy"><i class="fas fa-hdd"></i>系统部署</h2>
+        <!-- 部署步骤 -->
+        <h3 style="font-size: 17px; font-weight: 600; margin: 20px 0 10px 0;"><i class="fas fa-hdd" style="color: #0366d6;"></i> 部署步骤</h3>
 
         <div class="note-box">
             <strong><i class="fas fa-terminal"></i> 步骤 1：使用 diskpart 创建 VHD</strong>
@@ -423,10 +613,15 @@ cd /d %~dp0
             <strong><i class="fas fa-flag-checkered"></i> 接下来可运行 bat 以运行 Windows CoreOS</strong>
         </div>
 
+        <div class="source-link">
+            <i class="fas fa-link"></i> 来源：<a href="https://github.com/Empyreal96/WP-16236-Inkman-Guide/releases/tag/0.1" target="_blank">Empyreal96/WP-16236-Inkman-Guide Releases</a> ｜
+            <a href="https://github.com/DF4D3110/DF4D3110.github.io" target="_blank">DF4D3110 GitHub</a>
+        </div>
+
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 1.0</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 2.0</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
         </div>
     </div>
 </div>
