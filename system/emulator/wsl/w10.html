@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：在 WSL 中配置图形界面 (Windows 10) · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box.warning-box {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        .note-box.warning-box strong {
+            color: #d73a49;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .notice-banner {
+            background: #fdedf0;
+            border: 2px solid #d73a49;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            color: #a3485a;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .notice-banner i {
+            font-size: 22px;
+            color: #d73a49;
+        }
+        @media (max-width: 700px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← 返回 Windows Core OS 汇总</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-desktop"></i>文档：在 WSL 中配置图形界面</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 为 WSL Ubuntu 安装中文图形界面支持
+            <span class="badge">WSL</span>
+            <span class="badge">Ubuntu</span>
+            <span class="badge warning">⚠️ Windows 10 专属</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 告示 -->
+        <div class="notice-banner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>⚠️ 本教程仅在 Windows 10 中可用，其他 Windows 版本可能不兼容。</span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 安装 WSL                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title"><i class="fab fa-linux"></i>安装 WSL</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 命令：</strong>
+            在 Windows 中以管理员身份打开 PowerShell 或 CMD，运行以下命令：
+        </div>
+
+        <pre><code>wsl --install -d &lt;发行版名称&gt;</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            建议使用 Ubuntu，例如 <code>wsl --install -d Ubuntu</code>。安装完成后启动 WSL，按照提示设置用户名和密码。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 安装图形界面支持                                           -->
+        <!-- ============================================================ -->
+        <h2 class="section-title"><i class="fas fa-paint-brush"></i>安装图形界面支持</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 适用环境：</strong>
+            本教程适用于 <strong>Windows 10</strong> 用户，默认在 root 用户下操作。
+            <br>如果当前不是 root 用户，先执行：<br>
+            <code>wsl -u root -d Ubuntu</code>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 安装图形界面相关软件包：</strong>
+            <p style="margin-top:6px;">执行以下命令安装 gedit 编辑器、中文输入法及中文字体：</p>
+        </div>
+
+        <pre><code>apt update
+apt install gedit fcitx fcitx-config-gtk fcitx-sunpinyin fcitx-pinyin fcitx-googlepinyin xfonts-intl-chinese
+apt install xfonts-wqy xfonts-unifont fonts-wqy*
+apt install language-pack-gnome-zh-hans language-pack-kde-zh-hans language-pack-zh-hans</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 软件包说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>gedit</code> — 图形化文本编辑器，用于测试界面是否正常工作</li>
+                <li><code>fcitx*</code> — 中文输入法框架及多种输入法（拼音、双拼、谷歌拼音）</li>
+                <li><code>xfonts-*</code> 和 <code>fonts-wqy*</code> — 中文字体支持</li>
+                <li><code>language-pack-*</code> — 中文语言包</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. 安装图形界面配置脚本                                       -->
+        <!-- ============================================================ -->
+        <h2 class="section-title"><i class="fas fa-cog"></i>安装图形界面配置脚本</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-folder"></i> 步骤 1：创建并进入工作目录</strong>
+        </div>
+
+        <pre><code>mkdir /opt/WSL
+cd /opt/WSL</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-download"></i> 步骤 2：克隆配置脚本</strong>
+            <p style="margin-top:6px;">从 GitHub 获取 WSL 图形界面配置脚本：</p>
+        </div>
+
+        <pre><code>git clone https://github.com/nufeng1999/wsl_XWin_Cygwin.git --recurse-submodules</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <code>--recurse-submodules</code> 参数会同时下载子模块，确保所有依赖完整。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 3：执行安装脚本</strong>
+        </div>
+
+        <pre><code>cd wsl_XWin_Cygwin
+chmod +x ./install.sh
+./install.sh</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <code>chmod +x</code> 赋予脚本执行权限，然后运行 <code>install.sh</code> 完成图形界面配置。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 完成配置                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title"><i class="fas fa-check-circle"></i>完成配置</h2>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 重启 WSL</strong>
+            <p style="margin-top:6px;">安装完成后，重启 WSL 即可正常使用图形界面。</p>
+            <p style="margin-top:6px;">在 Windows PowerShell 中执行：</p>
+        </div>
+
+        <pre><code>wsl --shutdown</code></pre>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 验证：</strong>
+            重新打开 WSL 终端，尝试运行 <code>gedit</code> 或 <code>fcitx-config-gtk</code>，验证图形界面是否正常工作。
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.0 (Windows 10 版)</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
