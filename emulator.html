@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QEMU ARM 模拟器教程 · WinStory</title>
+    <title>异架构系统模拟指南 · WinStory</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,7 +21,6 @@
             max-width: 1100px;
             margin: 0 auto;
         }
-        /* 头部 */
         .header {
             background: #fff;
             border: 1px solid #e1e4e8;
@@ -78,7 +77,6 @@
             border-color: #f5c2cc;
             color: #a3485a;
         }
-        /* 内容卡片 */
         .content-box {
             background: #fff;
             border: 1px solid #e1e4e8;
@@ -96,7 +94,6 @@
             margin-right: 8px;
             color: #0366d6;
         }
-        /* 教程卡片网格 */
         .tutorial-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -133,6 +130,9 @@
         }
         .tutorial-card .card-icon.win10 {
             color: #0078d7;
+        }
+        .tutorial-card .card-icon.itanium {
+            color: #6a1b9a;
         }
         .tutorial-card h3 {
             font-size: 17px;
@@ -183,7 +183,16 @@
             color: #035fc9;
             border-color: #b6cde6;
         }
-        /* 底部 */
+        .tutorial-card .card-tags .tag.ia64 {
+            background: #f0e6ff;
+            color: #6a1b9a;
+            border-color: #ce93d8;
+        }
+        .tutorial-card .card-tags .tag.ski {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border-color: #8ed4ba;
+        }
         .footer-meta {
             margin-top: 30px;
             padding-top: 20px;
@@ -215,11 +224,12 @@
             <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← 返回 Windows Core OS 汇总</a>
             <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
         </div>
-        <h1><i class="fas fa-microchip"></i>QEMU ARM 模拟器教程</h1>
+        <h1><i class="fas fa-sitemap"></i>异架构系统模拟指南</h1>
         <div class="subtitle">
-            <i class="fas fa-list"></i> 在 QEMU 中安装 Windows RT / Windows Core OS 的完整指南
+            <i class="fas fa-list"></i> 在模拟环境中运行跨架构 Windows 系统的完整指引
             <span class="badge">ARM32</span>
-            <span class="badge warning">仅限模拟器</span>
+            <span class="badge">IA64</span>
+            <span class="badge warning">仅供研究</span>
         </div>
     </div>
 
@@ -228,23 +238,23 @@
         <!-- 说明 -->
         <div style="background: #eef7ff; padding: 14px; border-radius: 5px; margin-bottom: 22px; color: #024080; line-height: 1.7;">
             <strong><i class="fas fa-info-circle"></i> 说明：</strong>
-            <br>1. 本页面汇总了在 QEMU ARM 模拟器中安装 Windows RT 及 Windows Core OS 的教程；
-            <br>2. 所有教程均基于专门修改的 QEMU 版本，适用于不同阶段的 Windows ARM 系统；
+            <br>1. 本页面汇集了在不同模拟器中运行跨架构（ARM / IA64）Windows 系统的实践指南；
+            <br>2. 模拟方式涵盖 QEMU、SKI 等多种模拟器，针对不同系统版本提供对应方案；
             <br>3. 所有教程仅供学习研究，请于下载后 24 小时内删除。
         </div>
 
-        <div class="section-title"><i class="fas fa-book-open"></i>选择教程</div>
+        <div class="section-title"><i class="fas fa-book-open"></i>可用方案</div>
 
         <!-- 教程卡片网格 -->
         <div class="tutorial-grid">
 
-            <!-- 卡片 1：专门为 16236 设计的模拟方案 -->
+            <!-- 卡片 1：专门为 16236 设计的模拟方案 (QEMU) -->
             <a href="https://df4d3110.github.io/system/emulator/wcos16236emulator.html" class="tutorial-card">
                 <div class="card-icon mobile"><i class="fas fa-mobile-alt"></i></div>
-                <h3>专门为 16236 设计的模拟方案</h3>
-                <div class="card-subtitle">Windows Core OS 10.0.16236.1003</div>
+                <h3>Windows Core OS 16236 模拟</h3>
+                <div class="card-subtitle">QEMU · ARM32</div>
                 <div class="card-desc">
-                    专为 Windows Core OS Build 16236 设计的完整模拟部署方案，包含数字签名绕过、ESP 分区替换等操作流程。
+                    专为 Windows Core OS Build 16236 设计，包含数字签名绕过、ESP 分区替换等完整部署流程。
                 </div>
                 <div class="card-tags">
                     <span class="tag arm">ARM32</span>
@@ -254,13 +264,13 @@
                 </div>
             </a>
 
-            <!-- 卡片 2：Windows RT 后期系统模拟 -->
+            <!-- 卡片 2：Windows RT 后期系统模拟 (QEMU) -->
             <a href="https://df4d3110.github.io/system/emulator/qemuarmemulator_rp.html" class="tutorial-card">
                 <div class="card-icon win10"><i class="fab fa-windows"></i></div>
                 <h3>Windows RT 后期系统模拟</h3>
-                <div class="card-subtitle">Build 8318 ~ 22000</div>
+                <div class="card-subtitle">QEMU · Build 8318 ~ 22000</div>
                 <div class="card-desc">
-                    针对 Windows RT 后期版本（Build 8318 ~ 22000）的模拟方案，具有更佳的性能。
+                    面向 Windows RT 后期版本的 QEMU 模拟方案，针对性能与稳定性进行优化。
                 </div>
                 <div class="card-tags">
                     <span class="tag arm">ARM32</span>
@@ -269,18 +279,34 @@
                 </div>
             </a>
 
-            <!-- 卡片 3：Windows RT 中期及后期系统模拟 -->
+            <!-- 卡片 3：Windows RT 中期及后期系统模拟 (QEMU) -->
             <a href="https://df4d3110.github.io/system/emulator/qemuarmemulator_dp.html" class="tutorial-card">
                 <div class="card-icon win7"><i class="fab fa-windows"></i></div>
                 <h3>Windows RT 中期及后期系统模拟</h3>
-                <div class="card-subtitle">Build 8038 ~ 22000</div>
+                <div class="card-subtitle">QEMU · Build 8038 ~ 22000</div>
                 <div class="card-desc">
-                    涵盖 Windows RT 中期至后期全版本（Build 8038 ~ 22000）的模拟方案，适用于更广泛的版本范围。
+                    覆盖 Windows RT 中期至后期全版本的 QEMU 模拟方案，适用于更广泛的版本范围。
                 </div>
                 <div class="card-tags">
                     <span class="tag arm">ARM32</span>
                     <span class="tag qemu">QEMU</span>
                     <span class="tag rt">Windows RT</span>
+                </div>
+            </a>
+
+            <!-- 卡片 4：在 WSL 中通过 IA64 仿真运行 Windows Itanium (SKI) -->
+            <a href="https://df4d3110.github.io/system/emulator/skiitanium.html" class="tutorial-card">
+                <div class="card-icon itanium"><i class="fas fa-microchip"></i></div>
+                <h3>IA64 仿真运行 Windows Itanium</h3>
+                <div class="card-subtitle">SKI 仿真器 · WSL</div>
+                <div class="card-desc">
+                    使用 SKI 仿真器在 WSL 环境中模拟 Itanium 2 平台，运行 Windows Server 2003 及 Longhorn 的 IA64 版本。
+                </div>
+                <div class="card-tags">
+                    <span class="tag ia64">IA64</span>
+                    <span class="tag ski">SKI</span>
+                    <span class="tag warning">性能极低</span>
+                    <span class="tag">WSL</span>
                 </div>
             </a>
 
@@ -289,13 +315,13 @@
         <!-- 注意 -->
         <div style="margin-top: 20px; padding: 14px 18px; background: #fff8f0; border-left: 4px solid #e6a700; border-radius: 4px;">
             <strong><i class="fas fa-exclamation-triangle" style="color: #e6a700;"></i> 提示：</strong>
-            所有教程均假定您已具备基本的 QEMU 和 Windows 部署知识。请仔细阅读每个教程中的注意事项。
+            不同模拟器对硬件和宿主系统的要求各异，请仔细阅读对应教程中的环境配置与注意事项。
         </div>
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 1.0</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 2.0</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
         </div>
     </div>
 </div>
