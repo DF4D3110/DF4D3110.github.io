@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：在 WSL2 中使用 WSLg 实现完整桌面环境 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .file-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e1e4e8;
+        }
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+        .file-list li i {
+            color: #0366d6;
+            width: 20px;
+            margin-right: 8px;
+        }
+        .file-list li a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .file-list li a:hover {
+            text-decoration: underline;
+        }
+        .file-list li code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+        }
+        .table-wrap table th {
+            background: #f6f8fa;
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .table-wrap table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .table-wrap table tr:last-child td {
+            border-bottom: none;
+        }
+        .table-wrap table code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .os-tab {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0 12px 0;
+            flex-wrap: wrap;
+        }
+        .os-tab .tab-btn {
+            padding: 6px 20px;
+            background: #f0f6fe;
+            border: 1px solid #d0ddee;
+            border-radius: 30px;
+            color: #0366d6;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+        .os-tab .tab-btn:hover {
+            background: #dce8f7;
+        }
+        .os-tab .tab-btn.active {
+            background: #0366d6;
+            color: #fff;
+            border-color: #0366d6;
+        }
+        .os-section {
+            display: none;
+        }
+        .os-section.active {
+            display: block;
+        }
+        .footnote {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 6px;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .os-tab {
+                flex-direction: column;
+            }
+            .os-tab .tab-btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← 返回 Windows Core OS 汇总</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-desktop"></i>文档：在 WSL2 中使用 WSLg 实现完整桌面环境</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 通过 WSLg (XWayland) 在 WSL2 中运行 GNOME / KDE / Xfce 等桌面环境
+            <span class="badge">WSL2</span>
+            <span class="badge">WSLg</span>
+            <span class="badge">XWayland</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare">1. 准备工作</a></li>
+                <li><a href="#install">2. 安装桌面环境</a></li>
+                <li><a href="#configure">3. 配置 XWayland</a></li>
+                <li><a href="#gdm">4. 配置 GDM 与分辨率</a></li>
+                <li><a href="#run">5. 启动桌面环境</a></li>
+                <li><a href="#shutdown">6. 关机与注意事项</a></li>
+                <li><a href="#troubleshooting">7. 故障排除</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
+
+        <div class="warning-box">
+            <i class="fas fa-info-circle"></i> 本教程无需在 Windows 外部安装额外软件（如 VcXsrv 或 xrdp），完全基于 WSLg 实现。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 适用版本：</strong>
+            本教程以 <strong>Ubuntu 24.04</strong> + <strong>GNOME</strong> 为例，但同样适用于其他发行版（Debian、Kali 等）和桌面环境（KDE、Xfce、LXDE、Budgie 等）。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 系统要求：</strong>
+            本教程对 <strong>Windows 11</strong> 用户完全兼容。Windows 10 用户虽然也可以尝试，但因 WSLg 支持有限，不保证完整功能。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 1：确保 WSL2 正常运行</strong>
+            <p style="margin-top:6px;">确保已安装 WSL2 并能正常运行。如果未安装，参考以下命令：</p>
+        </div>
+
+        <pre><code>wsl --install -d Ubuntu</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 2：更新系统</strong>
+            <p style="margin-top:6px;">在 WSL 终端中运行：</p>
+        </div>
+
+        <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 步骤 3：配置 wsl.conf</strong>
+            <p style="margin-top:6px;">确保 <code>/etc/wsl.conf</code> 包含以下内容，如不存在则创建：</p>
+        </div>
+
+        <pre><code>[system]
+generateResolvConf = false
+
+[network]
+generateHosts = false
+
+[interop]
+enabled = true
+appendWindowsPath = true</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 提示：</strong>
+            修改完成后，使用 <code>wsl.exe --shutdown</code> 重启 WSL，然后重新打开终端。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 安装桌面环境                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="install"><i class="fas fa-archive"></i>安装桌面环境</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-list"></i> 选择桌面环境元包</strong>
+            <p style="margin-top:6px;">以下为常见的桌面环境元包列表：</p>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>发行版</th>
+                        <th>桌面环境</th>
+                        <th>元包名称</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="8">Ubuntu</td>
+                        <td>Budgie</td>
+                        <td><code>ubuntu-budgie-desktop</code> <span style="color:#d73a49;">(不推荐)</span></td>
+                    </tr>
+                    <tr><td>GNOME</td><td><code>ubuntu-desktop</code> <span style="color:#28a745;">(推荐)</span></td></tr>
+                    <tr><td>KDE Plasma</td><td><code>kubuntu-desktop</code></td></tr>
+                    <tr><td>Kylin</td><td><code>ubuntukylin-desktop</code></td></tr>
+                    <tr><td>LXDE</td><td><code>lubuntu-desktop</code></td></tr>
+                    <tr><td>MATE</td><td><code>ubuntu-mate-desktop</code></td></tr>
+                    <tr><td>Unity</td><td><code>ubuntu-unity-desktop</code></td></tr>
+                    <tr><td>Xfce</td><td><code>xubuntu-desktop</code></td></tr>
+                    <tr>
+                        <td rowspan="8">Ubuntu / Debian</td>
+                        <td>Cinnamon</td>
+                        <td><code>task-cinnamon-desktop</code></td>
+                    </tr>
+                    <tr><td>GNOME</td><td><code>task-gnome-desktop</code></td></tr>
+                    <tr><td>GNOME Flashback</td><td><code>task-gnome-flashback-desktop</code></td></tr>
+                    <tr><td>KDE Plasma</td><td><code>task-kde-desktop</code></td></tr>
+                    <tr><td>LXDE</td><td><code>task-lxde-desktop</code></td></tr>
+                    <tr><td>LXQt</td><td><code>task-lxqt-desktop</code></td></tr>
+                    <tr><td>MATE</td><td><code>task-mate-desktop</code></td></tr>
+                    <tr><td>Xfce</td><td><code>task-xfce-desktop</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 安装示例（以 GNOME 为例）</strong>
+            <p style="margin-top:6px;">选择并安装元包：</p>
+        </div>
+
+        <pre><code>sudo apt install ubuntu-desktop xwayland -y</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 注意：</strong>
+            安装过程可能需要较长时间，请耐心等待。如果使用 Ubuntu，可以考虑安装 <code>snap-store</code>；如不需要可跳过。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-globe"></i> Debian 用户配置区域设置</strong>
+            <p style="margin-top:6px;">如果你使用 Debian，需要配置区域设置（Ubuntu 不需要）：</p>
+        </div>
+
+        <pre><code>sudo dpkg-reconfigure locales</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 3. 配置 XWayland                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="configure"><i class="fas fa-cog"></i>配置 XWayland</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 核心步骤：</strong>
+            本步骤的核心是用 XWayland 替换默认的 Xorg，使桌面环境通过 WSLg 正常工作。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 1：创建 systemd 单元修复 /tmp/.X11-unix/</strong>
+            <p style="margin-top:6px;">创建新的 systemd 单元：</p>
+        </div>
+
+        <pre><code>sudo nano /etc/systemd/system/wslg-fix.service</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 粘贴以下内容：</strong>
+        </div>
+
+        <pre><code>[Unit]
+Description=Fix /tmp/.X11-unix permissions for WSLg
+Before=display-manager.service
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/bin/mount -o remount,exec /tmp/.X11-unix
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 启用服务：</strong>
+        </div>
+
+        <pre><code>sudo systemctl enable wslg-fix.service
+sudo systemctl start wslg-fix.service</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 2：移除 Wayland 引用</strong>
+            <p style="margin-top:6px;">编辑 <code>user-runtime-dir@.service</code> 服务：</p>
+        </div>
+
+        <pre><code>sudo systemctl edit user-runtime-dir@.service</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 粘贴以下内容：</strong>
+        </div>
+
+        <pre><code>[Service]
+ExecStartPre=-/bin/mount -o remount,exec /tmp/.X11-unix</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 3：更改默认启动目标</strong>
+            <p style="margin-top:6px;">更改默认启动目标，避免每次启动都出现 shell 窗口：</p>
+        </div>
+
+        <pre><code>sudo systemctl set-default graphical.target</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 4：用 XWayland 替换 Xorg</strong>
+            <p style="margin-top:6px;">备份原始 Xorg 脚本：</p>
+        </div>
+
+        <pre><code>sudo mv /usr/bin/Xorg /usr/bin/Xorg.original</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 创建新的 Xorg 脚本：</strong>
+        </div>
+
+        <pre><code>sudo nano /usr/bin/Xorg</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 粘贴以下内容（分辨率可根据需要修改）：</strong>
+        </div>
+
+        <pre><code>#!/bin/bash
+exec /usr/bin/Xwayland "$@" -geometry 1920x1080</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 设置权限并创建链接：</strong>
+        </div>
+
+        <pre><code>sudo chmod 755 /usr/bin/Xorg
+sudo ln -sf /usr/bin/Xorg /usr/bin/Xorg</code></pre>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 警告：</strong>
+            系统更新有时会将 Xorg 链接替换为原始版本。如果发生这种情况，只需重复此步骤即可。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 配置 GDM 与分辨率                                           -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="gdm"><i class="fas fa-desktop"></i>配置 GDM 与分辨率</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            此步骤用于解决 GDM 和 GNOME 不遵循 Xwayland 分辨率设置的问题，通过 <code>monitors.xml</code> 覆盖。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 步骤 1：创建 monitors.xml</strong>
+        </div>
+
+        <pre><code>nano ~/.config/monitors.xml</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 粘贴以下内容（分辨率为 1920x1080，可按需修改）：</strong>
+        </div>
+
+        <pre><code>&lt;monitors version="2"&gt;
+  &lt;configuration&gt;
+    &lt;logicalmonitor&gt;
+      &lt;x&gt;0&lt;/x&gt;
+      &lt;y&gt;0&lt;/y&gt;
+      &lt;scale&gt;1&lt;/scale&gt;
+      &lt;monitor&gt;
+        &lt;monitorspec&gt;
+          &lt;connector&gt;XWAYLAND0&lt;/connector&gt;
+          &lt;vendor&gt;unknown&lt;/vendor&gt;
+          &lt;product&gt;unknown&lt;/product&gt;
+        &lt;/monitorspec&gt;
+        &lt;mode&gt;
+          &lt;width&gt;1920&lt;/width&gt;
+          &lt;height&gt;1080&lt;/height&gt;
+          &lt;rate&gt;60&lt;/rate&gt;
+        &lt;/mode&gt;
+      &lt;/monitor&gt;
+    &lt;/logicalmonitor&gt;
+  &lt;/configuration&gt;
+&lt;/monitors&gt;</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 步骤 2：复制到 GDM 目录</strong>
+        </div>
+
+        <pre><code>sudo mkdir -p /var/lib/gdm3/.config
+sudo cp ~/.config/monitors.xml /var/lib/gdm3/.config/
+sudo chown gdm:gdm /var/lib/gdm3/.config/monitors.xml
+sudo chmod 644 /var/lib/gdm3/.config/monitors.xml</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 步骤 3：重启 WSL</strong>
+            <p style="margin-top:6px;">在 Windows 中运行：</p>
+        </div>
+
+        <pre><code>wsl.exe --shutdown</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 重新打开 WSL 终端后，配置生效。</strong>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 启动桌面环境                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="run"><i class="fas fa-play"></i>启动桌面环境</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 启动命令</strong>
+            <p style="margin-top:6px;">在 WSL 终端中执行以下命令启动 GDM：</p>
+        </div>
+
+        <pre><code>sudo systemctl start gdm</code></pre>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 成功：</strong>
+            稍等片刻（通常几秒钟），登录界面应该会出现。登录后即可看到桌面环境。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-wrench"></i> 修改 GDM 行为</strong>
+            <p style="margin-top:6px;">编辑 GDM 配置文件，可更改登录行为：</p>
+        </div>
+
+        <pre><code>sudo nano /etc/gdm3/custom.conf</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 取消注释并编辑以下行：</strong>
+            <pre><code>#WaylandEnable=false</code></pre>
+            改为：
+            <pre><code>WaylandEnable=false</code></pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 关机与注意事项                                             -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="shutdown"><i class="fas fa-power-off"></i>关机与注意事项</h2>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-circle"></i> 重要：一旦启动 WSL 实例，必须执行标准的 Linux 关机操作，否则可能导致 WSL 实例损坏！
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-power-off"></i> 关机方法</strong>
+            <ul style="padding-left:20px;margin-top:6px;">
+                <li>使用桌面环境菜单中的关机选项</li>
+                <li>在终端中执行：<code>sudo poweroff</code></li>
+            </ul>
+            <p style="margin-top:6px;">完成后，可安全使用 <code>wsl.exe --terminate</code> 或 <code>wsl.exe --shutdown</code> 关闭 WSL。</p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 故障排除                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 查看日志</strong>
+            <p style="margin-top:6px;">查看 journalctl 日志以排查问题：</p>
+        </div>
+
+        <pre><code>journalctl -xe | grep -i xwayland</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> Debian 用户：</strong>
+            <pre><code>journalctl -xe | grep -i xwayland</code></pre>
+            输出中应能看到 Xwayland 生成的命令行及错误信息。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-redo"></i> 检查 Xorg 脚本是否被替换</strong>
+            <p style="margin-top:6px;">如果 Xorg 脚本被系统更新还原，重复“用 XWayland 替换默认 Xorg”部分的步骤即可。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-check"></i> 确保 Xorg 为默认显示服务器</strong>
+            <p style="margin-top:6px;">确保 Xorg 是默认显示服务器，而非 Xephyr 或 Wayland。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> LightDM 用户检查日志</strong>
+            <p style="margin-top:6px;">如果使用 LightDM，检查以下日志：</p>
+        </div>
+
+        <pre><code>sudo cat /var/log/lightdm/x-0.log</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-redo"></i> 完全重启 WSL</strong>
+            <p style="margin-top:6px;">在 Windows 中执行：</p>
+        </div>
+
+        <pre><code>wsl.exe --shutdown</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 提示：</strong>
+            执行前请保存所有未保存的内容。重启后重新打开终端，再次执行 <code>sudo systemctl start gdm</code>。
+        </div>
+
+        <!-- 截图占位 -->
+        <div style="margin-top: 20px; padding: 14px 18px; background: #f0f6fe; border-left: 4px solid #0366d6; border-radius: 4px;">
+            <strong><i class="fas fa-images" style="color: #0366d6;"></i> 示例截图：</strong>
+            <p style="margin-top:6px;font-size:14px;color:#1f4a70;">
+                以下为成功配置后的桌面环境示例（GDM / GNOME / KDE / LXDE / Xfce）：
+            </p>
+            <ul style="padding-left:20px;margin-top:4px;font-size:14px;color:#1f4a70;">
+                <li><strong>GDM</strong> — 登录界面正常显示</li>
+                <li><strong>GNOME</strong> — 完整桌面环境运行</li>
+                <li><strong>KDE (Kubuntu)</strong> — Plasma 桌面流畅运行</li>
+                <li><strong>LXDE (Lubuntu)</strong> — 轻量级桌面环境</li>
+                <li><strong>Xfce (Xubuntu)</strong> — 稳定高效的桌面体验</li>
+            </ul>
+            <p class="footnote" style="margin-top:6px;">图片暂缺，请参考原文档或视频演示。</p>
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：
+            <a href="https://gist.github.com/tdcosta100/e28636c216515ca88d1f2e7a2e188912" target="_blank">tdcosta100 Gist</a> ｜
+            <a href="https://www.bilibili.com/video/BV1xTMqzQEdK/" target="_blank">Bilibili 视频演示</a> ｜
+            <a href="https://docs.qq.com/aio/DSXd3a1RmaFRTZXBP?p=glD9eD1y2nrLwQnYCahvK0" target="_blank">腾讯文档</a>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta" style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.0</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
