@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Itanium (IA64) 镜像下载清单</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .disclaimer {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-left: 6px solid red;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+        .disclaimer p {
+            color: red;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .arch-warning {
+            background: #fff5f5;
+            border: 2px solid #d73a49;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .arch-warning i {
+            color: #d73a49;
+            font-size: 24px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .arch-warning .warning-content {
+            color: #24292e;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .arch-warning .warning-content strong {
+            color: #d73a49;
+        }
+        .arch-warning .warning-content .highlight {
+            background: #fdedf0;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #a3485a;
+        }
+        .emulator-entry {
+            background: #f0f6ff;
+            border: 1px solid #b6cde6;
+            border-radius: 8px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .emulator-entry i {
+            color: #0366d6;
+            font-size: 20px;
+        }
+        .emulator-entry .entry-label {
+            font-weight: 600;
+            color: #024080;
+            font-size: 15px;
+        }
+        .emulator-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .emulator-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .emulator-entry .entry-desc {
+            font-size: 13px;
+            color: #1f4a70;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .group-desc {
+            background: #eef7ff;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 22px;
+            color: #024080;
+            line-height: 1.7;
+        }
+        .group-desc strong {
+            color: #002c5c;
+        }
+        .item {
+            padding: 13px 0;
+            border-bottom: 1px dashed #dddddd;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .ver-name {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 200px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .arch-tag {
+            font-size: 13px;
+            background: #f0e6ff;
+            color: #6a1b9a;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #ce93d8;
+        }
+        .itanium-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .itanium-tag.itanium1 {
+            background: #fff3e0;
+            color: #b84b00;
+            border: 1px solid #e6c9a8;
+        }
+        .itanium-tag.itanium2 {
+            background: #e3f0fa;
+            color: #1f4a70;
+            border: 1px solid #9fc3e0;
+        }
+        .itanium-tag.both {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .edition-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .lang-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .sku-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            background: #e8f4ff;
+            color: #035fc9;
+            border: 1px solid #b6cde6;
+        }
+        .version-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .version-status.retail {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .version-status.beta {
+            background: #fff5f5;
+            color: #d73a49;
+            border: 1px solid #f5c2cc;
+        }
+        .download-btn {
+            padding: 4px 14px;
+            background: #0366d6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .download-btn:hover {
+            background: #0250b3;
+        }
+        .full-filename {
+            font-size: 13px;
+            color: #22863a;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .full-filename i {
+            color: #22863a;
+            font-size: 13px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .stage-badge {
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 10px;
+        }
+        .count-badge {
+            font-size: 13px;
+            color: #586069;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+        .sub-item {
+            padding-left: 24px;
+            border-left: 2px solid #e1e4e8;
+            margin-left: 4px;
+        }
+        .sub-item .item-row {
+            padding: 6px 0;
+        }
+        .sub-item .item-row:first-child {
+            padding-top: 0;
+        }
+        .sub-item .item-row:last-child {
+            padding-bottom: 0;
+        }
+        .build-header-row {
+            font-weight: 600;
+            color: #24292e;
+            padding-bottom: 4px;
+        }
+        .build-header-row .ver-name {
+            font-size: 15px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        @media (max-width: 700px) {
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .download-btn {
+                margin-left: 0;
+            }
+            .ver-name {
+                min-width: unset;
+                font-size: 14px;
+                word-break: break-all;
+            }
+            .sub-item {
+                padding-left: 12px;
+            }
+            .full-filename {
+                font-size: 12px;
+            }
+            .emulator-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .arch-warning {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <a href="https://df4d3110.github.io/" class="btn-back">← 返回首页</a>
+        <a href="https://df4d3110.github.io/system/wcos.html" class="btn-back">← wcos系统汇总页面</a>
+        <h1><i class="fas fa-microchip"></i>Windows Itanium (IA64) 镜像下载清单</h1>
+    </div>
+
+    <!-- IA64 架构警告 -->
+    <div class="arch-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="warning-content">
+            <strong>⚠️ 架构特别警告</strong>
+            <br>本页面所有资源均为 <strong>IA64（Itanium）架构</strong> 专用版本，<strong>无法在常见的 x86 / x64 / ARM 设备上直接运行</strong>。
+            <br>• 这些镜像需要 <span class="highlight">专用的 Itanium 仿真模拟器</span>（如 SKI）或 <span class="highlight">实体 Itanium 服务器</span> 才能启动；
+            <br>• 请勿尝试在普通 PC、虚拟机或常见模拟器中加载，否则将无法引导；
+            <br>• 如需在个人电脑上体验，请参考下方的 <strong>模拟器指南</strong>，使用专门为 Itanium 设计的仿真环境。
+        </div>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+        <p>⚠️ 仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
+    </div>
+
+    <!-- 模拟器入口 -->
+    <div class="emulator-entry">
+        <i class="fas fa-microchip"></i>
+        <span class="entry-label">📌 模拟器指南：</span>
+        <span class="entry-desc">在 WSL 中通过 IA64 仿真运行 Windows Itanium</span>
+        <a href="https://df4d3110.github.io/system/emulator/skiitanium.html" target="_blank">查看指南 →</a>
+    </div>
+
+    <div class="content-box">
+        <!-- 说明区域 -->
+        <div class="group-desc">
+            <strong>📖 说明：</strong>
+            <br>1. 所有资源为 Windows Itanium (IA64) 版本镜像，仅适配 <span style="background:#f0e6ff;color:#6a1b9a;padding:1px 8px;border-radius:3px;border:1px solid #ce93d8;">IA64</span> 架构；
+            <br>2. 包含 Windows XP 64-Bit Edition、Windows Server 2003 及 Windows Vista (Longhorn) 的 IA64 版本；
+            <br>3. <span style="background:#fff3e0;color:#b84b00;padding:1px 10px;border-radius:30px;border:1px solid #e6c9a8;font-weight:600;">Itanium</span> 标签表示该版本适用于 Itanium 1 处理器；
+            <br>4. <span style="background:#e3f0fa;color:#1f4a70;padding:1px 10px;border-radius:30px;border:1px solid #9fc3e0;font-weight:600;">Itanium 2</span> 标签表示该版本适用于 Itanium 2 处理器；
+            <br>5. <span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">两者兼容</span> 标签表示该版本同时兼容两种处理器世代；
+            <br>6. 版本状态：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">正式版</span> 与 <span style="background:#fff5f5;color:#d73a49;padding:1px 10px;border-radius:30px;border:1px solid #f5c2cc;font-weight:600;">测试版</span> 已区分标注；
+            <br>7. 所有资源仅供学习研究，请于下载后 24 小时内删除。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Windows XP 64-Bit Edition                                    -->
+        <!-- ============================================================ -->
+        <div class="section-title">
+            <i class="fab fa-windows"></i>Windows XP 64-Bit Edition Version 2002 | Windows Server 2003 For 64-bit Itanium-based Systems
+            <span class="stage-badge">IA64</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">5.1.2462.0.main.010315-1720</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Server Enterprise</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.1.2462.0.main.010315-1720_ia64fre_server-enterprise_retail_en-us.CD.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.2462.0.main.010315-1720_ia64fre_server-enterprise_retail_en-us.CD.zip
+            </div>
+
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">5.1.2600.0.xpclient.010817-1148</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status retail">正式版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.1.2600.0.xpclient.010817-1148_ia64fre_client-professional_retail_English-US.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.2600.0.xpclient.010817-1148_ia64fre_client-professional_retail_English-US.rar
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Windows Server 2003                                          -->
+        <!-- ============================================================ -->
+        <div class="section-title">
+            <i class="fas fa-server"></i>Windows XP 64-Bit Edition Version 2003 | Windows Server 2003 For 64-bit Itanium-based Systems
+            <span class="stage-badge">IA64</span>
+            <span class="count-badge">共 9 个</span>
+        </div>
+
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">5.1.3590.0.main.011110-1652</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Server Enterprise 评估版</span>
+                <span class="lang-tag">ja-JP</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.1.3590.0.main.011110-1652_ia64fre_server-enterprise_eval_ja-jp.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.3590.0.main.011110-1652_ia64fre_server-enterprise_eval_ja-jp.rar
+            </div>
+
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">5.2.3663.0.main.020715-1506</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag both">两者兼容</span>
+                <span class="edition-tag">Server Enterprise</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3663.0.main.020715-1506_ia64fre_server-enterprise_retail_en-us.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.2.3663.0.main.020715-1506_ia64fre_server-enterprise_retail_en-us.rar
+            </div>
+
+            <!-- Build 3787 分组 — 测试版（RTM候选） -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
+                <span class="ver-name">5.2.3787.0.srv03_rtm.030312-1801</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag both">两者兼容</span>
+                <span class="version-status beta">测试版</span>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3787.0.srv03_rtm.030312-1801_ia64fre_client-professional_retail_en-us.CD</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Client Professional</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3787.0.srv03_rtm.030312-1801_ia64fre_client-professional_retail_en-us.CD.zip">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3787.0.srv03_rtm.030312-1801_ia64fre_client-professional_retail_en-us.CD.zip
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-datacenter_retail_en-us.CD</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Server Datacenter</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-datacenter_retail_en-us.CD.zip">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-datacenter_retail_en-us.CD.zip
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-enterprise_retail_en-us.CD</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Server Enterprise</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-enterprise_retail_en-us.CD.zip">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3787.0.srv03_rtm.030312-1801_ia64fre_server-enterprise_retail_en-us.CD.zip
+                </div>
+            </div>
+
+            <!-- Build 3790 分组 — 正式版 RTM -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
+                <span class="ver-name">5.2.3790.0.srv03_rtm.030324-2048</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag both">两者兼容</span>
+                <span class="version-status retail">正式版</span>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3790.0.srv03_rtm.030324-2048_ia64fre_client-professional_retail_en-us</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Client Professional</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3790.0.srv03_rtm.030324-2048_ia64fre_client-professional_retail_en-us.rar">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3790.0.srv03_rtm.030324-2048_ia64fre_client-professional_retail_en-us.rar
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3790.0.srv03_rtm.030324-2048_ia64fre_server-enterprise_retail</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Server Enterprise</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3790.0.srv03_rtm.030324-2048_ia64fre_server-enterprise_retail.rar">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3790.0.srv03_rtm.030324-2048_ia64fre_server-enterprise_retail.rar
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Windows Vista (Longhorn)                                     -->
+        <!-- ============================================================ -->
+        <div class="section-title">
+            <i class="fas fa-code-branch"></i>Windows Vista (Longhorn)
+            <span class="stage-badge">IA64</span>
+            <span class="count-badge">共 2 个</span>
+        </div>
+
+        <div class="item">
+            <div class="item-row">
+                <span class="ver-name">6.0.4033.0.idx01.030730-1630</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/6.0.4033.0.idx01.030730-1630_ia64fre_client-professional_retail_en-us.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4033.0.idx01.030730-1630_ia64fre_client-professional_retail_en-us.rar
+            </div>
+
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">6.0.4067.0.idx01.040312-1730</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us.rar
+            </div>
+        </div>
+
+        <!-- 底部信息 -->
+        <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
+            <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; Windows Itanium (IA64)</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
