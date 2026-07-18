@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：在 WSL 中通过 IA64 仿真运行 Windows Itanium · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        /* 前置条件提示框 */
+        .prereq-box {
+            background: #f0f6ff;
+            border: 1px solid #b6cde6;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 12px 0 20px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .prereq-box i {
+            color: #0366d6;
+            font-size: 18px;
+        }
+        .prereq-box .prereq-label {
+            font-weight: 600;
+            color: #024080;
+        }
+        .prereq-box a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .prereq-box a:hover {
+            text-decoration: underline;
+        }
+        .prereq-box .prereq-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .prereq-box .prereq-links .link-tag {
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            color: #15406a;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .result-table thead th {
+            background: #f6f8fa;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .result-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .result-table tbody tr:nth-child(even) {
+            background: #fafcff;
+        }
+        .result-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .result-table .yes {
+            color: #28a745;
+        }
+        .result-table .no {
+            color: #d73a49;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .result-table {
+                font-size: 12px;
+            }
+            .result-table thead th,
+            .result-table tbody td {
+                padding: 6px 8px;
+            }
+            .prereq-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-microchip"></i>文档：在 WSL 中通过 IA64 仿真运行 Windows Itanium</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 使用 SKI 仿真器在 WSL 中运行 Windows Itanium 版本
+            <span class="badge">IA64</span>
+            <span class="badge">WSL</span>
+            <span class="badge warning">⚠️ 性能极低</span>
+            <span class="badge">Windows 10</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 前置条件：WSL 图形界面配置 -->
+        <div class="prereq-box">
+            <i class="fas fa-info-circle"></i>
+            <span class="prereq-label">📌 前置条件：</span>
+            <span>在开始之前，请先完成 WSL 图形界面配置：</span>
+            <div class="prereq-links">
+                <a href="https://df4d3110.github.io/system/emulator/wsl/w10.html" class="link-tag">Windows 10 教程</a>
+                <a href="https://df4d3110.github.io/system/emulator/wsl/w11.html" class="link-tag">Windows 11 教程</a>
+            </div>
+        </div>
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare-iso">1. 准备安装镜像</a></li>
+                <li><a href="#create-disk">2. 创建虚拟磁盘</a></li>
+                <li><a href="#create-nvram">3. 创建 NVRAM</a></li>
+                <li><a href="#run-ski">4. 运行 SKI 仿真器</a></li>
+                <li><a href="#notes">5. 注意事项</a></li>
+                <li><a href="#troubleshooting">6. 故障排除</a></li>
+                <li><a href="#results">7. 运行结果参考</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备安装镜像                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare-iso"><i class="fas fa-cd"></i>准备安装镜像</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 准备 ISO 安装镜像</strong>
+            <p style="margin-top:6px;">首先，准备好 Windows Itanium 的安装 ISO 镜像。假设我们准备的 ISO 位于 Windows 宿主机中：</p>
+        </div>
+
+        <pre><code>D:\6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us-LB1PIFRE_EN.iso</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 路径说明：</strong>
+            在 WSL 中，Windows 的盘符会挂载到 <code>/mnt/</code> 目录下。例如 <code>D:\</code> 盘对应 <code>/mnt/d/</code>。
+            因此上述 ISO 在 WSL 中的路径为：<br>
+            <code>/mnt/d/6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us-LB1PIFRE_EN.iso</code>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 创建虚拟磁盘                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="create-disk"><i class="fas fa-hdd"></i>创建虚拟磁盘</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 创建 RAW 磁盘镜像</strong>
+            <p style="margin-top:6px;">使用 <code>dd</code> 命令创建一个大于等于 4GB 的 RAW 磁盘镜像作为虚拟硬盘：</p>
+        </div>
+
+        <pre><code>dd if=/dev/zero of=&lt;path-to-raw-img&gt; bs=1M count=&lt;size-in-mb&gt;</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 参数说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>if=/dev/zero</code> — 输入文件为零设备，生成全零数据</li>
+                <li><code>of=&lt;path-to-raw-img&gt;</code> — 输出文件路径，即虚拟磁盘文件</li>
+                <li><code>bs=1M</code> — 每次写入 1MB 数据块</li>
+                <li><code>count=&lt;size-in-mb&gt;</code> — 磁盘大小（MB），建议至少 4096（4GB）</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 示例：</strong>
+            <p style="margin-top:6px;">创建一个 8GB 的虚拟磁盘，存放在 <code>/mnt/d/ski-zx2000/ia64.img</code>：</p>
+        </div>
+
+        <pre><code>dd if=/dev/zero of=/mnt/d/ski-zx2000/ia64.img bs=1M count=8192</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 3. 创建 NVRAM                                                 -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="create-nvram"><i class="fas fa-memory"></i>创建 NVRAM</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 生成 NVRAM 镜像</strong>
+            <p style="margin-top:6px;">进入 SKI 仿真器所在目录，使用 <code>mknvram</code> 工具创建 NVRAM 镜像文件：</p>
+        </div>
+
+        <pre><code>./mknvram -o nvram.bin</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            NVRAM（非易失性随机存取存储器）用于存储 UEFI 固件设置，仿真器需要此文件来模拟 Itanium 系统的启动环境。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 运行 SKI 仿真器                                            -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="run-ski"><i class="fas fa-play"></i>运行 SKI 仿真器</h2>
+
+        <div class="warning-box">
+            <i class="fas fa-clock"></i> 运行速度可能非常慢！有用户反馈安装耗时超过 <strong>24 小时</strong>，请做好心理准备。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 基本运行命令</strong>
+            <p style="margin-top:6px;">使用 <code>bski</code> 启动仿真器，在 ZX2000 模式下运行：</p>
+        </div>
+
+        <pre><code>./bski -zx2000 firmware.bin -nvram nvram.bin -zx2000mem &lt;memory-size-in-mb&gt; -cdrom &lt;path-to-iso&gt; -hd &lt;path-to-raw-img&gt;</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 参数说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>-zx2000</code> — 使用 ZX2000 模式（Itanium 服务器平台模拟）</li>
+                <li><code>firmware.bin</code> — 固件文件路径</li>
+                <li><code>-nvram nvram.bin</code> — NVRAM 镜像路径</li>
+                <li><code>-zx2000mem</code> — 分配的内存大小（MB），建议 1024 以上</li>
+                <li><code>-cdrom</code> — ISO 镜像路径</li>
+                <li><code>-hd</code> — 虚拟硬盘路径</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 完整示例：</strong>
+            <p style="margin-top:6px;">假设 SKI 目录为 <code>/mnt/d/ski-zx2000</code>，ISO 位于 <code>/mnt/d/6.0.4067.0...iso</code>：</p>
+        </div>
+
+        <pre><code>./bski -zx2000 firmware.bin -nvram nvram.bin -zx2000mem 1024 -cdrom /mnt/d/6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us-LB1PIFRE_EN.iso -hd /mnt/d/ski-zx2000/ia64.img</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 5. 注意事项                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 性能警告：</strong>
+            IA-64 仿真效率极低，安装过程可能需要数小时甚至数天。已知有用户安装 Windows Itanium 耗时超过 24 小时，请耐心等待。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 磁盘空间：</strong>
+            确保宿主机有足够的磁盘空间存放虚拟磁盘文件（至少 4GB，推荐 8GB 以上）和 ISO 镜像。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 路径格式：</strong>
+            在 WSL 中访问 Windows 文件时，务必使用 <code>/mnt/&lt;盘符&gt;/</code> 格式，例如 <code>/mnt/d/</code>。盘符必须小写。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 故障排除                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 黑屏无法启动</strong>
+            <p style="margin-top:6px;">如果启动时出现黑屏无法启动：</p>
+            <ol style="margin-top:4px;padding-left:20px;">
+                <li>尝试删除 <code>nvram.bin.bmc</code> 文件</li>
+                <li>如果仍然无法启动，删除 <code>nvram.bin</code> 和 <code>nvram.bin.bmc</code> 两个文件，然后重新生成 NVRAM 镜像</li>
+            </ol>
+            <p style="margin-top:6px;font-size:13px;color:#586069;">删除 <code>.bmc</code> 文件是无害的，但删除 <code>nvram.bin</code> 会导致所有 EFI 设置丢失。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-save"></i> 重新生成 NVRAM</strong>
+            <p style="margin-top:6px;">如果 NVRAM 损坏或需要重置，重新运行以下命令：</p>
+        </div>
+
+        <pre><code>./mknvram -o nvram.bin</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-folder"></i> 检查文件完整性</strong>
+            <p style="margin-top:6px;">确保以下文件存在且完整：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li><code>bski</code> — 主仿真器程序（可执行）</li>
+                <li><code>mknvram</code> — NVRAM 生成工具（可执行）</li>
+                <li><code>firmware.bin</code> — IA64 固件文件</li>
+                <li><code>nvram.bin</code> — 生成的 NVRAM 镜像</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 运行结果参考                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="results"><i class="fas fa-chart-bar"></i>运行结果参考</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            以下为各 Build 在 IA-64 模拟环境下的运行结果，供参考。
+        </div>
+
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>版本 / Build</th>
+                    <th>完整 Build 标签</th>
+                    <th>运行结果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Windows XP 64-Bit Edition</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">5.1.2600.0.xpclient.010817-1148</td>
+                    <td class="no">❌ 不支持启动</td>
+                </tr>
+                <tr>
+                    <td>Windows Server 2003 RC1</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">5.2.3663.0.main.021113-1700</td>
+                    <td class="no">❌ 启动时蓝屏，错误代码 0x7B</td>
+                </tr>
+                <tr>
+                    <td>Windows Server 2003 RC2</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">5.2.3718.0.dnsrv.021112-1726</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                </tr>
+                <tr>
+                    <td>Windows Server 2003 RTM</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">5.2.3790.0.srv03_rtm.030324-2048</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                </tr>
+                <tr>
+                    <td>Windows Vista (Longhorn)</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">6.0.4033.0.winmain.030813-1826</td>
+                    <td class="no">❌ UI 安装阶段崩溃</td>
+                </tr>
+                <tr>
+                    <td>Windows Vista (Longhorn)</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">6.0.4067.0.idx01.040312-1730</td>
+                    <td class="no">❌ 蓝屏，错误代码未知 (0x??)</td>
+                </tr>
+                <tr>
+                    <td>Windows Vista (Longhorn)</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">6.0.4074.0.idx02.040419-1536</td>
+                    <td class="no">❌ UI 安装阶段崩溃</td>
+                </tr>
+                <tr>
+                    <td>Windows Server 2008 (早期开发版)</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px; color:#586069;">srv08 — 具体 Build 号不详</td>
+                    <td class="no">❌ 非常早期的启动问题</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note-box info" style="margin-top:8px;">
+            <strong><i class="fas fa-info-circle"></i> 注：</strong>
+            以上运行结果来自模拟环境实测，不同版本的模拟器配置（如内存分配、固件版本）可能导致结果有所不同。<br>
+            <span style="font-size:13px;color:#586069;">Build 标签来源：BetaWiki</span>
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：SKI 仿真器文档 ｜ 涉及 <a href="https://github.com/nufeng1999/wsl_XWin_Cygwin" target="_blank">nufeng1999/wsl_XWin_Cygwin</a> 的 WSL 图形界面方案
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.0 (Windows 10 版)</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
