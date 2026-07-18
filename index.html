@@ -154,6 +154,11 @@
             color: #a3485a;
             border-color: #f5c2cc;
         }
+        .link-item .link-tag.ia64 {
+            background: #f0e6ff;
+            color: #6a1b9a;
+            border-color: #ce93d8;
+        }
         /* 软件卡片网格 */
         .software-grid {
             display: grid;
@@ -291,6 +296,14 @@
                 <span class="link-tag">ARM32</span>
             </a>
 
+            <!-- ====== 新增：Windows Itanium 下载 ====== -->
+            <a href="https://DF4D3110.github.io/system/itanium.html" class="link-item">
+                <div class="link-title"><i class="fas fa-microchip"></i>Windows Itanium 下载</div>
+                <div class="link-desc">Windows Itanium 版本（IA64）镜像与模拟指南</div>
+                <span class="link-tag ia64">IA64</span>
+                <span class="link-tag new">新增</span>
+            </a>
+
             <a href="https://DF4D3110.github.io/system/wcos.html" class="link-item">
                 <div class="link-title"><i class="fas fa-cube"></i>基于 WCOS 内核的系统</div>
                 <div class="link-desc">Windows Core OS 内核系统下载汇总</div>
@@ -298,11 +311,11 @@
                 <span class="link-tag">AMD64</span>
             </a>
 
-            <a href="https://DF4D3110.github.io/emulator.html" class="link-item">
-                <div class="link-title"><i class="fas fa-microchip"></i>模拟器方案向导页</div>
-                <div class="link-desc">在 QEMU 中安装 Windows RT / Core OS</div>
+            <a href="https://DF4D3110.github.io/system/emulator/emulator.html" class="link-item">
+                <div class="link-title"><i class="fas fa-sitemap"></i>异架构系统模拟指南</div>
+                <div class="link-desc">在 QEMU / SKI 等模拟器中运行 ARM / IA64 系统</div>
                 <span class="link-tag guide">指南</span>
-                <span class="link-tag new">新增</span>
+                <span class="link-tag new">更新</span>
             </a>
 
             <a href="https://DF4D3110.github.io/software.html" class="link-item">
@@ -325,15 +338,15 @@
         <div class="section-title"><i class="fas fa-archive"></i>软件归档</div>
         <div class="software-grid">
 
-            <!-- 模拟器方案向导（置顶卡片） -->
+            <!-- 异架构系统模拟指南（更新） -->
             <div class="software-card">
-                <a href="https://DF4D3110.github.io/emulator.html" class="card-title">QEMU ARM 模拟器方案向导</a>
-                <div class="card-meta">QEMU v10.1.0 · ARM32 · 部署指南</div>
+                <a href="https://DF4D3110.github.io/system/emulator/emulator.html" class="card-title">异架构系统模拟指南</a>
+                <div class="card-meta">QEMU · SKI · ARM32 / IA64</div>
                 <div class="card-desc">
-                    在 QEMU 中安装 Windows RT（中期/后期）及 Windows Core OS 16236 的完整模拟部署方案向导。
+                    在模拟环境中运行跨架构 Windows 系统的完整指引，涵盖 QEMU（ARM）与 SKI（IA64）模拟方案。
                 </div>
                 <span class="card-tag guide">📖 指南</span>
-                <span class="card-tag new">✨ 新增</span>
+                <span class="card-tag new">✨ 更新</span>
             </div>
 
             <div class="software-card">
@@ -362,7 +375,7 @@
         <!-- 底部 -->
         <div class="footer-meta">
             <span><i class="fas fa-database"></i> 来源: 互联网收集 &nbsp;|&nbsp; DF4D3110</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-15</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
         </div>
 
     </div>
