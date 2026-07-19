@@ -151,6 +151,61 @@
         .toc ul li a:hover {
             text-decoration: underline;
         }
+        /* 新增：即用镜像区块 */
+        .ready-image-box {
+            background: #f0f6ff;
+            border: 1px solid #b6cde6;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+        .ready-image-box .box-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #024080;
+            margin-bottom: 6px;
+        }
+        .ready-image-box .box-title i {
+            color: #0366d6;
+            margin-right: 8px;
+        }
+        .ready-image-box .box-content {
+            font-size: 14px;
+            color: #24292e;
+            line-height: 1.7;
+        }
+        .ready-image-box .box-content code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        .ready-image-box .box-content .highlight {
+            background: #e3f0fa;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1f4a70;
+        }
+        .ready-image-box .box-content .tag {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 1px 10px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            color: #15406a;
+        }
+        .ready-image-box .box-content a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .ready-image-box .box-content a:hover {
+            text-decoration: underline;
+        }
+        .ready-image-box .box-content .warning-text {
+            color: #d73a49;
+        }
         .prereq-box {
             background: #f0f6ff;
             border: 1px solid #b6cde6;
@@ -323,6 +378,41 @@
         .result-table .no {
             color: #d73a49;
         }
+        .subsection-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+        }
+        .subsection-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .boot-repair-steps {
+            counter-reset: step;
+            padding-left: 0;
+            list-style: none;
+        }
+        .boot-repair-steps li {
+            counter-increment: step;
+            margin-bottom: 6px;
+            padding-left: 28px;
+            position: relative;
+        }
+        .boot-repair-steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0366d6;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+        }
         @media (max-width: 700px) {
             .toc ul li {
                 display: block;
@@ -347,6 +437,9 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .ready-image-box {
+                padding: 12px 16px;
+            }
         }
     </style>
 </head>
@@ -369,7 +462,7 @@
         </div>
     </div>
 
-    <!-- ====== 系统下载入口（放在头部下方） ====== -->
+    <!-- 系统下载入口 -->
     <div class="download-entry">
         <i class="fas fa-database"></i>
         <span class="entry-label">📦 系统镜像下载：</span>
@@ -394,6 +487,7 @@
         <div class="toc">
             <strong><i class="fas fa-list"></i> 目录</strong>
             <ul>
+                <li><a href="#ready-image">0. 即用镜像（快捷方案）</a></li>
                 <li><a href="#prepare-iso">1. 准备安装镜像</a></li>
                 <li><a href="#create-disk">2. 创建虚拟磁盘</a></li>
                 <li><a href="#create-nvram">3. 创建 NVRAM</a></li>
@@ -401,7 +495,31 @@
                 <li><a href="#notes">5. 注意事项</a></li>
                 <li><a href="#troubleshooting">6. 故障排除</a></li>
                 <li><a href="#results">7. 运行结果参考</a></li>
+                <li><a href="#boot-repair">8. Windows IA64 引导修复</a></li>
             </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 0. 即用镜像（快捷方案）                                       -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="ready-image"><i class="fas fa-rocket"></i>即用镜像（快捷方案）</h2>
+
+        <div class="ready-image-box">
+            <div class="box-title"><i class="fas fa-download"></i>预装镜像 (Windows Server 2003 RTM)</div>
+            <div class="box-content">
+                <p>此镜像为 <strong>5.2.3790.0.srv03_rtm.030324-2048</strong> 的已安装版本，可直接进入桌面，省去漫长的安装等待。</p>
+                <ul style="margin-top:6px;padding-left:20px;">
+                    <li><strong>⏱ 安装耗时参考：</strong>本人测试安装时间约 <span class="highlight">16.5 小时</span>，此镜像供不想自行安装的用户使用。</li>
+                    <li><strong>📦 镜像文件：</strong><a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/archivesite/ski-zx2000.zip" target="_blank">ski-zx2000.zip</a></li>
+                    <li><strong>🛠 部署方式：</strong>需要使用 <span class="highlight">DiskGenius</span> 释放镜像至 <span class="highlight">8GB</span> 的 <code>.img</code> 虚拟磁盘文件。</li>
+                    <li><strong>📋 包含内容：</strong>系统已安装完毕，解压后可直接用于 SKI 仿真器启动。</li>
+                    <li><strong>⚠️ 注意：</strong>此镜像为 <span class="warning-text">预装版本</span>，释放后需根据实际环境调整仿真器配置。</li>
+                </ul>
+                <div style="margin-top:8px;">
+                    <span class="tag">Windows Server 2003 RTM</span>
+                    <span class="tag">IA64</span>
+                </div>
+            </div>
         </div>
 
         <!-- ============================================================ -->
@@ -625,18 +743,210 @@
             <span style="font-size:13px;color:#586069;">Build 标签来源：BetaWiki</span>
         </div>
 
-        <div class="source-link">
+        <!-- ============================================================ -->
+        <!-- 8. Windows IA64 引导修复                                      -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="boot-repair"><i class="fas fa-wrench"></i>Windows IA64 引导修复</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 适用场景：</strong>
+            当 Windows Itanium 系统无法正常启动、引导项丢失或损坏时，可通过以下步骤修复 EFI 引导。
+        </div>
+
+        <!-- 8.1 添加 Windows 引导项 -->
+        <h3 class="subsection-title"><i class="fas fa-plus-circle"></i> 8.1 添加 Windows 引导项</h3>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            如果 Windows 引导项从 EFI 启动菜单中丢失，需要从 EFI Shell 手动导入。
+        </div>
+
+        <ol class="boot-repair-steps" style="padding-left:0;list-style:none;">
+            <li style="margin-bottom:12px;">
+                <strong>步骤 1：进入 EFI Shell</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">在系统启动时进入 EFI Boot Manager，选择 <code>EFI Shell</code> 进入命令行环境。</p>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 2：定位 EFI 系统分区</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">使用 <code>map -r</code> 命令列出所有可用的文件系统，找到包含 Windows 引导文件的 EFI 分区（通常为 <code>fs0:</code> 或 <code>fs1:</code>）。</p>
+                <pre style="margin-top:6px;"><code>Shell> map -r
+Device mapping table
+fs0 : Acpi(...)/Pci(...)/Scsi(...)/HD(Part1,...)
+fs1 : Acpi(...)/Pci(...)/Scsi(...)/HD(Part1,...)</code></pre>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 3：进入 Windows 引导分区</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">切换到 Windows 所在的 EFI 系统分区：</p>
+                <pre style="margin-top:6px;"><code>Shell> fs0:
+fs0:\></code></pre>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 4：确认 Windows 引导文件存在</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">检查 <code>\EFI\Microsoft\WINNT50\</code> 目录下的引导文件：</p>
+                <pre style="margin-top:6px;"><code>fs0:\> ls EFI\Microsoft\WINNT50
+Directory of: fs0:\EFI\Microsoft\WINNT50
+09/18/03  11:58a  &lt;DIR&gt;    1,024
+09/18/03  11:58a  &lt;DIR&gt;    1,024
+12/18/03  08:16a         354  Boot0001
+1 File(s)       354 bytes
+2 Dir(s)</code></pre>
+                <div class="note-box info" style="margin-top:6px;">
+                    <strong><i class="fas fa-info-circle"></i> 注意：</strong>
+                    <code>Boot0001</code> 是 Windows 的引导选项文件，文件名可能因版本而异（如 <code>Boot00nn</code>）。
+                </div>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 5：导入 Windows 引导项</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">使用 <code>nvrboot.efi</code> 工具将 Windows 引导项导入到 NVRAM：</p>
+                <pre style="margin-top:6px;"><code>fs0:\> msutil\nvrboot
+
+NVRBoot: OS Boot Options Maintenance Tool [Version 5.2.3683]
+
+1.  SUSE SLES 10
+2.  HP-UX Primary Boot: 0/0/1/0/0.2.0 *
+3.  Windows Server 2003, Datacenter
+4.  EFI Shell [Built-in]
+* = Windows OS boot option
+
+(D)isplay  (M)odify  (C)opy  E(x)port  (I)mport  (E)rase  (P)ush  (H)elp  (Q)uit
+
+Select> I
+Enter IMPORT file path: \EFI\Microsoft\WINNT50\Boot0001
+Imported Boot Options from file: \EFI\Microsoft\WINNT50\Boot0001
+Press enter to continue</code></pre>
+                <div class="note-box info" style="margin-top:6px;">
+                    <strong><i class="fas fa-info-circle"></i> 参数说明：</strong>
+                    <ul style="padding-left:20px;margin-top:4px;">
+                        <li><code>I</code> — Import，导入引导选项</li>
+                        <li><code>文件路径</code> — Windows 引导文件在 EFI 分区中的完整路径</li>
+                    </ul>
+                </div>
+            </li>
+            <li style="margin-bottom:0;">
+                <strong>步骤 6：退出并重启</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">输入 <code>Q</code> 退出 <code>nvrboot</code> 工具，然后执行 <code>reset</code> 重启系统。</p>
+                <pre style="margin-top:6px;"><code>Select> Q
+Shell> reset</code></pre>
+            </li>
+        </ol>
+
+        <!-- 8.2 使用 bcfg 命令 -->
+        <h3 class="subsection-title"><i class="fas fa-terminal"></i> 8.2 使用 bcfg 命令添加引导项（备用方法）</h3>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            如果 <code>nvrboot</code> 工具不可用，可以使用 EFI Shell 内置的 <code>bcfg</code> 命令手动添加引导项。
+        </div>
+
+        <ol class="boot-repair-steps" style="padding-left:0;list-style:none;">
+            <li style="margin-bottom:12px;">
+                <strong>步骤 1：确认引导文件路径</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">在 EFI 系统分区中确认 Windows 引导加载器的完整路径：</p>
+                <pre style="margin-top:6px;"><code>fs0:\> ls \EFI\Microsoft\WINNT50\*.efi
+ia64ldr.efi</code></pre>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 2：使用 bcfg 添加引导项</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">将 Windows 引导加载器添加到引导选项列表：</p>
+                <pre style="margin-top:6px;"><code>Shell> bcfg boot add 1 \EFI\Microsoft\WINNT50\ia64ldr.efi "Windows Server 2003"</code></pre>
+                <div class="note-box info" style="margin-top:6px;">
+                    <strong><i class="fas fa-info-circle"></i> 参数说明：</strong>
+                    <ul style="padding-left:20px;margin-top:4px;">
+                        <li><code>1</code> — 引导项在列表中的位置</li>
+                        <li><code>\EFI\Microsoft\WINNT50\ia64ldr.efi</code> — 引导加载器路径</li>
+                        <li><code>"Windows Server 2003"</code> — 在 EFI Boot Manager 中显示的名称</li>
+                    </ul>
+                </div>
+            </li>
+            <li style="margin-bottom:12px;">
+                <strong>步骤 3：验证引导项</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">查看当前引导选项列表，确认 Windows 已添加：</p>
+                <pre style="margin-top:6px;"><code>Shell> bcfg boot dump
+Option 00: EFI Shell [Built-in]
+Option 01: Windows Server 2003
+Option 02: HP-UX Primary Boot: 0/0/1/0/0.2.0</code></pre>
+            </li>
+            <li style="margin-bottom:0;">
+                <strong>步骤 4：设置自动启动超时</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">设置引导超时时间，让系统自动引导：</p>
+                <pre style="margin-top:6px;"><code>Shell> autoboot on
+Shell> autoboot time 10</code></pre>
+            </li>
+        </ol>
+
+        <!-- 8.3 清除 NVRAM -->
+        <h3 class="subsection-title"><i class="fas fa-undo-alt"></i> 8.3 清除 NVRAM 重置</h3>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 警告：</strong>
+            此操作将清除所有 NVRAM 设置，包括所有引导选项、EFI 配置和密码。仅在无其他方案时使用。
+        </div>
+
+        <ol class="boot-repair-steps" style="padding-left:0;list-style:none;">
+            <li style="margin-bottom:12px;">
+                <strong>步骤 1：进入 EFI Shell</strong>
+                <p style="margin-top:4px;font-size:14px;color:#24292e;">重启系统并进入 EFI Shell。</p>
+            </li>
+            <li style="margin-bottom:0;">
+                <strong>步骤 2：执行 NVRAM 清除</strong>
+                <pre style="margin-top:6px;"><code>Shell> default clear
+Are you sure you want to clear all NVRAM settings? [y/N] y
+Shell> reset</code></pre>
+                <div class="note-box info" style="margin-top:6px;">
+                    <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+                    系统重启后，EFI NVRAM 将恢复出厂设置，需要重新配置引导项。
+                </div>
+            </li>
+        </ol>
+
+        <!-- 8.4 常见问题排查 -->
+        <h3 class="subsection-title"><i class="fas fa-bug"></i> 8.4 常见问题排查</h3>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 问题 1：无法找到 EFI 系统分区</strong>
+            <p style="margin-top:6px;">执行 <code>map -r</code> 后看不到任何 <code>fsX:</code> 设备：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查硬盘是否连接正常</li>
+                <li>确认硬盘包含 EFI 系统分区（FAT32 格式）</li>
+                <li>尝试 <code>map -r</code> 重新扫描设备</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 问题 2：引导文件缺失</strong>
+            <p style="margin-top:6px;"><code>\EFI\Microsoft\WINNT50\</code> 目录为空或不存在：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>从 Windows 安装介质复制 <code>ia64ldr.efi</code> 和 <code>Boot00nn</code> 文件</li>
+                <li>重新安装 Windows 以恢复引导文件</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 问题 3：引导项添加后仍无法启动</strong>
+            <p style="margin-top:6px;">添加引导项后选择 Windows 但无法进入系统：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查 <code>boot.ini</code> 或 <code>BCD</code> 配置是否正确</li>
+                <li>确认 Windows 系统盘是否包含完整的 <code>\Windows\System32</code> 目录</li>
+                <li>尝试使用 Windows 安装介质的修复功能</li>
+            </ul>
+        </div>
+
+        <div class="source-link" style="margin-top:16px;">
+            <i class="fas fa-link"></i> 参考来源：HP Integrity BL860c 用户服务指南 第 88-91 页 ｜ EFI Shell 命令参考
+        </div>
+
+        <div class="source-link" style="margin-top:8px;">
             <i class="fas fa-link"></i> 参考来源：SKI 仿真器文档 ｜ 涉及 <a href="https://github.com/nufeng1999/wsl_XWin_Cygwin" target="_blank">nufeng1999/wsl_XWin_Cygwin</a> 的 WSL 图形界面方案
         </div>
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.0 (Windows 10 版)</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-18</span>
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.2</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-20</span>
         </div>
     </div>
 </div>
 <!-- Font Awesome 图标库 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
 </body>
 </html>
