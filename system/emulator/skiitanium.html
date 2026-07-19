@@ -77,6 +77,45 @@
             border-color: #f5c2cc;
             color: #a3485a;
         }
+        /* 系统下载入口卡片 */
+        .download-entry {
+            background: #e6f7ef;
+            border: 1px solid #8ed4ba;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .download-entry i {
+            color: #0d6b4f;
+            font-size: 20px;
+        }
+        .download-entry .entry-label {
+            font-weight: 600;
+            color: #0d6b4f;
+            font-size: 15px;
+        }
+        .download-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .download-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .download-entry .entry-desc {
+            font-size: 13px;
+            color: #0d6b4f;
+        }
         .content-box {
             background: #fff;
             border: 1px solid #e1e4e8;
@@ -112,7 +151,6 @@
         .toc ul li a:hover {
             text-decoration: underline;
         }
-        /* 前置条件提示框 */
         .prereq-box {
             background: #f0f6ff;
             border: 1px solid #b6cde6;
@@ -305,6 +343,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .download-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -325,6 +367,14 @@
             <span class="badge warning">⚠️ 性能极低</span>
             <span class="badge">Windows 10</span>
         </div>
+    </div>
+
+    <!-- ====== 系统下载入口（放在头部下方） ====== -->
+    <div class="download-entry">
+        <i class="fas fa-database"></i>
+        <span class="entry-label">📦 系统镜像下载：</span>
+        <span class="entry-desc">获取 Windows Itanium (IA64) 系统镜像</span>
+        <a href="https://df4d3110.github.io/system/itanium.html" target="_blank">前往下载 →</a>
     </div>
 
     <div class="content-box">
