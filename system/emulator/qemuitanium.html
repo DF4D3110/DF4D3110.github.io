@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：基于 QEMU 的 IA64 模拟 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .param-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .param-table .cmd {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .result-table thead th {
+            background: #f6f8fa;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .result-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .result-table tbody tr:nth-child(even) {
+            background: #fafcff;
+        }
+        .result-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .result-table .yes {
+            color: #28a745;
+        }
+        .result-table .no {
+            color: #d73a49;
+        }
+        .download-link {
+            display: inline-block;
+            padding: 4px 14px;
+            background: #0366d6;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 13px;
+            text-decoration: none;
+            margin-left: 8px;
+        }
+        .download-link:hover {
+            background: #0250b3;
+        }
+        .compat-warning {
+            background: #fdedf0;
+            border: 2px solid #d73a49;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #a3485a;
+        }
+        .compat-warning i {
+            color: #d73a49;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .compat-warning strong {
+            color: #d73a49;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .param-table,
+            .result-table {
+                font-size: 12px;
+            }
+            .param-table thead th,
+            .param-table tbody td,
+            .result-table thead th,
+            .result-table tbody td {
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-microchip"></i>文档：基于 QEMU 的 IA64 模拟</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 使用 QEMU 在 Windows 中运行 Itanium 系统
+            <span class="badge">IA64</span>
+            <span class="badge">QEMU</span>
+            <span class="badge warning">⚠️ 性能较低</span>
+            <span class="badge">Windows</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare">1. 准备工作</a></li>
+                <li><a href="#command">2. 启动命令</a></li>
+                <li><a href="#params">3. 参数说明</a></li>
+                <li><a href="#disk">4. 虚拟磁盘创建</a></li>
+                <li><a href="#notes">5. 注意事项</a></li>
+                <li><a href="#troubleshooting">6. 故障排除</a></li>
+                <li><a href="#results">7. 运行结果参考</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 重要提示：</strong>
+            必须将 <code>qemu-system-ia64.EXE</code> 放到 <strong>完整版本的 QEMU 安装目录</strong>（即包含 <code>qemu-img.exe</code>、<code>qemu-system-x86_64.exe</code> 等文件的目录）中运行，以避免因缺少依赖文件导致的运行错误。
+        </div>
+
+        <div class="compat-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>⚠️ 兼容性警告：</strong>
+            SKI 仿真器中已经启动到桌面的系统 <strong>不可直接迁移到 QEMU 运行</strong>，否则会导致系统启动崩溃。这是因为两种仿真器的硬件抽象层（HAL）和固件接口存在根本性差异。如需在 QEMU 中运行，请使用 QEMU 环境下的全新安装。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 所需文件：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>
+                    <strong>qemu-system-ia64.exe</strong>
+                    <a class="download-link" target="_blank" href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/qemu-system-ia64.exe">下载</a>
+                </li>
+                <li>
+                    <strong>ia64-firmware.bin</strong>（IA64 UEFI 固件）
+                    <a class="download-link" target="_blank" href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/ia64-firmware.bin">下载</a>
+                </li>
+                <li><strong>完整 QEMU 环境</strong> — 建议使用官方 QEMU for Windows 包，将 <code>qemu-system-ia64.EXE</code> 放入其安装目录</li>
+                <li><strong>安装 ISO 镜像</strong> — Windows Itanium 或 Linux IA64 的安装介质</li>
+                <li><strong>NVRAM 文件</strong> — 用于存储 UEFI 设置，如 <code>nvram.bin</code>（运行后自动生成）</li>
+            </ul>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 目录结构示例：</strong>
+            <pre style="margin-top:6px;">D:\QEMU\
+├── qemu-system-ia64.EXE      ← 放入 QEMU 主目录
+├── qemu-img.exe              ← 已有
+├── qemu-system-x86_64.exe    ← 已有
+├── UEFI\
+│   └── ia64-firmware.bin
+├── Disc01.iso
+└── ia64.vhd</pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 启动命令                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="command"><i class="fas fa-terminal"></i>启动命令</h2>
+
+        <div class="warning-box">
+            <i class="fas fa-clock"></i> IA64 模拟性能较低，启动可能需要较长时间，请耐心等待。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 完整命令（分行便于查看参数）：</strong>
+        </div>
+
+        <pre><code>D:\QEMU\qemu-system-ia64.EXE ^
+    -machine ia64-vpc,i8042=off,nvram=nvram.bin ^
+    -bios D:\QEMU\UEFI\ia64-firmware.bin ^
+    -drive file="D:\Disc01.iso",media=cdrom,format=raw,readonly=on ^
+    -accel tcg,thread=multi ^
+    -smp 4 ^
+    -m 4G ^
+    -nic user,model=e1000 ^
+    -drive file=D:\ia64.vhd,format=vpc ^
+    -display gtk</code></pre>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 简化版命令（便于复制）：</strong>
+        </div>
+
+        <pre><code>qemu-system-ia64.EXE -machine ia64-vpc,i8042=off,nvram=nvram.bin -bios ia64-firmware.bin -drive file="install.iso",media=cdrom,format=raw,readonly=on -accel tcg,thread=multi -smp 4 -m 4G -nic user,model=e1000 -drive file=ia64.vhd,format=vpc -display gtk</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 3. 参数说明                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="params"><i class="fas fa-cog"></i>参数说明</h2>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:25%;">参数</th>
+                    <th style="width:35%;">值</th>
+                    <th style="width:40%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cmd">-machine</td>
+                    <td><code>ia64-vpc,i8042=off,nvram=nvram.bin</code></td>
+                    <td>指定机器类型为 <code>ia64-vpc</code>，禁用 i8042 键盘控制器，指定 NVRAM 文件</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-bios</td>
+                    <td><code>D:\QEMU\UEFI\ia64-firmware.bin</code></td>
+                    <td>指定 IA64 UEFI 固件文件路径</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-drive (CD-ROM)</td>
+                    <td><code>file="D:\Disc01.iso",media=cdrom,format=raw,readonly=on</code></td>
+                    <td>挂载 ISO 镜像为虚拟光驱，只读</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-accel</td>
+                    <td><code>tcg,thread=multi</code></td>
+                    <td>使用 TCG 软件模拟，启用多线程加速</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-smp</td>
+                    <td><code>4</code></td>
+                    <td>分配 4 个 CPU 核心（可根据实际调整）</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-m</td>
+                    <td><code>4G</code></td>
+                    <td>分配 4GB 内存</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-nic</td>
+                    <td><code>user,model=e1000</code></td>
+                    <td>使用用户模式网络，模拟 Intel e1000 网卡</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-drive (HDD)</td>
+                    <td><code>file=D:\ia64.vhd,format=vpc</code></td>
+                    <td>挂载虚拟硬盘（VHD 格式）</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-display</td>
+                    <td><code>gtk</code></td>
+                    <td>使用 GTK 图形界面显示</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 4. 虚拟磁盘创建                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="disk"><i class="fas fa-hdd"></i>虚拟磁盘创建</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 使用 QEMU 创建 VHD 格式磁盘：</strong>
+        </div>
+
+        <pre><code>D:\>D:\QEMU\qemu-img.exe create -f vpc D:\ia64.vhd 20G</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>-f vpc</code> — 指定 VHD 格式（Virtual PC 兼容）</li>
+                <li><code>D:\ia64.vhd</code> — 磁盘文件路径</li>
+                <li><code>20G</code> — 磁盘大小（可根据需要调整）</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 注意事项                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 性能警告：</strong>
+            TCG 软件模拟效率较低，IA64 模拟尤为明显。启动和安装过程可能需要较长时间，请耐心等待。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 固件兼容性：</strong>
+            确保使用的 UEFI 固件与 QEMU 版本兼容。如遇到启动问题，尝试更换固件版本。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> NVRAM 文件：</strong>
+            NVRAM 文件用于存储 UEFI 设置。如启动异常，可删除并重新生成该文件。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 网络配置：</strong>
+            使用 <code>-nic user,model=e1000</code> 可让虚拟机通过宿主机的网络访问外部网络。如需桥接网络，可改用 <code>-nic tap,model=e1000</code>。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 故障排除                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 黑屏无法启动</strong>
+            <p style="margin-top:6px;">尝试以下操作：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查 <code>-bios</code> 路径是否正确指向有效的 UEFI 固件</li>
+                <li>删除 NVRAM 文件（<code>nvram.bin</code>）后重新启动</li>
+                <li>尝试更换 <code>-machine</code> 参数，如 <code>-machine virt</code></li>
+                <li>确认 <code>qemu-system-ia64.EXE</code> 已放入完整 QEMU 目录</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 模拟速度极慢</strong>
+            <p style="margin-top:6px;">优化建议：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>减少 <code>-smp</code> 核心数（如 2 核）</li>
+                <li>减少 <code>-m</code> 内存分配（如 2G）</li>
+                <li>确保宿主机有足够的 CPU 资源</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 无法从 ISO 引导</strong>
+            <p style="margin-top:6px;">检查：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>ISO 文件是否完整且可引导</li>
+                <li>是否支持 IA64 架构</li>
+                <li>尝试在 UEFI 固件中手动选择引导设备</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 运行结果参考                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="results"><i class="fas fa-chart-bar"></i>运行结果参考</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            以下为各 Build 在 QEMU IA64 模拟环境下的运行结果，供参考。
+        </div>
+
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>版本 / Build</th>
+                    <th>运行结果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows XP 64-Bit Edition Version 2002</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RC1</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RC2</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">5.2.3787.0.srv03_rtm.030312-1801</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RTM</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4033</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4067</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4074</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2008 (早期开发版)</td>
+                    <td class="no">❌ 无法进入 i386 安装</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note-box info" style="margin-top:8px;">
+            <strong><i class="fas fa-info-circle"></i> 注：</strong>
+            <span style="font-size:13px;color:#586069;">以上运行结果来自 QEMU IA64 模拟环境实测，不同版本的 QEMU 和固件配置可能导致结果有所不同。</span>
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/syunnPC/qemu-system-ia64" target="_blank">syunnPC/qemu-system-ia64</a> ｜ QEMU 官方文档
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.0</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-20</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
