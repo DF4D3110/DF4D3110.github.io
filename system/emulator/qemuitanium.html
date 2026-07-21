@@ -340,6 +340,16 @@
         .compat-warning strong {
             color: #d73a49;
         }
+        .highlight-box {
+            background: #e6f7ef;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .highlight-box strong {
+            color: #0d6b4f;
+        }
         @media (max-width: 700px) {
             .toc ul li {
                 display: block;
@@ -403,9 +413,10 @@
                 <li><a href="#command">2. 启动命令</a></li>
                 <li><a href="#params">3. 参数说明</a></li>
                 <li><a href="#disk">4. 虚拟磁盘创建</a></li>
-                <li><a href="#notes">5. 注意事项</a></li>
-                <li><a href="#troubleshooting">6. 故障排除</a></li>
-                <li><a href="#results">7. 运行结果参考</a></li>
+                <li><a href="#server2008">5. Windows Server 2008 R2 特别说明</a></li>
+                <li><a href="#notes">6. 注意事项</a></li>
+                <li><a href="#troubleshooting">7. 故障排除</a></li>
+                <li><a href="#results">8. 运行结果参考</a></li>
             </ul>
         </div>
 
@@ -414,9 +425,33 @@
         <!-- ============================================================ -->
         <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
 
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> QEMU 下载（由 ZZPPAP 编译）：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>
+                    <strong>x86_64 版本：</strong>
+                    <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/QEMU-SYSTEM-IA64_x86_64.7z" target="_blank">QEMU-SYSTEM-IA64_x86_64.7z</a>
+                    <span style="display:inline-block; font-size:12px; background:#e6f7ef; color:#0d6b4f; padding:0 8px; border-radius:12px; margin-left:6px;">适用于 x86_64 宿主机</span>
+                </li>
+                <li style="margin-top:4px;">
+                    <strong>AArch64 版本：</strong>
+                    <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/QEMU-SYSTEM-IA64_AARCH64.7z" target="_blank">QEMU-SYSTEM-IA64_AARCH64.7z</a>
+                    <span style="display:inline-block; font-size:12px; background:#fdedf0; color:#a3485a; padding:0 8px; border-radius:12px; margin-left:6px; font-weight:600;">⚠️ 仅限 ARM64 宿主机</span>
+                </li>
+            </ul>
+            <div style="margin-top:8px; padding:8px 12px; background:#fff5f5; border-radius:4px; border-left:3px solid #d73a49;">
+                <strong style="color:#d73a49;">⚠️ 平台限制说明：</strong>
+                <span style="font-size:14px; color:#24292e;">
+                    <strong>AArch64 版本</strong> 只能在 <strong>ARM64 架构</strong> 的宿主机（如 Apple M1/M2/M3、ARM64 Windows 设备、ARM Linux 等）上运行。
+                    在 x86_64 宿主机上运行 AArch64 版本的 QEMU 会因指令集不兼容而失败，请务必根据您的宿主机架构下载对应版本。
+                </span>
+            </div>
+            <p style="margin-top:6px;">以上版本由 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a> 编译，感谢其贡献。</p>
+        </div>
+
         <div class="note-box warning">
             <strong><i class="fas fa-exclamation-circle"></i> 重要提示：</strong>
-            必须将 <code>qemu-system-ia64.EXE</code> 放到 <strong>完整版本的 QEMU 安装目录</strong>（即包含 <code>qemu-img.exe</code>、<code>qemu-system-x86_64.exe</code> 等文件的目录）中运行，以避免因缺少依赖文件导致的运行错误。
+            下载的压缩包已包含 <code>qemu-system-ia64.EXE</code> 及其所有依赖库，解压后可直接使用，无需额外配置。
         </div>
 
         <div class="compat-warning">
@@ -426,30 +461,27 @@
         </div>
 
         <div class="note-box">
-            <strong><i class="fas fa-file"></i> 所需文件：</strong>
+            <strong><i class="fas fa-file"></i> 本机文件列表（示例）：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
-                <li>
-                    <strong>qemu-system-ia64.exe</strong>
-                </li>
-                <li>
-                    <strong>ia64-firmware.bin</strong>（IA64 UEFI 固件）
-                </li>
-                <li><strong>完整 QEMU 环境</strong> — 建议使用官方 QEMU for Windows 包，将 <code>qemu-system-ia64.EXE</code> 放入其安装目录</li>
-                <li><strong>安装 ISO 镜像</strong> — Windows Itanium 或 Linux IA64 的安装介质</li>
-                <li><strong>NVRAM 文件</strong> — 用于存储 UEFI 设置，如 <code>nvram.bin</code>（运行后自动生成）</li>
+                <li><code>qemu-system-ia64.exe</code> — 主程序（约 47.3 MB）</li>
+                <li><code>ia64-firmware.bin</code> — IA64 UEFI 固件（约 810 KB）</li>
+                <li><code>qemu-img.exe</code> — 磁盘映像工具（约 12.9 MB）</li>
+                <li><code>SDL2.dll</code> 及众多 <code>lib*.dll</code> — 运行时依赖库</li>
             </ul>
         </div>
 
-        <div class="note-box info">
-            <strong><i class="fas fa-info-circle"></i> 目录结构示例：</strong>
-            <pre style="margin-top:6px;">D:\QEMU\
-├── qemu-system-ia64.EXE      ← 放入 QEMU 主目录
-├── qemu-img.exe              ← 已有
-├── qemu-system-x86_64.exe    ← 已有
-├── UEFI\
-│   └── ia64-firmware.bin
-├── Disc01.iso
-└── ia64.vhd</pre>
+        <div class="note-box">
+            <strong><i class="fas fa-folder-open"></i> 目录结构示例：</strong>
+            <pre style="margin-top:6px;">D:\QEMU-SYSTEM-IA64_x86_64\
+├── qemu-system-ia64.exe
+├── qemu-img.exe
+├── ia64-firmware.bin
+├── SDL2.dll
+├── lib*.dll          （大量依赖库）
+├── lib\              （额外库目录）
+├── share\            （共享资源）
+└── run.bat           （可选启动脚本）</pre>
+            <p style="margin-top:6px;">解压后直接将 <code>ia64-firmware.bin</code> 和系统 ISO 放在同一目录即可。</p>
         </div>
 
         <!-- ============================================================ -->
@@ -461,26 +493,47 @@
             <i class="fas fa-clock"></i> IA64 模拟性能较低，启动可能需要较长时间，请耐心等待。
         </div>
 
+        <!-- 通用命令 -->
         <div class="note-box">
-            <strong><i class="fas fa-terminal"></i> 完整命令（分行便于查看参数）：</strong>
+            <strong><i class="fas fa-terminal"></i> 通用启动命令（分行便于查看参数）：</strong>
         </div>
-
-        <pre><code>D:\QEMU\qemu-system-ia64.EXE ^
+        <pre><code>qemu-system-ia64.exe ^
     -machine ia64-vpc,i8042=off,nvram=nvram.bin ^
-    -bios D:\QEMU\UEFI\ia64-firmware.bin ^
-    -drive file="D:\Disc01.iso",media=cdrom,format=raw,readonly=on ^
+    -bios ia64-firmware.bin ^
+    -drive file="install.iso",media=cdrom,format=raw,readonly=on ^
     -accel tcg,thread=multi ^
     -smp 4 ^
     -m 4G ^
     -nic user,model=e1000 ^
-    -drive file=D:\ia64.vhd,format=vpc ^
+    -drive file=ia64.vhd,format=vpc ^
     -display gtk</code></pre>
+
+        <!-- Windows Server 2008 R2 专用命令 -->
+        <div class="highlight-box">
+            <strong><i class="fas fa-windows"></i> Windows Server 2008 R2 推荐命令：</strong>
+            <p style="margin-top:6px;">针对 Windows Server 2008 R2 (Build 7000)，<strong>必须</strong>添加 <code>if=ide</code> 参数将磁盘接口设置为 IDE，否则系统会因无法识别 SCSI 控制器而蓝屏。RTC 时间参数为可选，仅在遇到时间相关校验问题时使用。</p>
+        </div>
+        <pre><code>qemu-system-ia64.exe ^
+    -machine ia64-vpc,i8042=off,nvram=nvram.bin ^
+    -bios ia64-firmware.bin ^
+    -accel tcg,thread=multi ^
+    -smp 4 ^
+    -m 4G ^
+    -nic user,model=e1000 ^
+    -drive file=ia64.vhd,if=ide,format=vpc ^
+    -drive file="install.iso",media=cdrom,format=raw,readonly=on ^
+    -display gtk</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 可选 RTC 参数（仅在需要时添加）：</strong>
+            <p style="margin-top:4px;">如遇到与系统激活或时间校验相关的问题（例如“系统时间异常”提示），可在命令末尾添加：</p>
+            <pre style="margin-top:4px;"><code>-rtc base=2008-12-27,clock=vm</code></pre>
+        </div>
 
         <div class="note-box success">
             <strong><i class="fas fa-check-circle"></i> 简化版命令（便于复制）：</strong>
         </div>
-
-        <pre><code>qemu-system-ia64.EXE -machine ia64-vpc,i8042=off,nvram=nvram.bin -bios ia64-firmware.bin -drive file="install.iso",media=cdrom,format=raw,readonly=on -accel tcg,thread=multi -smp 4 -m 4G -nic user,model=e1000 -drive file=ia64.vhd,format=vpc -display gtk</code></pre>
+        <pre><code>qemu-system-ia64.exe -machine ia64-vpc,i8042=off,nvram=nvram.bin -bios ia64-firmware.bin -drive file="install.iso",media=cdrom,format=raw,readonly=on -accel tcg,thread=multi -smp 4 -m 4G -nic user,model=e1000 -drive file=ia64.vhd,format=vpc -display gtk</code></pre>
 
         <!-- ============================================================ -->
         <!-- 3. 参数说明                                                   -->
@@ -503,12 +556,12 @@
                 </tr>
                 <tr>
                     <td class="cmd">-bios</td>
-                    <td><code>D:\QEMU\UEFI\ia64-firmware.bin</code></td>
-                    <td>指定 IA64 UEFI 固件文件路径</td>
+                    <td><code>ia64-firmware.bin</code></td>
+                    <td>指定 IA64 UEFI 固件文件路径（与 qemu-system-ia64.exe 同目录）</td>
                 </tr>
                 <tr>
                     <td class="cmd">-drive (CD-ROM)</td>
-                    <td><code>file="D:\Disc01.iso",media=cdrom,format=raw,readonly=on</code></td>
+                    <td><code>file="install.iso",media=cdrom,format=raw,readonly=on</code></td>
                     <td>挂载 ISO 镜像为虚拟光驱，只读</td>
                 </tr>
                 <tr>
@@ -533,13 +586,22 @@
                 </tr>
                 <tr>
                     <td class="cmd">-drive (HDD)</td>
-                    <td><code>file=D:\ia64.vhd,format=vpc</code></td>
-                    <td>挂载虚拟硬盘（VHD 格式）</td>
+                    <td><code>file=ia64.vhd,format=vpc</code> 或 <code>file=ia64.vhd,if=ide,format=vpc</code></td>
+                    <td>
+                        <strong>挂载虚拟硬盘（VHD 格式）。</strong><br>
+                        • <strong>默认（无 <code>if=ide</code>）：</strong> 磁盘为 <strong>SCSI 设备</strong>，适用于 Windows Server 2003 等旧系统。<br>
+                        • <strong>添加 <code>if=ide</code>：</strong> 磁盘为 <strong>IDE 设备</strong>，<strong>Windows Server 2008 R2 必须使用此参数</strong>，否则系统将无法识别启动盘导致 0x0000007B 蓝屏。
+                    </td>
+                </tr>
+                <tr>
+                    <td class="cmd">-rtc</td>
+                    <td><code>base=2008-12-27,clock=vm</code>（可选）</td>
+                    <td><strong>（可选参数）</strong> 设置 RTC 基准时间，仅在遇到时间校验相关问题时使用。一般情况下不需要添加。</td>
                 </tr>
                 <tr>
                     <td class="cmd">-display</td>
                     <td><code>gtk</code></td>
-                    <td>使用 GTK 图形界面显示</td>
+                    <td>使用 GTK 图形界面显示（也可换为 <code>sdl</code>）</td>
                 </tr>
             </tbody>
         </table>
@@ -550,58 +612,100 @@
         <h2 class="section-title" id="disk"><i class="fas fa-hdd"></i>虚拟磁盘创建</h2>
 
         <div class="note-box">
-            <strong><i class="fas fa-terminal"></i> 使用 QEMU 创建 VHD 格式磁盘：</strong>
+            <strong><i class="fas fa-terminal"></i> 使用 <code>qemu-img.exe</code> 创建 VHD 格式磁盘：</strong>
         </div>
 
-        <pre><code>D:\>D:\QEMU\qemu-img.exe create -f vpc D:\ia64.vhd 20G</code></pre>
+        <pre><code>qemu-img.exe create -f vpc ia64.vhd 20G</code></pre>
 
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> 说明：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
                 <li><code>-f vpc</code> — 指定 VHD 格式（Virtual PC 兼容）</li>
-                <li><code>D:\ia64.vhd</code> — 磁盘文件路径</li>
-                <li><code>20G</code> — 磁盘大小（可根据需要调整）</li>
+                <li><code>ia64.vhd</code> — 磁盘文件路径（与 qemu-system-ia64.exe 同目录）</li>
+                <li><code>20G</code> — 磁盘大小（可根据需要调整，如 <code>40G</code>）</li>
+                <li><strong>特别提醒：</strong> 创建完成后，在启动命令中根据需要决定是否添加 <code>if=ide</code>。对于 Windows Server 2008 R2，<strong>必须</strong>使用 <code>if=ide</code>。</li>
             </ul>
         </div>
 
         <!-- ============================================================ -->
-        <!-- 5. 注意事项                                                   -->
+        <!-- 5. Windows Server 2008 R2 特别说明                           -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="server2008"><i class="fas fa-windows"></i>Windows Server 2008 R2 特别说明</h2>
+
+        <div class="highlight-box">
+            <strong><i class="fas fa-exclamation-circle"></i> 关键要点：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>必须使用 IDE 磁盘接口：</strong> Windows Server 2008 R2 的 IA64 版本默认 SCSI 驱动在 QEMU 环境下存在兼容性问题。必须在 <code>-drive</code> 参数中明确指定 <code>if=ide</code>，即 <code>-drive file=ia64.vhd,if=ide,format=vpc</code>。如果省略 <code>if=ide</code>，磁盘将被识别为 SCSI 设备，系统启动时会提示无法找到启动设备 (0x0000007B 蓝屏)。</li>
+                <li><strong>RTC 时间为可选：</strong> <code>-rtc base=2008-12-27,clock=vm</code> 参数不是必须的。仅在系统提示时间相关错误（如“系统时间异常”或激活校验失败）时，才需要添加此参数。大多数情况下，无需设置 RTC 即可正常启动和安装。</li>
+                <li><strong>ISO 文件确认：</strong> 请确保使用的 ISO 镜像为 <strong>IA64 架构</strong> 专用版本，x86/x64 版本无法在此模拟环境中运行。</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 启动参数核对清单（Windows Server 2008 R2）：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>✅ <code>-drive file=xxx.vhd,<strong>if=ide</strong>,format=vpc</code> （<strong>必需</strong>，IDE 接口）</li>
+                <li>✅ <code>-machine ia64-vpc,i8042=off,nvram=xxx.bin</code> （正确机器类型）</li>
+                <li>✅ <code>-bios ia64-firmware.bin</code> （正确固件路径）</li>
+                <li>❓ <code>-rtc base=2008-12-27,clock=vm</code> （<strong>可选</strong>，仅在需要时添加）</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 注意事项                                                   -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
 
         <div class="note-box warning">
             <strong><i class="fas fa-exclamation-circle"></i> 性能警告：</strong>
-            TCG 软件模拟效率较低，IA64 模拟尤为明显。启动和安装过程可能需要较长时间，请耐心等待。
+            TCG 软件模拟效率较低，IA64 模拟尤为明显。启动和安装过程可能需要较长时间，请耐心等待。建议关闭宿主机上其他占用 CPU 的程序。
         </div>
 
         <div class="note-box warning">
             <strong><i class="fas fa-exclamation-circle"></i> 固件兼容性：</strong>
-            确保使用的 UEFI 固件与 QEMU 版本兼容。如遇到启动问题，尝试更换固件版本。
+            本压缩包已包含 <code>ia64-firmware.bin</code>，如从其他来源获取固件，请确保与 QEMU 版本兼容。如遇到启动问题，尝试更换固件版本。
         </div>
 
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> NVRAM 文件：</strong>
-            NVRAM 文件用于存储 UEFI 设置。如启动异常，可删除并重新生成该文件。
+            NVRAM 文件（<code>nvram.bin</code>）用于存储 UEFI 设置。首次运行时会自动生成。如启动异常，可删除并重新生成该文件。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 磁盘接口说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>未指定 <code>if=ide</code>：</strong> 磁盘默认为 <strong>SCSI 设备</strong>。Windows Server 2003 及更早版本通常可以正常使用 SCSI。</li>
+                <li><strong>指定 <code>if=ide</code>：</strong> 磁盘为 <strong>IDE 设备</strong>。Windows Server 2008 R2 必须使用 IDE，否则无法启动。</li>
+                <li>根据目标系统的驱动支持情况，选择合适的接口类型。</li>
+            </ul>
         </div>
 
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> 网络配置：</strong>
-            使用 <code>-nic user,model=e1000</code> 可让虚拟机通过宿主机的网络访问外部网络。如需桥接网络，可改用 <code>-nic tap,model=e1000</code>。
+            使用 <code>-nic user,model=e1000</code> 可让虚拟机通过宿主机的网络访问外部网络。如需桥接网络，可改用 <code>-nic tap,model=e1000</code>（需额外配置）。
         </div>
 
         <!-- ============================================================ -->
-        <!-- 6. 故障排除                                                   -->
+        <!-- 7. 故障排除                                                   -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 0x0000007B 蓝屏（无法访问启动设备）</strong>
+            <p style="margin-top:6px;"><strong>常见于 Windows Server 2008 R2：</strong></p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查 <code>-drive</code> 参数是否包含 <code>if=ide</code>（默认是 SCSI，但 2008 R2 需要 IDE）</li>
+                <li>确认虚拟磁盘格式为 <code>format=vpc</code></li>
+            </ul>
+        </div>
 
         <div class="note-box warning">
             <strong><i class="fas fa-exclamation-circle"></i> 黑屏无法启动</strong>
             <p style="margin-top:6px;">尝试以下操作：</p>
             <ul style="margin-top:4px;padding-left:20px;">
-                <li>检查 <code>-bios</code> 路径是否正确指向有效的 UEFI 固件</li>
+                <li>检查 <code>-bios ia64-firmware.bin</code> 文件是否存在且路径正确</li>
                 <li>删除 NVRAM 文件（<code>nvram.bin</code>）后重新启动</li>
-                <li>尝试更换 <code>-machine</code> 参数，如 <code>-machine virt</code></li>
-                <li>确认 <code>qemu-system-ia64.EXE</code> 已放入完整 QEMU 目录</li>
+                <li>检查 ISO 镜像是否为 IA64 架构可引导</li>
             </ul>
         </div>
 
@@ -609,9 +713,8 @@
             <strong><i class="fas fa-search"></i> 模拟速度极慢</strong>
             <p style="margin-top:6px;">优化建议：</p>
             <ul style="margin-top:4px;padding-left:20px;">
-                <li>减少 <code>-smp</code> 核心数（如 2 核）</li>
                 <li>减少 <code>-m</code> 内存分配（如 2G）</li>
-                <li>确保宿主机有足够的 CPU 资源</li>
+                <li>确保宿主机有足够的 CPU 资源，关闭其他大型程序</li>
             </ul>
         </div>
 
@@ -619,78 +722,82 @@
             <strong><i class="fas fa-search"></i> 无法从 ISO 引导</strong>
             <p style="margin-top:6px;">检查：</p>
             <ul style="margin-top:4px;padding-left:20px;">
-                <li>ISO 文件是否完整且可引导</li>
-                <li>是否支持 IA64 架构</li>
-                <li>尝试在 UEFI 固件中手动选择引导设备</li>
+                <li>ISO 文件是否完整且可引导（建议校验 MD5/SHA）</li>
+                <li>镜像是否为 IA64 架构（不是 x86/x64/ARM）</li>
+                <li>在 QEMU 启动后按 <kbd>Esc</kbd> 或 <kbd>F2</kbd> 进入 UEFI 固件设置，手动选择引导设备</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 缺少 DLL 错误</strong>
+            <p style="margin-top:6px;">如果提示找不到某个 <code>.dll</code> 文件，请确保：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>解压时完整保留了所有文件和 <code>lib\</code>、<code>share\</code> 目录</li>
+                <li>不要将 <code>qemu-system-ia64.exe</code> 单独移出原目录</li>
+                <li>必要时将 <code>lib\</code> 目录添加到系统 <code>PATH</code> 环境变量</li>
             </ul>
         </div>
 
         <!-- ============================================================ -->
-        <!-- 7. 运行结果参考                                               -->
+        <!-- 8. 运行结果参考                                               -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="results"><i class="fas fa-chart-bar"></i>运行结果参考</h2>
 
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> 说明：</strong>
-            以下为各 Build 在 QEMU IA64 模拟环境下的运行结果，供参考。
+            以下为各 Build 在 QEMU IA64 模拟环境下的运行结果，供参考。实际结果可能因 QEMU 版本、固件和宿主机配置而异。
         </div>
 
         <table class="result-table">
             <thead>
                 <tr>
                     <th>版本 / Build</th>
+                    <th>磁盘接口</th>
                     <th>运行结果</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows XP 64-Bit Edition Version 2002</td>
+                    <td>SCSI / IDE</td>
                     <td class="no">❌ 无法进入 i386 安装</td>
-                </tr>
-                <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RC1</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
-                </tr>
-                <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RC2</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
-                </tr>
-                <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">5.2.3787.0.srv03_rtm.030312-1801</td>
-                    <td class="yes">✅ 可以正常启动</td>
                 </tr>
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RTM</td>
+                    <td>SCSI</td>
                     <td class="yes">✅ 可以正常启动</td>
                 </tr>
                 <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4033</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
-                </tr>
-                <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4067</td>
+                    <td>SCSI / IDE</td>
                     <td class="no">❌ 无法进入 i386 安装</td>
                 </tr>
                 <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4074</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;"><strong>Windows Server 2008 R2 (Build 7000)</strong></td>
+                    <td><strong>IDE（必需）</strong></td>
+                    <td class="yes">✅ 使用 <code>if=ide</code> 后可正常启动</td>
+                </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2008 R2 (Build 7000)</td>
+                    <td>SCSI（默认）</td>
+                    <td class="no">❌ 0x0000007B 蓝屏，无法启动</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="note-box info" style="margin-top:8px;">
             <strong><i class="fas fa-info-circle"></i> 注：</strong>
-            <span style="font-size:13px;color:#586069;">以上运行结果来自 QEMU IA64 模拟环境实测，不同版本的 QEMU 和固件配置可能导致结果有所不同。</span>
+            <span style="font-size:13px;color:#586069;">Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，仅在需要时添加。</span>
         </div>
 
         <div class="source-link">
-            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/syunnPC/qemu-system-ia64" target="_blank">syunnPC/qemu-system-ia64</a> ｜ QEMU 官方文档
+            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/syunnPC/qemu-system-ia64" target="_blank">syunnPC/qemu-system-ia64</a> ｜ QEMU 官方文档 ｜ 编译者 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a>
         </div>
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: Betaworld Betawiki Discord &nbsp;|&nbsp; 文档版本: 1.0</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-20</span>
+            <span><i class="fas fa-database"></i> 来源: Betawiki Discord、WinStory社区 &nbsp;|&nbsp; 文档版本: 1.4</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-21</span>
         </div>
     </div>
 </div>
