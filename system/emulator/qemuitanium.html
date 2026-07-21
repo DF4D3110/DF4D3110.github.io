@@ -350,6 +350,13 @@
         .highlight-box strong {
             color: #0d6b4f;
         }
+        .step-list {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .step-list li {
+            margin-bottom: 6px;
+        }
         @media (max-width: 700px) {
             .toc ul li {
                 display: block;
@@ -417,6 +424,8 @@
                 <li><a href="#notes">6. 注意事项</a></li>
                 <li><a href="#troubleshooting">7. 故障排除</a></li>
                 <li><a href="#results">8. 运行结果参考</a></li>
+                <li><a href="#bootrepair">9. 引导修复（Windows Boot Manager）</a></li>
+                <li><a href="#rdp">10. RDP 远程桌面转发配置</a></li>
             </ul>
         </div>
 
@@ -790,13 +799,163 @@
             <span style="font-size:13px;color:#586069;">Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，仅在需要时添加。</span>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- 9. 引导修复（Windows Server 2003 / XP 64-Bit Version 2003）                           -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="bootrepair"><i class="fas fa-boot"></i>引导修复（Windows Server 2003 / XP 64-Bit Version 2003）</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 参考来源：</strong>
+            基于 HP Integrity BL860c Server Blade User Service Guide（第 88–91 页）中关于 Microsoft Windows 引导配置的描述，结合 IA64 平台的 EFI 特性整理。
+        </div>
+
+        <p>当 Windows 启动项丢失或损坏时，可通过 EFI Shell 手动修复引导记录。以下是完整步骤：</p>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 前提条件：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>系统已安装 Windows 且 <code>\EFI\Microsoft\WINNT50\</code> 目录下存在 <code>Boot00nn</code> 文件</li>
+                <li>当前处于 EFI Shell 环境（从 EFI Boot Manager 选择 <code>EFI Shell</code> 进入）</li>
+                <li>已确认 Windows 所在的 EFI 系统分区（通常为 <code>fs0:</code> 或 <code>fs2:</code>）</li>
+            </ul>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>进入 EFI Shell：</strong> 启动 QEMU 后，在 EFI Boot Manager 界面选择 <code>EFI Shell [Built-in]</code>。</li>
+            <li>
+                <strong>列出所有可引导设备：</strong> 在 EFI Shell 提示符下执行：
+                <pre><code>map -r</code></pre>
+                找到 Windows 所在的 EFI 系统分区（通常标记为 <code>fsX:</code>，其中 X 为数字）。
+            </li>
+            <li>
+                <strong>切换到 Windows 所在的 EFI 分区：</strong>
+                <pre><code>fs2:</code></pre>
+                （将 <code>2</code> 替换为实际分区号）
+            </li>
+            <li>
+                <strong>确认 Windows 引导文件存在：</strong>
+                <pre><code>ls EFI\Microsoft\WINNT50\</code></pre>
+                应能看到类似 <code>Boot0001</code>、<code>Boot0002</code> 等文件。
+            </li>
+            <li>
+                <strong>使用 <code>nvrboot.efi</code> 导入引导项：</strong>
+                <pre><code>msutil\nvrboot.efi</code></pre>
+                在交互菜单中：
+                <ul style="margin-top:4px;padding-left:20px;">
+                    <li>输入 <code>I</code>（Import）导入引导选项</li>
+                    <li>输入引导文件路径，例如：<code>\EFI\Microsoft\WINNT50\Boot0001</code></li>
+                    <li>按提示完成导入</li>
+                </ul>
+            </li>
+            <li>
+                <strong>验证引导项是否已添加：</strong>
+                <pre><code>bcfg boot dump</code></pre>
+                检查输出中是否包含 <code>Windows Server 2003</code> 或 <code>Windows Server 2008 R2</code> 相关条目。
+            </li>
+            <li>
+                <strong>（可选）设置 Windows 为默认启动项：</strong>
+                <pre><code>bcfg boot mv 2 1</code></pre>
+                将 Windows 启动项移至首位（<code>2</code> 为当前编号，<code>1</code> 为目标位置）。
+            </li>
+            <li>
+                <strong>重启系统：</strong>
+                <pre><code>reset</code></pre>
+                系统重启后，EFI Boot Manager 应显示 Windows 启动选项。
+            </li>
+        </ol>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 备选方法：</strong>
+            如果 <code>nvrboot.efi</code> 不可用，可手动添加引导项：
+            <pre><code>bcfg boot add 1 \EFI\Microsoft\WINNT50\ia64ldr.efi "Windows Server 2003"</code></pre>
+            <p style="margin-top:4px;">但需注意，<code>ia64ldr.efi</code> 通常不是直接可执行文件，推荐使用 <code>nvrboot.efi</code> 方式导入。</p>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>每次更换磁盘或重新安装系统后，都需要重新导入引导项。</li>
+                <li>如果 <code>EFI\Microsoft\WINNT50\</code> 目录为空，说明系统未正确安装，请重新安装。</li>
+                <li>导入后如仍无法引导，检查 <code>-drive</code> 参数中的 <code>if=ide</code> 是否正确（Windows Server 2008 R2 必须使用 IDE）。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 10. RDP 远程桌面转发配置                                     -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="rdp"><i class="fas fa-desktop"></i>RDP 远程桌面转发配置(启用256色可选方案)</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 功能说明：</strong>
+            通过 QEMU 的端口转发功能，将虚拟机内的 RDP 服务（默认端口 3389）映射到宿主机端口，实现远程桌面连接。
+        </div>
+
+        <div class="highlight-box">
+            <strong><i class="fas fa-network-wired"></i> 端口转发参数：</strong>
+            <pre style="margin-top:6px;"><code>-nic user,model=e1000,hostfwd=tcp::33890-:3389</code></pre>
+            <p style="margin-top:6px;">其中：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li><code>33890</code> — 宿主机端口（可自行修改，但需避免与系统服务冲突）</li>
+                <li><code>3389</code> — 虚拟机内 RDP 服务的默认端口</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 端口冲突警告：</strong>
+            如果宿主机已开启 RDP 服务（即占用 <code>3389</code> 端口），则不能使用 <code>3389</code> 作为转发接口。请使用其他端口（如示例中的 <code>33890</code>）。
+        </div>
+
+        <h3 style="margin-top:16px; font-size:17px;">完整启动命令示例（含 RDP 转发）</h3>
+        <pre><code>qemu-system-ia64.exe ^
+    -machine ia64-vpc,i8042=off,nvram=nvram.bin ^
+    -bios ia64-firmware.bin ^
+    -drive file="install.iso",media=cdrom,format=raw,readonly=on ^
+    -accel tcg,thread=multi ^
+    -smp 4 ^
+    -m 4G ^
+    -nic user,model=e1000,hostfwd=tcp::33890-:3389 ^
+    -drive file=ia64.vhd,if=ide,format=vpc ^
+    -display gtk</code></pre>
+
+        <h3 style="margin-top:16px; font-size:17px;">Windows 系统内配置要求</h3>
+        <ol class="step-list">
+            <li><strong>启用远程桌面：</strong>
+                <ul style="margin-top:4px;padding-left:20px;">
+                    <li>Windows Server 2003：右键“我的电脑” → 属性 → 远程 → 勾选“启用远程桌面”</li>
+                    <li>Windows Server 2008 R2：服务器管理器 → 配置 → 远程桌面设置 → 启用</li>
+                </ul>
+            </li>
+            <li><strong>为当前用户设置密码：</strong> 确保登录账户有密码（空密码无法通过 RDP 认证）。</li>
+            <li><strong>确认防火墙放行：</strong> 在虚拟机内执行以下命令（以管理员身份）：
+                <pre><code>netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389</code></pre>
+                或直接在 Windows 防火墙中添加入站规则（端口 3389）。
+            </li>
+        </ol>
+
+        <h3 style="margin-top:16px; font-size:17px;">连接方法</h3>
+        <ol class="step-list">
+            <li>启动 QEMU 并等待 Windows 完全启动。</li>
+            <li>在宿主机上打开远程桌面连接（mstsc）。</li>
+            <li>在“计算机”栏输入：<code>localhost:33890</code>（或您设置的其他宿主机端口）。</li>
+            <li>输入虚拟机的用户名和密码，即可连接。</li>
+        </ol>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>QEMU 必须保持运行状态，RDP 连接才能正常使用。</li>
+                <li>如果连接失败，检查虚拟机内 RDP 服务是否已启动（<code>services.msc</code> 中确认 <code>Remote Desktop Services</code> 状态）。</li>
+                <li>宿主机端口若被占用，可更换为其他未被使用的端口（如 <code>33891</code>、<code>33900</code> 等）。</li>
+            </ul>
+        </div>
+
         <div class="source-link">
-            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/syunnPC/qemu-system-ia64" target="_blank">syunnPC/qemu-system-ia64</a> ｜ QEMU 官方文档 ｜ 编译者 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a>
+            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/syunnPC/qemu-system-ia64" target="_blank">syunnPC/qemu-system-ia64</a> ｜ QEMU 官方文档 ｜ 编译者 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a> ｜ HP Integrity BL860c Server Blade User Service Guide
         </div>
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: Betawiki Discord、WinStory社区 &nbsp;|&nbsp; 文档版本: 1.4</span>
+            <span><i class="fas fa-database"></i> 来源: Betawiki Discord、WinStory社区 &nbsp;|&nbsp; 文档版本: 2.0</span>
             <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-21</span>
         </div>
     </div>
