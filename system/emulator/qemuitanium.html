@@ -465,8 +465,8 @@
 
         <div class="compat-warning">
             <i class="fas fa-exclamation-triangle"></i>
-            <strong>⚠️ 兼容性警告：</strong>
-            SKI 仿真器中已经启动到桌面的系统 <strong>不可直接迁移到 QEMU 运行</strong>，否则会导致系统启动崩溃。这是因为两种仿真器的硬件抽象层（HAL）和固件接口存在根本性差异。如需在 QEMU 中运行，请使用 QEMU 环境下的全新安装。
+            <strong>⚠️ 警告：</strong>
+            SKI 仿真器中已经启动到桌面的系统 <strong>不可直接迁移到 QEMU 运行</strong>，否则会导致系统启动崩溃。如需在 QEMU 中运行，请使用 QEMU 环境下的全新安装。
         </div>
 
         <div class="note-box">
@@ -520,7 +520,7 @@
         <!-- Windows Server 2008 R2 专用命令 -->
         <div class="highlight-box">
             <strong><i class="fas fa-windows"></i> Windows Server 2008 R2 推荐命令：</strong>
-            <p style="margin-top:6px;">针对 Windows Server 2008 R2 (Build 7000)，<strong>必须</strong>添加 <code>if=ide</code> 参数将磁盘接口设置为 IDE，否则系统会因无法识别 SCSI 控制器而蓝屏。RTC 时间参数为可选，仅在遇到时间相关校验问题时使用。</p>
+            <p style="margin-top:6px;">针对 Windows Server 2008 R2 (Build 7000)，<strong>必须</strong>添加 <code>if=ide</code> 参数将磁盘接口设置为 IDE，否则系统会蓝屏。RTC 时间参数为可选，仅在遇到时间相关校验问题时使用。</p>
         </div>
         <pre><code>qemu-system-ia64.exe ^
     -machine ia64-vpc,i8042=off,nvram=nvram.bin ^
@@ -610,7 +610,7 @@
                 <tr>
                     <td class="cmd">-display</td>
                     <td><code>gtk</code></td>
-                    <td>使用 GTK 图形界面显示（也可换为 <code>sdl</code>）</td>
+                    <td>使用 GTK 图形界面显示</td>
                 </tr>
             </tbody>
         </table>
@@ -926,7 +926,7 @@
                 </ul>
             </li>
             <li><strong>为当前用户设置密码：</strong> 确保登录账户有密码（空密码无法通过 RDP 认证）。</li>
-            <li><strong>确认防火墙放行：</strong> 在虚拟机内执行以下命令（以管理员身份）：
+            <li><strong>确认防火墙放行（可选，通常不需要进行此步）：</strong> 在虚拟机内执行以下命令（以管理员身份）：
                 <pre><code>netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389</code></pre>
                 或直接在 Windows 防火墙中添加入站规则（端口 3389）。
             </li>
