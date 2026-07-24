@@ -285,7 +285,7 @@
             <ul style="margin-top:6px;padding-left:20px;">
                 <li>Windows 10 或 Windows 11 主机系统</li>
                 <li>完整的 WSK ISO（Build 18941、18985 或 22000）</li>
-                <li>至少 50 GB 可用磁盘空间（建议 SSD）</li>
+                <li>至少 30 GB 可用磁盘空间（建议 SSD）</li>
             </ul>
         </div>
 
@@ -474,13 +474,27 @@ E:\FactoryWorkSpace></pre>
             </ul>
         </div>
 
+        <!-- ============================================================ -->
+        <!-- 常见错误（已修正）                                            -->
+        <!-- ============================================================ -->
         <div class="note-box">
             <strong><i class="fas fa-bug"></i> 常见错误与解决方法：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
-                <li><strong>“找不到指定的文件”</strong> — 如果当前系统版本高于 WSK 版本，可能出现该异常。可尝试将 WSK 文件复制到其他可写位置再修改（直接修改 ISO 本身较为复杂）。</li>
-                <li><strong>无法挂载/卸载 UpdateOS</strong> — 同上，可能与系统版本不兼容有关。</li>
-                <li><strong>无法检测存储池版本 / 报错“尝试读取或写入受保护的内存”</strong> — 通常由环境不兼容引起，建议在匹配的 Windows 版本上运行。</li>
+                <li>
+                    <strong>“找不到指定的文件”</strong><br>
+                    如果当前系统版本高于 WSK 版本，可能出现该异常。可尝试将 WSK 文件复制到其他可写位置再修改（直接修改 ISO 本身较为复杂）。
+                </li>
+                <li>
+                    <strong>无法挂载/卸载 UpdateOS</strong><br>
+                    可能出现拒绝访问（0x80070005）的错误，这可能是由 <code>wimgapi.dll</code> 和 <code>wimserv.exe</code> 中的 bug 导致的。可以删除对应文件，以使用当前系统内置的版本。
+                </li>
+                <li>
+                    <strong>无法检测存储池版本 / 报错“尝试读取或写入受保护的内存”</strong><br>
+                    在 Windows 11 上制作 FactoryOS 时的常见情况。无法检测存储池版本通常只是警告，制作仍将继续进行，最终报错是“尝试读取或写入受保护的内存”，这通常指示其他内存已损坏。<br>
+                    这可能是由于内置的 <code>IUSpaces.dll</code> 版本（相对于当前系统版本）过低，无法识别系统最高支持的存储池版本。可以从最新版本的 ADK 中获取 <code>IUSpaces.dll</code> 并替换来解决。如仍存在问题，可以尝试更换其他版本的 <code>IUSpaces.dll</code> 或使用 Windows 10 制作 FactoryOS。
+                </li>
             </ul>
+            <p style="margin-top:8px;"><strong>注：</strong>直接修改 WSK 的 ISO 本身较为复杂，可以复制文件到其他可写位置再修改。</p>
         </div>
 
         <div class="note-box info">
@@ -500,7 +514,7 @@ E:\FactoryWorkSpace></pre>
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: Microsoft Learn &amp; WinStory &nbsp;|&nbsp; 文档版本: 1.1</span>
+            <span><i class="fas fa-database"></i> 来源: Microsoft Learn &amp; WinStory &nbsp;|&nbsp; 文档版本: 1.2</span>
             <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-24</span>
         </div>
     </div>
