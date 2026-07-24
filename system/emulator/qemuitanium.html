@@ -122,6 +122,48 @@
             font-size: 13px;
             color: #0d6b4f;
         }
+
+        /* 新增：体验包下载卡片 */
+        .ready-to-run-entry {
+            background: #fff3e0;
+            border: 2px solid #e6a700;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .ready-to-run-entry i {
+            color: #b84b00;
+            font-size: 20px;
+        }
+        .ready-to-run-entry .entry-label {
+            font-weight: 600;
+            color: #b84b00;
+            font-size: 15px;
+        }
+        .ready-to-run-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+            background: #fff;
+        }
+        .ready-to-run-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .ready-to-run-entry .entry-desc {
+            font-size: 13px;
+            color: #b84b00;
+        }
+
         .toc {
             background: #f6f8fa;
             border: 1px solid #e1e4e8;
@@ -380,6 +422,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .ready-to-run-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -412,6 +458,14 @@
             <a href="https://df4d3110.github.io/system/itanium.html" target="_blank">前往下载 →</a>
         </div>
 
+        <!-- ====== 新增：已安装好的体验包 ====== -->
+        <div class="ready-to-run-entry">
+            <i class="fas fa-rocket"></i>
+            <span class="entry-label">🚀 已安装好的体验包：</span>
+            <span class="entry-desc">Windows Longhorn 4074 (IA64) — 直接运行脚本即可体验，已完整走完安装流程</span>
+            <a href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/6.0.4074.0.idx02.040425-1535_ia64_fullqemu.zip" target="_blank">下载体验包 →</a>
+        </div>
+
         <!-- 目录 -->
         <div class="toc">
             <strong><i class="fas fa-list"></i> 目录</strong>
@@ -421,11 +475,12 @@
                 <li><a href="#params">3. 参数说明</a></li>
                 <li><a href="#disk">4. 虚拟磁盘创建</a></li>
                 <li><a href="#server2008">5. Windows Server 2008 R2 特别说明</a></li>
-                <li><a href="#notes">6. 注意事项</a></li>
-                <li><a href="#troubleshooting">7. 故障排除</a></li>
-                <li><a href="#results">8. 运行结果参考</a></li>
-                <li><a href="#bootrepair">9. 引导修复（Windows Boot Manager）</a></li>
-                <li><a href="#rdp">10. RDP 远程桌面转发配置</a></li>
+                <li><a href="#longhorn">6. Windows Longhorn 测试记录</a></li>
+                <li><a href="#notes">7. 注意事项</a></li>
+                <li><a href="#troubleshooting">8. 故障排除</a></li>
+                <li><a href="#results">9. 运行结果参考</a></li>
+                <li><a href="#bootrepair">10. 引导修复（Windows Boot Manager）</a></li>
+                <li><a href="#rdp">11. RDP 远程桌面转发配置</a></li>
             </ul>
         </div>
 
@@ -435,27 +490,25 @@
         <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
 
         <div class="note-box info">
-            <strong><i class="fas fa-info-circle"></i> QEMU 下载（由 ZZPPAP 编译）：</strong>
+            <strong><i class="fas fa-info-circle"></i> QEMU 下载：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
                 <li>
-                    <strong>x86_64 版本：</strong>
+                    <strong>x86_64 版本（ZZPPAP 编译）：</strong>
                     <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/QEMU-SYSTEM-IA64_x86_64.7z" target="_blank">QEMU-SYSTEM-IA64_x86_64.7z</a>
                     <span style="display:inline-block; font-size:12px; background:#e6f7ef; color:#0d6b4f; padding:0 8px; border-radius:12px; margin-left:6px;">适用于 x86_64 宿主机</span>
                 </li>
                 <li style="margin-top:4px;">
-                    <strong>AArch64 版本：</strong>
+                    <strong>AArch64 版本（ZZPPAP 编译）：</strong>
                     <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/qemu-ia64/QEMU-SYSTEM-IA64_AARCH64.7z" target="_blank">QEMU-SYSTEM-IA64_AARCH64.7z</a>
                     <span style="display:inline-block; font-size:12px; background:#fdedf0; color:#a3485a; padding:0 8px; border-radius:12px; margin-left:6px; font-weight:600;">⚠️ 仅限 ARM64 宿主机</span>
                 </li>
+                <li style="margin-top:4px;">
+                    <strong>x86_64 版本（DF4D3110 编译）：</strong>
+                    <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/Qemu_Windows_2607232243.zip" target="_blank">Qemu_Windows_2607232243.zip</a>
+                    <span style="display:inline-block; font-size:12px; background:#e6f7ef; color:#0d6b4f; padding:0 8px; border-radius:12px; margin-left:6px;">包含完整依赖，需要 -L 参数额外指定 vgabios-ati.bin 等文件所在路径</span>
+                </li>
             </ul>
-            <div style="margin-top:8px; padding:8px 12px; background:#fff5f5; border-radius:4px; border-left:3px solid #d73a49;">
-                <strong style="color:#d73a49;">⚠️ 平台限制说明：</strong>
-                <span style="font-size:14px; color:#24292e;">
-                    <strong>AArch64 版本</strong> 只能在 <strong>ARM64 架构</strong> 的宿主机（如 Apple M1/M2/M3、ARM64 Windows 设备、ARM Linux 等）上运行。
-                    在 x86_64 宿主机上运行 AArch64 版本的 QEMU 会因指令集不兼容而失败，请务必根据您的宿主机架构下载对应版本。
-                </span>
-            </div>
-            <p style="margin-top:6px;">以上版本由 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a> 编译，感谢其贡献。</p>
+            <p style="margin-top:6px;">ZZPPAP 编译版本由 <a href="https://space.bilibili.com/297604122" target="_blank">ZZPPAP</a> 编译，感谢其贡献；DF4D3110 编译版本由本人编译。</p>
         </div>
 
         <div class="note-box warning">
@@ -661,7 +714,52 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 6. 注意事项                                                   -->
+        <!-- 6. Windows Longhorn 测试记录                                 -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="longhorn"><i class="fas fa-code-branch"></i>Windows Longhorn 测试记录</h2>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 测试结果：</strong>
+            Windows Longhorn（Build 4051、4074 等）在 QEMU IA64 模拟环境中 <strong>默认可以启动到桌面</strong>，无需额外配置。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 测试环境：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>QEMU 版本：DF4D3110 编译版 / ZZPPAP 编译版</li>
+                <li>固件：<code>ia64-firmware.bin</code></li>
+                <li>磁盘接口：SCSI（默认）</li>
+                <li>CPU：4 核 TCG 多线程模拟</li>
+                <li>内存：4 GB</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 已知问题：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>时间炸弹：</strong> Longhorn 测试版可能有时间限制，如遇到激活或过期提示，请添加 <code>-rtc base=2004-03-27,clock=vm</code> 参数。</li>
+                <li><strong>性能问题：</strong> 由于跨架构运行效率较低，建议关闭宿主机占用较大的程序以提高qemu内系统的运行速度。</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> Longhorn 推荐启动命令：</strong>
+            <pre style="margin-top:6px;"><code>qemu-system-ia64.exe ^
+    -machine ia64-vpc,i8042=off,nvram=longhorn.bin ^
+    -bios ia64-firmware.bin ^
+    -accel tcg,thread=multi ^
+    -smp 2 ^
+    -m 4G ^
+    -nic user,model=e1000 ^
+    -drive file=longhorn.vhd,format=vpc ^
+    -drive file="4067.iso",media=cdrom,format=raw,readonly=on ^
+    -rtc base=2004-03-27,clock=vm ^
+    -display gtk</code></pre>
+            <p style="margin-top:6px;">其中 <code>-rtc base=2004-03-27</code> 是 Longhorn 测试版绕过时间炸弹的关键参数。</p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 注意事项                                                   -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
 
@@ -683,7 +781,7 @@
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> 磁盘接口说明：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
-                <li><strong>未指定 <code>if=ide</code>：</strong> 磁盘默认为 <strong>SCSI 设备</strong>。Windows Server 2003 及更早版本通常可以正常使用 SCSI。</li>
+                <li><strong>未指定 <code>if=ide</code>：</strong> 磁盘默认为 <strong>SCSI 设备</strong>。Windows Server 2003 及更早版本、Longhorn 通常可以正常使用 SCSI。</li>
                 <li><strong>指定 <code>if=ide</code>：</strong> 磁盘为 <strong>IDE 设备</strong>。Windows Server 2008 R2 必须使用 IDE，否则无法启动。</li>
                 <li>根据目标系统的驱动支持情况，选择合适的接口类型。</li>
             </ul>
@@ -695,7 +793,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 7. 故障排除                                                   -->
+        <!-- 8. 故障排除                                                   -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
 
@@ -748,7 +846,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 8. 运行结果参考                                               -->
+        <!-- 9. 运行结果参考                                               -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="results"><i class="fas fa-chart-bar"></i>运行结果参考</h2>
 
@@ -769,7 +867,7 @@
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows XP 64-Bit Edition Version 2002</td>
                     <td>SCSI / IDE</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
+                    <td class="no">❌ 无法进入安装</td>
                 </tr>
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows Server 2003 RTM</td>
@@ -777,9 +875,9 @@
                     <td class="yes">✅ 可以正常启动</td>
                 </tr>
                 <tr>
-                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4067</td>
-                    <td>SCSI / IDE</td>
-                    <td class="no">❌ 无法进入 i386 安装</td>
+                    <td style="font-family:Consolas, monospace; font-size:13px;"><strong>Windows Longhorn 4051 / 4074</strong></td>
+                    <td>SCSI</td>
+                    <td class="yes">✅ <strong>可以正常启动到桌面</strong>（需 <code>-rtc base=2004-03-27</code>）</td>
                 </tr>
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;"><strong>Windows Server 2008 R2 (Build 7000)</strong></td>
@@ -791,16 +889,21 @@
                     <td>SCSI（默认）</td>
                     <td class="no">❌ 0x0000007B 蓝屏，无法启动</td>
                 </tr>
+                <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4033</td>
+                    <td>SCSI</td>
+                    <td class="yes">✅ 可以正常启动到桌面</td>
+                </tr>
             </tbody>
         </table>
 
         <div class="note-box info" style="margin-top:8px;">
             <strong><i class="fas fa-info-circle"></i> 注：</strong>
-            <span style="font-size:13px;color:#586069;">Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，仅在需要时添加。</span>
+            <span style="font-size:13px;color:#586069;">Windows Longhorn 系列（4051、4074）在 QEMU IA64 模拟中表现良好，默认 SCSI 磁盘即可正常启动到桌面。Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，Longhorn 系列建议添加 <code>-rtc base=2004-03-27</code>。</span>
         </div>
 
         <!-- ============================================================ -->
-        <!-- 9. 引导修复（Windows Server 2003 / XP 64-Bit Version 2003）                           -->
+        <!-- 10. 引导修复（Windows Boot Manager）                         -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="bootrepair"><i class="fas fa-boot"></i>引导修复（Windows Server 2003 / XP 64-Bit Version 2003）</h2>
 
@@ -881,7 +984,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- 10. RDP 远程桌面转发配置                                     -->
+        <!-- 11. RDP 远程桌面转发配置                                     -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="rdp"><i class="fas fa-desktop"></i>RDP 远程桌面转发配置(启用256色可选方案)</h2>
 
