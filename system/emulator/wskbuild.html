@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows System Kit (WSK) 构建指南 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .param-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .param-table .cmd {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .step-list {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .step-list li {
+            margin-bottom: 6px;
+        }
+        .download-link {
+            display: inline-block;
+            padding: 4px 14px;
+            background: #0366d6;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 13px;
+            text-decoration: none;
+            margin-left: 8px;
+        }
+        .download-link:hover {
+            background: #0250b3;
+        }
+        @media (max-width: 700px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .param-table {
+                font-size: 12px;
+            }
+            .param-table thead th,
+            .param-table tbody td {
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回模拟汇总页面</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-tools"></i>Windows System Kit (WSK) 构建指南</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 使用 WSK 生成自定义 Factory OS / Windows 10X 映像
+            <span class="badge">WSK</span>
+            <span class="badge">Factory OS</span>
+            <span class="badge warning">⚠️ 仅供研究</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 说明 -->
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <br>1. 本指南基于 Windows System Kit (WSK) 官方文档与社区实践整理；
+            <br>2. 涵盖 Build 18941、18985、22000 等多个版本；
+            <br>3. 所有操作仅供学习研究，请遵守相关许可协议。
+            <br>4. 该教程仅供新手初次熟悉流程，如果你本身能力已经很强，那么这个教程对你来说没有任何意义，你应该去 Microsoft 官网进修而不是在这里。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-desktop"></i> 宿主机要求：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>Windows 10 或 Windows 11 主机系统</li>
+                <li>完整的 WSK ISO（Build 18941、18985 或 22000）</li>
+                <li>至少 50 GB 可用磁盘空间（建议 SSD）</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-download"></i> 外部下载：</strong>
+            <p style="margin-top:6px;">此处仅提供 Build 22000 的官方下载参考，其他版本请读者自行寻找：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li><a href="https://learn.microsoft.com/en-us/legal/windows/hardware/wsk-license" target="_blank">Microsoft Windows System Kit (WSK) for Windows Factory OS | Microsoft Learn</a></li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 重要提示：</strong>
+            如果你已经准备好了所需的 ISO，请将其装载（或解压），并确保文件结构完整。假设装载位点为 <code>E:\</code>。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-folder-open"></i> ISO 光盘结构（示例，Build 22000）：</strong>
+            <pre style="margin-top:6px;">E:\ 的目录
+2021/06/06  01:51    &lt;DIR&gt;          BuildEnv
+2021/06/06  01:51    &lt;DIR&gt;          Installers
+2021/06/06  01:35           203,064 LICENSE.rtf
+2021/06/06  01:51    &lt;DIR&gt;          Program Files
+2021/06/06  01:35               328 RelNotes.txt
+2021/06/06  01:35                53 SetImagGenEnv.cmd
+2021/06/06  01:35                26 Version.txt</pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 打开 Windows System Kit 环境                              -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="openenv"><i class="fas fa-terminal"></i>打开 Windows System Kit 环境</h2>
+
+        <ol class="step-list">
+            <li>导航到分配给已装载的 WSK ISO 的驱动器根目录（例如 <code>E:\</code>）。</li>
+            <li>右键单击 <code>SetImagGenEnv.cmd</code>，选择“<strong>以管理员身份运行</strong>”。</li>
+        </ol>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 预期输出：</strong>
+            <pre style="margin-top:6px;">***********************************************
+** Windows System Kit image generation environment
+** Version xxx.xxxxx.1001
+***********************************************</pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. 创建工厂 OS 工作区                                        -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="workspace"><i class="fas fa-folder"></i>创建工厂 OS 工作区</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 工作区说明：</strong>
+            <p style="margin-top:4px;"><a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/prepare-a-workspace?view=windows-11" target="_blank">工作区</a>是一个工作目录，它有助于整理创建工厂 OS 映像所需的应用、驱动程序和其他资产。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 基本命令：</strong>
+            <pre style="margin-top:6px;"><code>PrepWSKWorkspace C:\FactoryWorkSpace -Product FactoryOS</code></pre>
+        </div>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 创建虚拟机映像（添加 <code>-VM</code> 参数）：</strong>
+            <pre style="margin-top:6px;"><code>PrepWSKWorkspace C:\FactoryWorkSpace -Product FactoryOS -VM</code></pre>
+            <p style="margin-top:4px;">添加 <code>-VM</code> 参数后，最终映像将是一个 <code>.vhdx</code> 文件 (UEFI)。生成 VM 映像时，不会生成 FFU。</p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PrepWSKWorkspace 语法                                        -->
+        <!-- ============================================================ -->
+        <h3 style="font-size:18px; margin:20px 0 10px 0;"><i class="fas fa-code"></i>PrepWSKWorkspace 语法</h3>
+
+        <pre style="margin-bottom:16px;"><code>PrepWSKWorkspace {-Destination} &lt;Path&gt; {-Product [productname]}
+{-ProductConfiguration [Development|Manufacturing|ramboot_pre_oobe|ramboot_post_oobe]}
+{-Architecture [AMD64|x86|Arm|Arm64]} {-VM} {-Overwrite [YES|NO|PROMPT]}
+{-AdditionalLanguages [lang-lang,lang-lang]} {DefaultLanguage [default-language]}</code></pre>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:25%;">参数</th>
+                    <th style="width:75%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cmd">-Destination（必需）</td>
+                    <td>目标目录，例如 <code>C:\Workspace</code>。如果此目录不存在，则脚本会创建它。可以选择现有的工作区文件夹。<br>可能需要在电脑上<a href="https://learn.microsoft.com/zh-cn/windows/win32/fileio/naming-a-file" target="_blank">启用长文件路径</a>，具体取决于工作区的存储位置。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-Product（必需）</td>
+                    <td>指定工作区支持的产品。<br><strong>选项：</strong><br>• <code>FactoryOS</code><br>• <code>HubOS</code>（仅限 18941）<br>• <code>wcoscdg</code>（18941/18985，即 Windows 10X）<br>• <code>wcosref</code>（需手动复制 FM 构建）</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-ProductConfiguration</td>
+                    <td>配置 PrepWSKWorkspace 创建的 OEMInput 文件。<strong>值区分大小写。</strong><br><strong>选项：</strong><br>• <code>Development</code>：用于启动和测试（默认）<br>• <code>Manufacturing</code>：减少磁盘占用量和高性能电源管理模式（适用于 Factory OS）<br>• <code>win32_manufacturing</code> / <code>win32_development</code>：配置可在容器中运行诊断 Win32 应用的 Factory OS 版本</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-Architecture [AMD64|x86|Arm|Arm64]</td>
+                    <td>要构建的设备体系结构。默认体系结构为 <strong>AMD64</strong>。<br>注意：ARM/ARM64 版本需要特定的设备布局相关包，此处仅以 x86/AMD64 为例说明。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-VM</td>
+                    <td>用于生成虚拟机映像。添加此参数时，最终映像将是一个 <code>.vhdx</code> 文件 (UEFI)。生成 VM 映像时，不会生成 FFU。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-Overwrite:[Yes|No|Prompt]</td>
+                    <td>控制是否覆盖现有工作区。<br>• <code>Yes</code>：覆盖目标文件夹中的任何冲突文件<br>• <code>No</code>：不覆盖，仅复制新文件<br>• <code>Prompt</code>：覆盖前询问（默认）</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-AdditionalLanguages [lang-lang]</td>
+                    <td>用于将语言包和可供用户安装的功能添加到 OEMInput 文件。使用语言-区域性格式指定语言，例如 <code>de-de</code>、<code>fr-ca</code> 等。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-DefaultLanguage [default-language]</td>
+                    <td>指定映像中的默认语言。映像只能指定一种默认语言。使用语言-区域性格式指定语言，确保默认语言是 OEMInput 文件中包含的语言。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 注：</strong>
+            -Product 参数在现有 WSK 中均可填入 <code>FactoryOS</code>。<br>
+            18941 存在 <code>HubOS</code> 这一 SKU。<br>
+            18941 和 18985 存在 <code>wcoscdg</code>（即 Windows 10X 的一个 SKU）。<br>
+            <code>wcosref</code> 目前未找到有效方案进行操作，需要手动复制 FM 进行手动构建。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 生成映像                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="build"><i class="fas fa-hammer"></i>生成映像</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 第二步结束后会生成 XML 文件，例如：</strong>
+            <pre style="margin-top:6px;">OEMInput file E:\FactoryWorkSpace\FactoryOS_Win32_Development_AMD64_UEFI_SpacesGPT_Hardware.xml created.
+Successfully saved the Configuration file at E:\FactoryWorkSpace\FactoryOS_Win32_Development_AMD64_UEFI_SpacesGPT_Hardware_Configuration.xml.
+Success!
+E:\FactoryWorkSpace></pre>
+            <p style="margin-top:6px;">这里 <code>FactoryOS_Win32_Development_AMD64_UEFI_SpacesGPT_Hardware_Configuration.xml</code> 就是下一步需要的 XML。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 构建命令：</strong>
+            <pre style="margin-top:6px;"><code>BuildWSKImage %WSKWorkspaceRoot%\FactoryOS_Development_AMD64_UEFI_SpacesGPT_Hardware.xml</code></pre>
+            <p style="margin-top:6px;">即 <code>BuildWSKImage</code> 后面的文件即为上一步输出的 XML 的绝对路径，回车后即开始构建。</p>
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-clock"></i> 构建过程耗时较长，请耐心等待。建议在 SSD 上进行操作以获得更好的性能。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 多语言支持与常见问题                                      -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="multilang"><i class="fas fa-language"></i>多语言支持与常见问题</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 多语言支持说明：</strong>
+            <p style="margin-top:6px;">尽管 WSK 中的 FactoryOS 程序包提供了三种显示语言支持（<strong>en-US、zh-CN、zh-TW</strong>），但由于发布时未经充分测试，<strong>无法使用内置工具自动完成语言相关设置</strong>。</p>
+            <p style="margin-top:6px;">例如，在使用 <code>PrepWSKWorkSpace</code> 脚本创建 OEMInput.xml 时，如果指定添加语言或设置默认语言的参数，会出现错误提示：<strong>不支持修改非 ModernPC SKU 的语言</strong>。</p>
+        </div>
+
+        <h3 style="font-size:17px; margin:16px 0 10px 0;"><i class="fas fa-edit"></i>解决方案：手动修改 OEMInput.xml</h3>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 推荐方法：</strong>
+            <p style="margin-top:6px;">直接手动修改 <code>OEMInput.xml</code> 的 <strong><code>&lt;Languages&gt;</code></strong> 元素：</p>
+            <pre style="margin-top:6px;"><code>&lt;Languages&gt;
+    &lt;Language&gt;en-US&lt;/Language&gt;
+    &lt;Language Default="true"&gt;zh-CN&lt;/Language&gt;
+    &lt;Language&gt;zh-TW&lt;/Language&gt;
+&lt;/Languages&gt;</code></pre>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>添加语言：添加 <code>&lt;Language&gt;zh-CN&lt;/Language&gt;</code> 或 <code>&lt;Language&gt;zh-TW&lt;/Language&gt;</code>。</li>
+                <li>设置默认语言：添加属性 <code>Default="true"</code>。</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 重要注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>默认语言唯一性：</strong> 标记了 <code>Default="true"</code> 的语言只能有一个，否则会在制作时抛出异常。可以删除多余的 Default 属性或将其设为 <code>false</code>。</li>
+                <li><strong>en-US 必须保留：</strong> 如果直接修改原始 en-US 部分来改变语言，制作时 ImageApp 将会警告：必须包含 en-US 语言，并且会自动增加该语言。理论上可以通过修改内置工具绕过此要求。</li>
+                <li><strong>大小写敏感：</strong> ImageApp 判断文件是否存在的部分方法会区分大小写，因此 <code>en-us</code> 与 <code>en-US</code> 可能会影响制作结果。</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-bug"></i> 常见错误与解决方法：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>“找不到指定的文件”</strong> — 如果当前系统版本高于 WSK 版本，可能出现该异常。可尝试将 WSK 文件复制到其他可写位置再修改（直接修改 ISO 本身较为复杂）。</li>
+                <li><strong>无法挂载/卸载 UpdateOS</strong> — 同上，可能与系统版本不兼容有关。</li>
+                <li><strong>无法检测存储池版本 / 报错“尝试读取或写入受保护的内存”</strong> — 通常由环境不兼容引起，建议在匹配的 Windows 版本上运行。</li>
+            </ul>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-microchip"></i> ARM / ARM64 体系结构：</strong>
+            <p style="margin-top:4px;">与 AMD64 不同，官方未提供通用设备包，需要自行创建设备布局相关包。</p>
+            <p style="margin-top:4px;"><strong>容器支持：</strong> 尚未进行测试。已知 ARM 体系结构不提供容器支持。</p>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-bolt"></i> RamBoot 支持：</strong>
+            <p style="margin-top:4px;">完整系统的 RamBoot 支持尚未进行测试。不同于从 UpdateOS.wim 启动的方式。</p>
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：<a href="https://www.win-story.cn/2024/12/21/windows-factory-os-%e5%88%b6%e4%bd%9c-%c2%b7-%e5%b8%b8%e8%a7%81%e9%97%ae%e9%a2%98%e8%a7%a3%e7%ad%94/" target="_blank">WinStory - Windows Factory OS 制作 · 常见问题解答</a> ｜ <a href="https://learn.microsoft.com/en-us/legal/windows/hardware/wsk-license" target="_blank">Microsoft Learn - WSK License</a>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: Microsoft Learn &amp; WinStory &nbsp;|&nbsp; 文档版本: 1.1</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-24</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
