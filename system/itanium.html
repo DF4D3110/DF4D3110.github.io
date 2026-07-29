@@ -251,6 +251,11 @@
             color: #b84b00;
             border: 1px solid #e6c9a8;
         }
+        .version-status.checked {
+            background: #f0e6ff;
+            color: #6a1b9a;
+            border: 1px solid #ce93d8;
+        }
         .download-btn {
             padding: 4px 14px;
             background: #0366d6;
@@ -381,6 +386,11 @@
             font-size: 13px;
             color: #0d6b4f;
         }
+        .entry-placeholder {
+            color: #586069;
+            font-size: 12px;
+            margin-left: 4px;
+        }
         @media (max-width: 700px) {
             .item-row {
                 flex-direction: column;
@@ -443,7 +453,7 @@
         <p>⚠️ 仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
     </div>
 
-    <!-- ====== 新增：外部下载源入口 ====== -->
+    <!-- 外部下载源入口 -->
     <div class="external-source-entry">
         <i class="fas fa-cloud-download-alt"></i>
         <span class="entry-label">📦 完整镜像归档：</span>
@@ -466,6 +476,14 @@
         <a href="https://df4d3110.github.io/system/emulator/qemuitanium.html" target="_blank">查看指南 →</a>
     </div>
 
+    <!-- 新增：适用于 Itanium 1 的模拟方案入口 -->
+    <div class="emulator-entry">
+        <i class="fas fa-microchip"></i>
+        <span class="entry-label">📌 模拟器指南（Itanium 1）：</span>
+        <span class="entry-desc">适用于 Itanium 1 处理器的专用模拟方案 <span class="entry-placeholder">（链接待补充）</span></span>
+        <a href="#" target="_blank" style="opacity:0.6; cursor:default; pointer-events:none;">查看指南 →</a>
+    </div>
+
     <div class="emulator-entry">
         <i class="fas fa-boxes"></i>
         <span class="entry-label">📌 IA64软件下载：</span>
@@ -482,7 +500,7 @@
             <br>3. <span style="background:#fff3e0;color:#b84b00;padding:1px 10px;border-radius:30px;border:1px solid #e6c9a8;font-weight:600;">Itanium</span> 标签表示该版本适用于 Itanium 1 处理器；
             <br>4. <span style="background:#e3f0fa;color:#1f4a70;padding:1px 10px;border-radius:30px;border:1px solid #9fc3e0;font-weight:600;">Itanium 2</span> 标签表示该版本适用于 Itanium 2 处理器；
             <br>5. <span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">两者兼容</span> 标签表示该版本同时兼容两种处理器世代；
-            <br>6. 版本状态：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">正式版</span>、<span style="background:#fff5f5;color:#d73a49;padding:1px 10px;border-radius:30px;border:1px solid #f5c2cc;font-weight:600;">测试版</span> 与 <span style="background:#fff3e0;color:#b84b00;padding:1px 10px;border-radius:30px;border:1px solid #e6c9a8;font-weight:600;">候选版</span> 已区分标注；
+            <br>6. 版本状态：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">正式版</span>、<span style="background:#fff5f5;color:#d73a49;padding:1px 10px;border-radius:30px;border:1px solid #f5c2cc;font-weight:600;">测试版</span>、<span style="background:#fff3e0;color:#b84b00;padding:1px 10px;border-radius:30px;border:1px solid #e6c9a8;font-weight:600;">候选版</span> 与 <span style="background:#f0e6ff;color:#6a1b9a;padding:1px 10px;border-radius:30px;border:1px solid #ce93d8;font-weight:600;">Checked</span> 已区分标注；
             <br>7. 所有资源仅供学习研究，请于下载后 24 小时内删除；
             <br>8. <span style="background:#f6f8fa;color:#6a737d;padding:1px 10px;border-radius:12px;border:1px dashed #d1d5da;font-size:13px;">📋 仅清单</span> 标记的条目为本地归档，可点击上方 <strong>“完整镜像归档”</strong> 链接获取。
         </div>
@@ -493,7 +511,7 @@
         <div class="section-title">
             <i class="fab fa-windows"></i>Windows XP 64-Bit Edition Version 2002
             <span class="stage-badge">IA64</span>
-            <span class="count-badge">共 2 个</span>
+            <span class="count-badge">共 3 个</span>
         </div>
 
         <div class="item">
@@ -524,6 +542,21 @@
                 <i class="fas fa-file-archive"></i>
                 5.1.2600.0.xpclient.010817-1148_ia64fre_client-professional_retail_English-US.rar
             </div>
+
+            <!-- 新增：XP MUI Pack -->
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">Microsoft Windows XP MUI Pack 2001</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">MUI Pack</span>
+                <span class="lang-tag">Multilanguage</span>
+                <span class="version-status retail">正式版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/Microsoft.Windows.XP.MUI.Pack.2001.ia64.Multilanguage.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                Microsoft.Windows.XP.MUI.Pack.2001.ia64.Multilanguage.zip
+            </div>
         </div>
 
         <!-- ============================================================ -->
@@ -532,10 +565,11 @@
         <div class="section-title">
             <i class="fas fa-server"></i>Windows Server 2003 / XP 64-Bit Edition Version 2003
             <span class="stage-badge">IA64</span>
-            <span class="count-badge">共 11 个</span>
+            <span class="count-badge">共 15 个</span>
         </div>
 
         <div class="item">
+            <!-- 原有：5.1.3590.0 保持不变 -->
             <div class="item-row">
                 <span class="ver-name">5.1.3590.0.main.011110-1652</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -550,6 +584,22 @@
                 5.1.3590.0.main.011110-1652_ia64fre_server-enterprise_eval_ja-jp.rar
             </div>
 
+            <!-- ====== 新增：5.1.3590.0 日文零售版 ====== -->
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">5.1.3590.0.main.011110-1652</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Server Enterprise</span>
+                <span class="lang-tag">ja-JP</span>
+                <span class="version-status beta">测试版</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.1.3590.0.main.011110-1652_ia64fre_server-enterprise_retail_ja-jp.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.3590.0.main.011110-1652_ia64fre_server-enterprise_retail_ja-jp.zip
+            </div>
+
+            <!-- 原有：5.2.3663.0 保持不变 -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">5.2.3663.0.main.020715-1506</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -564,7 +614,22 @@
                 5.2.3663.0.main.020715-1506_ia64fre_server-enterprise_retail_en-us.rar
             </div>
 
-            <!-- ====== Build 3718 RC2 两个光盘 ====== -->
+            <!-- ====== 新增：5.2.3663.0 CD 版 ====== -->
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">5.2.3663.0.main.020715-1506</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag both">两者兼容</span>
+                <span class="edition-tag">Server Enterprise</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版 (CD)</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3663.0.main.020715-1506_ia64fre_server-enterprise_retail_en-us.CD.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.2.3663.0.main.020715-1506_ia64fre_server-enterprise_retail_en-us.CD.zip
+            </div>
+
+            <!-- Build 3718 RC2 两个光盘 -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">5.2.3718.0.dnsrv.021114-1947</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -572,7 +637,6 @@
                 <span class="version-status rc">候选版 (RC2)</span>
                 <span class="edition-tag">Enterprise Beta Kit</span>
             </div>
-            <!-- Disc02 - Server Enterprise -->
             <div class="sub-item">
                 <div class="item-row">
                     <span class="ver-name" style="min-width:200px;">Disc02 - Server 2003 Enterprise (ia64)</span>
@@ -585,7 +649,6 @@
                     Microsoft.Windows.Server.2003.Enterprise.Beta.Kit.5.2.3718.0.rc2.English-US.CD.Disc02.-.Server.2003.Enterprise.ia64.zip
                 </div>
             </div>
-            <!-- Disc03 - Resource CD -->
             <div class="sub-item">
                 <div class="item-row">
                     <span class="ver-name" style="min-width:200px;">Disc03 - Resource CD</span>
@@ -599,7 +662,7 @@
                 </div>
             </div>
 
-            <!-- Build 3787 分组 — 测试版（RTM候选） -->
+            <!-- Build 3787 分组 -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">5.2.3787.0.srv03_rtm.030312-1801</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -643,7 +706,7 @@
                 </div>
             </div>
 
-            <!-- Build 3790 分组 — 正式版 RTM -->
+            <!-- Build 3790 RTM -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">5.2.3790.0.srv03_rtm.030324-2048</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -674,6 +737,26 @@
                     5.2.3790.0.srv03_rtm.030324-2048_ia64fre_server-enterprise_retail.rar
                 </div>
             </div>
+
+            <!-- 新增：5.2.3790.1830 SP1 Datacenter -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
+                <span class="ver-name">5.2.3790.1830.srv03_sp1_rtm.050324-1447</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag both">两者兼容</span>
+                <span class="version-status retail">正式版 (SP1)</span>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">5.2.3790.1830.srv03_sp1_rtm.050324-1447_ia64fre_server-datacenter_volume</span>
+                    <span class="lang-tag">en-US</span>
+                    <span class="sku-tag">Server Datacenter (Volume)</span>
+                    <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/5.2.3790.1830.srv03_sp1_rtm.050324-1447_ia64fre_server-datacenter_volume.rar">下载</a>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    5.2.3790.1830.srv03_sp1_rtm.050324-1447_ia64fre_server-datacenter_volume.rar
+                </div>
+            </div>
         </div>
 
         <!-- ============================================================ -->
@@ -682,7 +765,7 @@
         <div class="section-title">
             <i class="fas fa-code-branch"></i>Windows Vista (Longhorn)
             <span class="stage-badge">IA64</span>
-            <span class="count-badge">共 6 个</span>
+            <span class="count-badge">共 8 个</span>
         </div>
 
         <div class="item">
@@ -700,6 +783,22 @@
                 6.0.4033.0.idx01.030730-1630_ia64fre_client-professional_retail_en-us.rar
             </div>
 
+            <!-- 新增：6.0.4051.0 Checked Build -->
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">6.0.4051.0.idx02.031001-1340</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional (Checked)</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status checked">Checked</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/6.0.4051.0.idx02.031001-1340_ia64chk_client-professional_retail_en-us.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4051.0.idx02.031001-1340_ia64chk_client-professional_retail_en-us.rar
+            </div>
+
+            <!-- 原有：6.0.4051.0 普通版 -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.0.4051.0.idx02.031001-1340</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -728,6 +827,22 @@
                 6.0.4067.0.idx01.040312-1730_ia64fre_client-professional_retail_en-us.rar
             </div>
 
+            <!-- 新增：6.0.4074.0 Checked Build -->
+            <div class="item-row" style="margin-top:4px;">
+                <span class="ver-name">6.0.4074.0.idx02.040425-1535</span>
+                <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional (Checked)</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status checked">Checked</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/i386/6.0.4074.0.idx02.040425-1535_ia64chk_client-professional_retail_en-us.rar">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4074.0.idx02.040425-1535_ia64chk_client-professional_retail_en-us.rar
+            </div>
+
+            <!-- 原有：6.0.4074.0 普通版 -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.0.4074.0.idx02.040425-1535</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -742,7 +857,7 @@
                 6.0.4074.0.idx02.040425-1535_ia64fre_client-professional_retail_en-us.rar
             </div>
 
-            <!-- ====== 新增：6.0.5384.4 Beta 2 ====== -->
+            <!-- 6.0.5384.4 Beta 2 -->
             <div class="item-row" style="margin-top:8px; border-top:1px dashed #e1e4e8; padding-top:8px;">
                 <span class="ver-name">6.0.5384.4.winmain_beta2.060518-1455</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -757,7 +872,7 @@
                 6.0.5384.4.winmain_beta2.060518-1455_ia64fre_server-enterprise_retail_en-us.rar
             </div>
 
-            <!-- ====== 新增：6.0.6001.16406 Longhorn ====== -->
+            <!-- 6.0.6001.16406 Longhorn -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.0.6001.16406.longhorn_idx01.061208-1900</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -774,7 +889,7 @@
         </div>
 
         <!-- ============================================================ -->
-        <!-- Windows Server 2008 R2 (新增)                                -->
+        <!-- Windows Server 2008 R2                                        -->
         <!-- ============================================================ -->
         <div class="section-title">
             <i class="fas fa-server"></i>Windows Server 2008 R2
@@ -783,7 +898,6 @@
         </div>
 
         <div class="item">
-            <!-- ====== 新增：6.1.7000.0 Beta ====== -->
             <div class="item-row">
                 <span class="ver-name">6.1.7000.0.winmain_win7beta.081212-1400</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -798,7 +912,6 @@
                 6.1.7000.0.winmain_win7beta.081212-1400_ia64fre_server-enterprise_retail_English-US.rar
             </div>
 
-            <!-- ====== 新增：6.1.7100.0 RC ====== -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.1.7100.0.winmain_win7rc.090421-1700</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -813,14 +926,13 @@
                 6.1.7100.0.winmain_win7rc.090421-1700_ia64fre_server-enterprise_retail_English-US.rar
             </div>
 
-            <!-- ====== 新增：6.1.7201.0 Checked Build ====== -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.1.7201.0.winmain_win7ids.090601-1516</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
                 <span class="itanium-tag both">两者兼容</span>
                 <span class="edition-tag">Server Unstaged (Checked)</span>
                 <span class="lang-tag">en-US</span>
-                <span class="version-status beta">测试版 (Checked)</span>
+                <span class="version-status checked">Checked</span>
                 <span class="no-download-note">📋 仅清单</span>
             </div>
             <div class="full-filename" style="color:#586069;">
@@ -828,7 +940,6 @@
                 6.1.7201.0.winmain_win7ids.090601-1516_ia64chk_server-unstaged_retail_en-us.rar
             </div>
 
-            <!-- ====== 新增：6.1.7600.16385 RTM ====== -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.1.7600.16385.win7_rtm.090713-1255</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> IA64</span>
@@ -847,7 +958,7 @@
         <!-- 底部信息 -->
         <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
             <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; Windows Itanium (IA64) &nbsp;|&nbsp; <span style="background:#f6f8fa;padding:0 8px;border-radius:4px;border:1px solid #e1e4e8;">📋 仅清单 = 本地归档（见上方 OneDrive 链接）</span></span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-21</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-29</span>
         </div>
     </div>
 </div>
