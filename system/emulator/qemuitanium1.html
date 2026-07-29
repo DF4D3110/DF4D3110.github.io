@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：基于 QEMU 的 Itanium 1 (Merced) 模拟 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .header .badge.itanium1 {
+            background: #fff3e0;
+            border-color: #e6c9a8;
+            color: #b84b00;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .download-entry {
+            background: #e6f7ef;
+            border: 1px solid #8ed4ba;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .download-entry i {
+            color: #0d6b4f;
+            font-size: 20px;
+        }
+        .download-entry .entry-label {
+            font-weight: 600;
+            color: #0d6b4f;
+            font-size: 15px;
+        }
+        .download-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+            background: #fff;
+        }
+        .download-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .download-entry .entry-desc {
+            font-size: 13px;
+            color: #0d6b4f;
+        }
+        .qemu-download-entry {
+            background: #f0f6ff;
+            border: 1px solid #b6cde6;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .qemu-download-entry i {
+            color: #0366d6;
+            font-size: 20px;
+        }
+        .qemu-download-entry .entry-label {
+            font-weight: 600;
+            color: #024080;
+            font-size: 15px;
+        }
+        .qemu-download-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+            background: #fff;
+        }
+        .qemu-download-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .qemu-download-entry .entry-desc {
+            font-size: 13px;
+            color: #1f4a70;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .param-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .param-table .cmd {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .param-table .must {
+            color: #d73a49;
+            font-weight: 700;
+        }
+        .step-list {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .step-list li {
+            margin-bottom: 6px;
+        }
+        .trouble-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .trouble-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .trouble-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .trouble-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .param-table,
+            .trouble-table {
+                font-size: 12px;
+            }
+            .param-table thead th,
+            .param-table tbody td,
+            .trouble-table thead th,
+            .trouble-table tbody td {
+                padding: 6px 8px;
+            }
+            .download-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .qemu-download-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-microchip"></i>文档：基于 QEMU 的 Itanium 1 (Merced) 模拟</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 使用 QEMU 在 Windows 中运行 Itanium 1 系统
+            <span class="badge itanium1">Itanium 1</span>
+            <span class="badge">QEMU</span>
+            <span class="badge warning">⚠️ 性能较低</span>
+            <span class="badge">Windows</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 系统下载入口 -->
+        <div class="download-entry">
+            <i class="fas fa-database"></i>
+            <span class="entry-label">📦 系统镜像下载：</span>
+            <span class="entry-desc">获取 Windows Itanium (IA64) 系统镜像</span>
+            <a href="https://df4d3110.github.io/system/itanium.html" target="_blank">前往下载 →</a>
+        </div>
+
+        <!-- QEMU 下载入口 -->
+        <div class="qemu-download-entry">
+            <i class="fas fa-download"></i>
+            <span class="entry-label">📌 QEMU 下载（Itanium 1 专用）：</span>
+            <span class="entry-desc">包含专用主程序和固件</span>
+            <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/Qemu_Windows_202607291727.zip" target="_blank">下载 QEMU →</a>
+        </div>
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare">1. 准备工作</a></li>
+                <li><a href="#command">2. 启动命令</a></li>
+                <li><a href="#params">3. 参数说明</a></li>
+                <li><a href="#rdp">4. RDP 远程桌面转发配置</a></li>
+                <li><a href="#notes">5. 注意事项</a></li>
+                <li><a href="#bootrepair">6. 引导修复（详细流程）</a></li>
+                <li><a href="#troubleshooting">7. 故障排除</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 概述：</strong>
+            <p style="margin-top:4px;">Itanium 1（代号 Merced）是 Intel 第一代 IA64 处理器，与后续的 Itanium 2 在微架构和固件上有显著差异。本方案使用专门编译的 <code>qemu-system-ia64-Itanium1.EXE</code> 和专用固件 <code>ia64-firmware-Itanium1.bin</code> 来模拟 Itanium 1 环境。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 与 Itanium 2 方案的关键差异：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>QEMU 主程序：</strong> <code>qemu-system-ia64-Itanium1.EXE</code>（区别于 <code>qemu-system-ia64.exe</code>）</li>
+                <li><strong>固件文件：</strong> <code>ia64-firmware-Itanium1.bin</code>（区别于 <code>ia64-firmware.bin</code>）</li>
+                <li><strong>CPU 类型：</strong> <code>-cpu merced</code> <span style="color:#d73a49;font-weight:600;">（必须指定）</span></li>
+                <li><strong>推荐内存：</strong> <strong>1.5 GB (1536M)</strong>（Itanium 1 对内存管理有不同要求）</li>
+                <li><strong>显卡参数：</strong> 建议使用 <code>-vga std</code>（避免 ATI 驱动不兼容）</li>
+                <li><strong>AHCI 支持：</strong> 早期版本（如 2462）需添加 <code>ahci=off</code></li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-folder-open"></i> 目录结构示例：</strong>
+            <pre style="margin-top:6px;">D:\QEMU-ITANIUM1\
+├── qemu-system-ia64-Itanium1.EXE
+├── qemu-img.exe
+├── share\
+│   └── vgabios-ati.bin (及其他固件)
+├── Firmware\
+│   └── ia64-firmware-Itanium1.bin
+├── 2462.vhd
+├── 2462.iso
+├── 2462.bin (NVRAM)
+├── 2600.vhd
+├── 2600.bin (NVRAM)
+├── ia64-2462.bat
+└── ia64-2600.bat</pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 启动命令                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="command"><i class="fas fa-terminal"></i>启动命令</h2>
+
+        <div class="warning-box">
+            <i class="fas fa-clock"></i> IA64 模拟性能较低，启动可能需要较长时间，请耐心等待。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> Windows XP 64-Bit Edition Version 2002 (5.1.2600.0)：</strong>
+        </div>
+        <pre><code>@echo off
+setlocal
+set SCRIPT_DIR=%~dp0
+set SCRIPT_DIR=%SCRIPT_DIR:~0,-1%
+"%SCRIPT_DIR%\Qemu_Windows\qemu-system-ia64-Itanium1.EXE" ^
+-L "%SCRIPT_DIR%\Qemu_Windows\share" ^
+-machine ia64-vpc,i8042=off,nvram=%SCRIPT_DIR%\2600.bin ^
+-bios "%SCRIPT_DIR%\Qemu_Windows\Firmware\ia64-firmware-Itanium1.bin" ^
+-accel tcg,thread=multi ^
+-cpu merced ^
+-smp 4 ^
+-m 1536M ^
+-net nic -net user,hostfwd=tcp::33890-:3389 ^
+-drive file="%SCRIPT_DIR%\2600.vhd",format=vpc ^
+-rtc base=2001-03-27,clock=vm ^
+-display gtk</code></pre>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> Windows Server 2003 (5.1.2462.0) — 含安装镜像：</strong>
+        </div>
+        <pre><code>@echo off
+setlocal
+set SCRIPT_DIR=%~dp0
+set SCRIPT_DIR=%SCRIPT_DIR:~0,-1%
+"%SCRIPT_DIR%\Qemu_Windows\qemu-system-ia64-Itanium1.EXE" ^
+-L "%SCRIPT_DIR%\Qemu_Windows\share" ^
+-machine ia64-vpc,i8042=off,nvram=%SCRIPT_DIR%\2462.bin,ahci=off ^
+-bios "%SCRIPT_DIR%\Qemu_Windows\Firmware\ia64-firmware-Itanium1.bin" ^
+-accel tcg,thread=multi ^
+-cpu merced ^
+-smp 4 ^
+-m 1536M ^
+-net nic -net user,hostfwd=tcp::33894-:3389 ^
+-drive file="%SCRIPT_DIR%\2462.vhd",format=vpc ^
+-drive file="%SCRIPT_DIR%\2462.iso",media=cdrom,format=raw,readonly=on ^
+-rtc base=2001-03-27,clock=vm ^
+-vga std ^
+-display gtk</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 3. 参数说明                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="params"><i class="fas fa-cog"></i>参数说明（Itanium 1 特有）</h2>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:25%;">参数</th>
+                    <th style="width:25%;">值</th>
+                    <th style="width:50%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cmd"><span class="must">⚠️ -cpu</span></td>
+                    <td><code><span class="must">merced</span></code></td>
+                    <td><strong class="must">必须指定！</strong> 显式指定 CPU 类型为 Itanium 1 (Merced)。如果省略此参数，QEMU 会使用默认的 Itanium 2 指令集，导致模拟失败或系统崩溃。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-m</td>
+                    <td><code>1536M</code></td>
+                    <td><strong>推荐使用 1.5 GB 内存</strong>，以避免更大内存出现的问题。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-vga</td>
+                    <td><code>std</code></td>
+                    <td><strong>建议添加</strong>，避免 ATI 显卡驱动在 Itanium 1 上引发蓝屏。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">-machine</td>
+                    <td><code>ia64-vpc,...,ahci=off</code></td>
+                    <td><strong>早期系统（如 2462）需禁用 AHCI</strong>，否则无法识别磁盘。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 4. RDP 远程桌面转发配置                                      -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="rdp"><i class="fas fa-desktop"></i>RDP 远程桌面转发配置</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 功能说明：</strong>
+            <p style="margin-top:4px;">与 Itanium 2 方案相同，Itanium 1 模拟也支持通过端口转发实现远程桌面连接。</p>
+        </div>
+
+        <div class="highlight-box" style="background:#e6f7ef;border:2px solid #28a745;border-radius:8px;padding:16px 20px;margin:16px 0;">
+            <strong><i class="fas fa-network-wired"></i> 端口转发参数：</strong>
+            <pre style="margin-top:6px;"><code>-net nic -net user,hostfwd=tcp::33890-:3389</code></pre>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>33890</code> — 宿主机端口（可自行修改，但需避免与系统服务冲突）</li>
+                <li><code>3389</code> — 虚拟机内 RDP 服务的默认端口</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 端口冲突警告：</strong>
+            如果宿主机已开启 RDP 服务（即占用 <code>3389</code> 端口），则不能使用 <code>3389</code> 作为转发接口。请使用其他端口（如示例中的 <code>33890</code> 或 <code>33894</code>）。
+        </div>
+
+        <h3 style="margin-top:16px; font-size:17px;">Windows 系统内配置要求</h3>
+        <ol class="step-list">
+            <li><strong>启用远程桌面：</strong>
+                <ul style="margin-top:4px;padding-left:20px;">
+                    <li>Windows XP 64-Bit Edition：右键“我的电脑” → 属性 → 远程 → 勾选“启用远程桌面”</li>
+                    <li>Windows Server 2003：右键“我的电脑” → 属性 → 远程 → 勾选“启用远程桌面”</li>
+                </ul>
+            </li>
+            <li><strong>为当前用户设置密码：</strong> 确保登录账户有密码（空密码无法通过 RDP 认证）。</li>
+            <li><strong>确认防火墙放行</strong>（通常不需要此步）：
+                <pre style="margin-top:4px;"><code>netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389</code></pre>
+            </li>
+        </ol>
+
+        <h3 style="margin-top:16px; font-size:17px;">连接方法</h3>
+        <ol class="step-list">
+            <li>启动 QEMU 并等待 Windows 完全启动。</li>
+            <li>在宿主机上打开远程桌面连接（mstsc）。</li>
+            <li>在“计算机”栏输入：<code>localhost:33890</code>（或您设置的其他宿主机端口）。</li>
+            <li>输入虚拟机的用户名和密码，即可连接。</li>
+        </ol>
+
+        <!-- ============================================================ -->
+        <!-- 5. 注意事项                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="notes"><i class="fas fa-exclamation-triangle"></i>注意事项</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 针对 5.1.2462.0 的特殊修复步骤：</strong>
+            <p style="margin-top:6px;">Build 2462 在i386安装阶段结束后，系统无法进入其后的安装阶段。需要在虚拟磁盘上进行以下操作：</p>
+            <ol style="margin-top:6px;padding-left:20px;">
+                <li><strong>替换 EFI 分区引导文件：</strong> 将 EFI 分区的 <code>ia64ldr.efi</code> 替换为来自正式版（如 Build 2600）的版本。</li>
+                <li><strong>替换系统驱动文件：</strong> 将系统分区 <code>Windows\System32\drivers\npfs.sys</code> 替换为来自正式版的版本。</li>
+            </ol>
+            <div style="margin-top:8px; padding:8px 12px; background:#f0f6ff; border-radius:4px; border-left:3px solid #0366d6;">
+                <strong><i class="fas fa-download"></i> 所需文件下载：</strong>
+                <span style="font-size:13px; color:#1f4a70;">包含替换所需的 <code>ia64ldr.efi</code> 和 <code>npfs.sys</code> 文件</span>
+                <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/2462.zip" target="_blank" style="display:inline-block; margin-left:12px; padding:3px 14px; background:#0366d6; color:#fff; border-radius:4px; text-decoration:none; font-size:13px;">下载 2462.zip →</a>
+            </div>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 显卡兼容性：</strong>
+            为避免 ATI 驱动不兼容导致蓝屏，<strong>强烈建议使用 <code>-vga std</code> 参数</strong>启动模拟器。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 其他注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong><code>-cpu merced</code> 必须指定：</strong> 这是 Itanium 1 模拟成功的必要条件。</li>
+                <li><strong>NVRAM 文件：</strong> 不同 Build 使用独立的 NVRAM 文件（如 <code>2462.bin</code>、<code>2600.bin</code>），避免混淆。</li>
+                <li><strong>RDP 端口：</strong> 不同实例使用不同端口（33890、33894）避免冲突。</li>
+                <li><strong>RTC 时间：</strong> 建议设置为 <code>2001-03-27</code>（对应 Windows XP 开发周期）。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 引导修复（详细流程）                                      -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="bootrepair"><i class="fas fa-boot"></i>引导修复（详细流程）</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 参考来源：</strong>
+            <p style="margin-top:4px;">本流程基于 HP Integrity BL860c Server Blade User Service Guide（第 88–91 页）中关于 Microsoft Windows 引导配置的描述，结合 IA64 平台的 EFI 特性整理。</p>
+        </div>
+
+        <p>当 Windows 启动项丢失或损坏时，可通过 EFI Shell 手动修复引导记录。Itanium 1 与 Itanium 2 的 EFI 环境基本一致，以下方法同样适用。</p>
+
+        <!-- ====== 方法一：nvrboot.efi ====== -->
+        <h3 style="margin-top:20px; font-size:17px;">方法一：使用 <code>nvrboot.efi</code> 导入引导项</h3>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 前提条件：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>系统已安装 Windows 且 <code>\EFI\Microsoft\WINNT50\</code> 目录下存在 <code>Boot00nn</code> 文件。</li>
+                <li>当前处于 EFI Shell 环境（从 EFI Boot Manager 选择 <code>EFI Shell [Built-in]</code> 进入）。</li>
+                <li>已确认 Windows 所在的 EFI 系统分区（通常为 <code>fs0:</code> 或 <code>fs2:</code>）。</li>
+            </ul>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>进入 EFI Shell：</strong> 启动 QEMU 后，在 EFI Boot Manager 界面选择 <code>EFI Shell [Built-in]</code>。</li>
+            <li>
+                <strong>列出所有可引导设备：</strong> 在 EFI Shell 提示符下执行：
+                <pre><code>map -r</code></pre>
+                找到 Windows 所在的 EFI 系统分区（通常标记为 <code>fsX:</code>，其中 X 为数字）。根据手册描述，EFI 系统分区是包含 <code>\EFI\Microsoft\WINNT50\</code> 目录的分区。
+            </li>
+            <li>
+                <strong>切换到 Windows 所在的 EFI 分区：</strong>
+                <pre><code>fs2:</code></pre>
+                （将 <code>2</code> 替换为实际分区号）
+            </li>
+            <li>
+                <strong>确认 Windows 引导文件存在：</strong>
+                <pre><code>ls EFI\Microsoft\WINNT50\</code></pre>
+                应能看到类似 <code>Boot0001</code>、<code>Boot0002</code> 等文件。
+            </li>
+            <li>
+                <strong>启动 <code>nvrboot.efi</code> 工具：</strong>
+                <pre><code>msutil\nvrboot.efi</code></pre>
+                根据手册，<code>nvrboot.efi</code> 位于 <code>\MSUtil\</code> 目录下，用于管理 Windows 启动选项。
+            </li>
+            <li>
+                <strong>在 <code>nvrboot.efi</code> 交互菜单中导入引导项：</strong>
+                <ul style="margin-top:4px;padding-left:20px;">
+                    <li>输入 <code>I</code>（Import）导入引导选项。</li>
+                    <li>输入引导文件路径，例如：<code>\EFI\Microsoft\WINNT50\Boot0001</code>。</li>
+                    <li>按提示完成导入。导入成功后，工具会显示 <code>Imported Boot Options from file</code> 的确认信息。</li>
+                </ul>
+            </li>
+            <li>
+                <strong>验证引导项是否已添加：</strong>
+                <pre><code>bcfg boot dump</code></pre>
+                检查输出中是否包含 <code>Windows Server 2003</code> 或 <code>Windows XP</code> 相关条目。
+            </li>
+            <li>
+                <strong>（可选）设置 Windows 为默认启动项：</strong>
+                <pre><code>bcfg boot mv 2 1</code></pre>
+                将 Windows 启动项移至首位（<code>2</code> 为当前编号，<code>1</code> 为目标位置）。
+            </li>
+            <li>
+                <strong>退出 <code>nvrboot.efi</code>：</strong> 输入 <code>Q</code> 退出工具。
+            </li>
+            <li>
+                <strong>重启系统：</strong>
+                <pre><code>reset</code></pre>
+                系统重启后，EFI Boot Manager 应显示 Windows 启动选项。
+            </li>
+        </ol>
+
+        <!-- ====== 方法二：bcfg 手动添加 ====== -->
+        <h3 style="margin-top:24px; font-size:17px;">方法二：使用 <code>bcfg</code> 命令手动添加引导项</h3>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <p style="margin-top:4px;">如果 <code>nvrboot.efi</code> 不可用，或需要更精细的控制，可使用 EFI Shell 内置的 <code>bcfg</code> 命令手动管理引导项。根据手册，<code>bcfg</code> 是 EFI 系统中管理引导选项列表的标准命令。</p>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>进入 EFI Shell 并切换到 EFI 分区：</strong> 同方法一步骤 1-3。</li>
+            <li>
+                <strong>查看当前引导项列表：</strong>
+                <pre><code>bcfg boot dump</code></pre>
+                这会显示所有已配置的引导项及其编号。
+            </li>
+            <li>
+                <strong>添加新的引导项：</strong>
+                <pre><code>bcfg boot add 1 \EFI\Microsoft\WINNT50\ia64ldr.efi "Windows Server 2003"</code></pre>
+                其中：
+                <ul style="margin-top:4px;padding-left:20px;">
+                    <li><code>1</code> — 引导项在列表中的位置（1 为第一位）</li>
+                    <li><code>\EFI\Microsoft\WINNT50\ia64ldr.efi</code> — 引导加载器的路径</li>
+                    <li><code>"Windows Server 2003"</code> — 在 EFI Boot Manager 中显示的名称</li>
+                </ul>
+            </li>
+            <li>
+                <strong>验证添加结果：</strong>
+                <pre><code>bcfg boot dump</code></pre>
+                确认新添加的引导项已出现在列表中。
+            </li>
+            <li><strong>重启系统：</strong> <code>reset</code></li>
+        </ol>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><code>ia64ldr.efi</code> 通常不是直接可执行文件，它需要配合 <code>Boot00nn</code> 配置文件使用。推荐优先使用 <code>nvrboot.efi</code> 方式导入。</li>
+                <li>如果手动添加后无法引导，请检查 <code>Boot00nn</code> 文件是否存在于 <code>\EFI\Microsoft\WINNT50\</code> 目录中。</li>
+            </ul>
+        </div>
+
+        <!-- ====== 方法三：bcfg 调整顺序 ====== -->
+        <h3 style="margin-top:24px; font-size:17px;">方法三：使用 <code>bcfg</code> 调整引导顺序</h3>
+
+        <ol class="step-list">
+            <li><strong>查看当前引导项列表：</strong> <code>bcfg boot dump</code>，记下 Windows 引导项的编号。</li>
+            <li>
+                <strong>将 Windows 引导项移至首位：</strong>
+                <pre><code>bcfg boot mv 3 1</code></pre>
+                将编号为 3 的引导项移动到位置 1。
+            </li>
+            <li>
+                <strong>验证修改结果：</strong>
+                <pre><code>bcfg boot dump</code></pre>
+            </li>
+            <li><strong>重启系统：</strong> <code>reset</code></li>
+        </ol>
+
+        <!-- ====== 方法四：autoboot ====== -->
+        <h3 style="margin-top:24px; font-size:17px;">方法四：配置 <code>autoboot</code> 自动启动</h3>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <p style="margin-top:4px;">根据手册，<code>autoboot</code> 设置决定系统启动时是否自动加载引导项列表中的第一项。</p>
+        </div>
+
+        <ol class="step-list">
+            <li>
+                <strong>启用自动启动（默认超时时间）：</strong>
+                <pre><code>autoboot on</code></pre>
+            </li>
+            <li>
+                <strong>设置自定义超时时间（秒）：</strong>
+                <pre><code>autoboot time 60</code></pre>
+            </li>
+            <li>
+                <strong>禁用自动启动：</strong>
+                <pre><code>autoboot off</code></pre>
+                禁用后，系统每次都会停留在 EFI Boot Manager 界面等待用户选择。
+            </li>
+            <li><strong>重启系统：</strong> <code>reset</code></li>
+        </ol>
+
+        <!-- ====== 备选方案：手动引导 ====== -->
+        <h3 style="margin-top:24px; font-size:17px;">备选方案：从 EFI Shell 手动引导 Windows</h3>
+
+        <ol class="step-list">
+            <li><strong>进入 EFI Shell 并切换到 EFI 分区：</strong> 同方法一步骤 1-3。</li>
+            <li>
+                <strong>导航到 Windows 引导目录：</strong>
+                <pre><code>cd EFI\Microsoft\WINNT50</code></pre>
+            </li>
+            <li>
+                <strong>列出可用的引导文件：</strong>
+                <pre><code>ls</code></pre>
+                确认存在 <code>Boot00nn</code> 文件。
+            </li>
+            <li>
+                <strong>执行引导加载器：</strong>
+                <pre><code>ia64ldr.efi</code></pre>
+                这会手动启动 Windows 引导过程。
+            </li>
+        </ol>
+
+        <!-- ====== 总结表格 ====== -->
+        <h3 style="margin-top:24px; font-size:17px;">引导修复方法速查</h3>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:20%;">方法</th>
+                    <th style="width:30%;">适用场景</th>
+                    <th style="width:50%;">关键命令/工具</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>方法一</strong></td>
+                    <td>Windows Boot Manager 丢失（推荐）</td>
+                    <td><code>\MSUtil\nvrboot.efi</code> → 选择 <code>I</code>（Import）→ 输入 <code>\EFI\Microsoft\WINNT50\Boot00nn</code></td>
+                </tr>
+                <tr>
+                    <td><strong>方法二</strong></td>
+                    <td><code>nvrboot.efi</code> 不可用时</td>
+                    <td><code>bcfg boot add # \EFI\Microsoft\WINNT50\ia64ldr.efi "Description"</code></td>
+                </tr>
+                <tr>
+                    <td><strong>方法三</strong></td>
+                    <td>修改默认启动项顺序</td>
+                    <td><code>bcfg boot mv #a #b</code></td>
+                </tr>
+                <tr>
+                    <td><strong>方法四</strong></td>
+                    <td>配置自动启动</td>
+                    <td><code>autoboot on/off</code>、<code>autoboot time 60</code></td>
+                </tr>
+                <tr>
+                    <td><strong>备选方案</strong></td>
+                    <td>临时手动引导</td>
+                    <td>切换到 EFI 分区 → <code>cd EFI\Microsoft\WINNT50</code> → <code>ia64ldr.efi</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 通用注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>每次更换磁盘或重新安装系统后，都需要重新导入引导项。</li>
+                <li>如果 <code>EFI\Microsoft\WINNT50\</code> 目录为空，说明系统未正确安装，请重新安装。</li>
+                <li>导入后如仍无法引导，检查 <code>-drive</code> 参数中的 <code>if=ide</code> 是否正确（Windows Server 2008 R2 必须使用 IDE，但 Itanium 1 早期系统通常使用 SCSI）。</li>
+                <li>在 EFI Shell 中，文件系统编号（如 <code>fs2:</code>）可能每次启动后发生变化，建议使用 <code>map -r</code> 重新扫描后确认。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 故障排除                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <table class="trouble-table">
+            <thead>
+                <tr>
+                    <th style="width:25%;">问题</th>
+                    <th style="width:35%;">可能原因</th>
+                    <th style="width:40%;">解决方案</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>QEMU 无法启动</strong></td>
+                    <td>未指定 CPU 类型</td>
+                    <td>添加 <code>-cpu merced</code> 参数</td>
+                </tr>
+                <tr>
+                    <td><strong>安装后无法进入 GUI</strong></td>
+                    <td>Build 2462 特有 bug</td>
+                    <td>替换 <code>ia64ldr.efi</code> 和 <code>npfs.sys</code>（见上方下载链接）</td>
+                </tr>
+                <tr>
+                    <td><strong>ATI 驱动蓝屏</strong></td>
+                    <td>显卡兼容性</td>
+                    <td>添加 <code>-vga std</code> 参数</td>
+                </tr>
+                <tr>
+                    <td><strong>磁盘无法识别</strong></td>
+                    <td>AHCI 不兼容</td>
+                    <td>添加 <code>ahci=off</code> 参数（早期版本）</td>
+                </tr>
+                <tr>
+                    <td><strong>模拟速度极慢</strong></td>
+                    <td>内存配置不当</td>
+                    <td>使用 <code>-m 1536M</code> 而非 4G</td>
+                </tr>
+                <tr>
+                    <td><strong>NVRAM 冲突</strong></td>
+                    <td>多个版本共用 NVRAM</td>
+                    <td>为每个版本使用独立的 <code>xxx.bin</code></td>
+                </tr>
+                <tr>
+                    <td><strong>RDP 连接失败</strong></td>
+                    <td>端口冲突或防火墙</td>
+                    <td>检查宿主机端口是否被占用，确认虚拟机内 RDP 已启用</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：<a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/Qemu_Windows_202607291727.zip" target="_blank">Itanium 1 专用 QEMU</a> ｜ <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/2462.zip" target="_blank">2462 修复文件</a> ｜ HP Integrity BL860c Server Blade User Service Guide ｜ WinStory 社区整理
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: WinStory社区、Betaworld、Betawiki &nbsp;|&nbsp; 文档版本: 1.2</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-29</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
