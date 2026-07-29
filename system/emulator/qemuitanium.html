@@ -123,7 +123,7 @@
             color: #0d6b4f;
         }
 
-        /* 新增：体验包下载卡片 */
+        /* 体验包下载卡片 */
         .ready-to-run-entry {
             background: #fff3e0;
             border: 2px solid #e6a700;
@@ -440,10 +440,9 @@
         </div>
         <h1><i class="fas fa-microchip"></i>文档：基于 QEMU 的 IA64 模拟</h1>
         <div class="subtitle">
-            <i class="fas fa-tag"></i> 使用 QEMU 在 Windows 中运行 Itanium 系统
+            <i class="fas fa-tag"></i> 使用 QEMU 在 Windows 中运行 Itanium 2 系统
             <span class="badge">IA64</span>
             <span class="badge">QEMU</span>
-            <span class="badge warning">⚠️ 性能较低</span>
             <span class="badge">Windows</span>
         </div>
     </div>
@@ -458,7 +457,7 @@
             <a href="https://df4d3110.github.io/system/itanium.html" target="_blank">前往下载 →</a>
         </div>
 
-        <!-- ====== 新增：已安装好的体验包 ====== -->
+        <!-- 体验包 -->
         <div class="ready-to-run-entry">
             <i class="fas fa-rocket"></i>
             <span class="entry-label">🚀 已安装好的体验包：</span>
@@ -723,6 +722,17 @@
             Windows Longhorn（Build 4051、4074 等）在 QEMU IA64 模拟环境中 <strong>默认可以启动到桌面</strong>，无需额外配置。
         </div>
 
+        <!-- ====== 新增：Build 4033 特别注意事项 ====== -->
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> Build 4033 特别注意事项：</strong>
+            <p style="margin-top:6px;">Windows Longhorn Build 4033 的 <code>hal.dll</code> 存在问题，<strong>无法使用原版 hal.dll 进行安装</strong>。需要将其替换为 Build 4051 <strong>fre（零售版）</strong> 版本的 <code>hal.dll</code>，才能正常完成安装并进入桌面。</p>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>替换方法：</strong> 在安装介质或已安装系统的 <code>Windows\System32\</code> 目录下，将 4033 的 <code>hal.dll</code> 替换为 4051 fre 版本。</li>
+                <li><strong>获取途径：</strong> 从 Build 4051 的 IA64 安装镜像或已安装系统中提取 <code>hal.dll</code> 文件。</li>
+                <li><strong>注意：</strong> 仅 4051 <strong>fre</strong> 版本适用，<strong>chk（检查版）</strong> 在此没有进行测试。</li>
+            </ul>
+        </div>
+
         <div class="note-box info">
             <strong><i class="fas fa-info-circle"></i> 测试环境：</strong>
             <ul style="margin-top:6px;padding-left:20px;">
@@ -880,6 +890,11 @@
                     <td class="yes">✅ <strong>可以正常启动到桌面</strong>（需 <code>-rtc base=2004-03-27</code>）</td>
                 </tr>
                 <tr>
+                    <td style="font-family:Consolas, monospace; font-size:13px;"><strong>Windows Longhorn 4033</strong></td>
+                    <td>SCSI</td>
+                    <td class="yes">✅ 替换 <code>hal.dll</code> 为 4051 fre 版本后可正常启动到桌面</td>
+                </tr>
+                <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;"><strong>Windows Server 2008 R2 (Build 7000)</strong></td>
                     <td><strong>IDE（必需）</strong></td>
                     <td class="yes">✅ 使用 <code>if=ide</code> 后可正常启动</td>
@@ -892,14 +907,14 @@
                 <tr>
                     <td style="font-family:Consolas, monospace; font-size:13px;">Windows Vista (Longhorn) 4033</td>
                     <td>SCSI</td>
-                    <td class="yes">✅ 可以正常启动到桌面</td>
+                    <td class="yes">✅ 替换 <code>hal.dll</code> 后可正常启动到桌面</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="note-box info" style="margin-top:8px;">
             <strong><i class="fas fa-info-circle"></i> 注：</strong>
-            <span style="font-size:13px;color:#586069;">Windows Longhorn 系列（4051、4074）在 QEMU IA64 模拟中表现良好，默认 SCSI 磁盘即可正常启动到桌面。Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，Longhorn 系列建议添加 <code>-rtc base=2004-03-27</code>。</span>
+            <span style="font-size:13px;color:#586069;">Windows Longhorn 系列（4051、4074）在 QEMU IA64 模拟中表现良好，默认 SCSI 磁盘即可正常启动到桌面。<strong>Build 4033 需要替换 hal.dll</strong> 为 4051 fre 版本。Windows Server 2008 R2 必须使用 IDE 磁盘接口（<code>if=ide</code>），否则会因 SCSI 驱动不兼容导致 0x0000007B 蓝屏。RTC 时间为可选参数，Longhorn 系列建议添加 <code>-rtc base=2004-03-27</code>。</span>
         </div>
 
         <!-- ============================================================ -->
@@ -1058,8 +1073,8 @@
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: Betawiki Discord、WinStory社区 &nbsp;|&nbsp; 文档版本: 2.0</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-21</span>
+            <span><i class="fas fa-database"></i> 来源: Betawiki Discord、WinStory社区 &nbsp;|&nbsp; 文档版本: 2.1</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-07-29</span>
         </div>
     </div>
 </div>
