@@ -166,6 +166,47 @@
             font-size: 13px;
             color: #1f4a70;
         }
+        /* ====== 修改后的体验包入口样式 ====== */
+        .ready-to-run-entry {
+            background: #fff3e0;
+            border: 2px solid #e6a700;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+        .ready-to-run-entry i {
+            color: #b84b00;
+            font-size: 20px;
+        }
+        .ready-to-run-entry .entry-label {
+            font-weight: 600;
+            color: #b84b00;
+            font-size: 15px;
+        }
+        .ready-to-run-entry a {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 4px 16px;
+            border: 1px solid #0366d6;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: all 0.15s;
+            background: #fff;
+        }
+        .ready-to-run-entry a:hover {
+            background: #0366d6;
+            color: #fff;
+        }
+        .ready-to-run-entry .entry-desc {
+            font-size: 13px;
+            color: #b84b00;
+        }
+
         .toc {
             background: #f6f8fa;
             border: 1px solid #e1e4e8;
@@ -384,6 +425,10 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .ready-to-run-entry {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -425,7 +470,7 @@
             <a href="https://github.com/DF4D3110/DF4D3110.github.io/releases/download/website2/Qemu_Windows_202607291727.zip" target="_blank">下载 QEMU →</a>
         </div>
 
-        <!-- 体验包 -->
+        <!-- 体验包入口（样式已修正） -->
         <div class="ready-to-run-entry">
             <i class="fas fa-rocket"></i>
             <span class="entry-label">🚀 已安装好的体验包：</span>
