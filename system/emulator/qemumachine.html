@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QEMU IA64 现成虚拟机镜像下载 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .header .badge.itanium1 {
+            background: #fff3e0;
+            border-color: #e6c9a8;
+            color: #b84b00;
+        }
+        .header .badge.itanium2 {
+            background: #e3f0fa;
+            border-color: #9fc3e0;
+            color: #1f4a70;
+        }
+        .header .badge.ready {
+            background: #e6f7ef;
+            border-color: #8ed4ba;
+            color: #0d6b4f;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .group-desc {
+            background: #eef7ff;
+            padding: 14px;
+            border-radius: 5px;
+            margin-bottom: 22px;
+            color: #024080;
+            line-height: 1.7;
+        }
+        .group-desc strong {
+            color: #002c5c;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .item {
+            padding: 13px 0;
+            border-bottom: 1px dashed #dddddd;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .ver-name {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 200px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .itanium-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .itanium-tag.itanium1 {
+            background: #fff3e0;
+            color: #b84b00;
+            border: 1px solid #e6c9a8;
+        }
+        .itanium-tag.itanium2 {
+            background: #e3f0fa;
+            color: #1f4a70;
+            border: 1px solid #9fc3e0;
+        }
+        .edition-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .lang-tag {
+            font-size: 13px;
+            background: #f0f6fe;
+            color: #1f4a70;
+            padding: 2px 10px;
+            border-radius: 3px;
+            border: 1px solid #cbd9ec;
+        }
+        .version-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .version-status.retail {
+            background: #e6f7ef;
+            color: #0d6b4f;
+            border: 1px solid #8ed4ba;
+        }
+        .version-status.beta {
+            background: #fff5f5;
+            color: #d73a49;
+            border: 1px solid #f5c2cc;
+        }
+        .download-btn {
+            padding: 4px 14px;
+            background: #0366d6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .download-btn:hover {
+            background: #0250b3;
+        }
+        .full-filename {
+            font-size: 13px;
+            color: #22863a;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .full-filename i {
+            color: #22863a;
+            font-size: 13px;
+        }
+        .script-name {
+            font-size: 13px;
+            color: #0366d6;
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: #f0f6ff;
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: 1px solid #b6cde6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .disclaimer {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-left: 6px solid red;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+        .disclaimer p {
+            color: red;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .arch-warning {
+            background: #fff5f5;
+            border: 2px solid #d73a49;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .arch-warning i {
+            color: #d73a49;
+            font-size: 24px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .arch-warning .warning-content {
+            color: #24292e;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .arch-warning .warning-content strong {
+            color: #d73a49;
+        }
+        .arch-warning .warning-content .highlight {
+            background: #fdedf0;
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #a3485a;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .default-cred {
+            display: inline-block;
+            background: #f0f6ff;
+            border: 1px solid #b6cde6;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .struct-example {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 8px 0;
+        }
+        .struct-example .folder {
+            color: #0366d6;
+            font-weight: 600;
+        }
+        .struct-example .file {
+            color: #22863a;
+        }
+        .struct-example .highlight-file {
+            color: #b84b00;
+            font-weight: 600;
+        }
+        .pw-note {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 10px 16px;
+            margin: 6px 0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        @media (max-width: 700px) {
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .download-btn {
+                margin-left: 0;
+            }
+            .ver-name {
+                min-width: unset;
+                font-size: 14px;
+                word-break: break-all;
+            }
+            .full-filename {
+                font-size: 12px;
+            }
+            .arch-warning {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回模拟汇总页面</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-box-open"></i>QEMU IA64 现成虚拟机镜像下载</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 开箱即用的 IA64 虚拟机镜像
+            <span class="badge">IA64</span>
+            <span class="badge">QEMU</span>
+            <span class="badge ready">开箱即用</span>
+            <span class="badge warning">仅供研究</span>
+        </div>
+    </div>
+
+    <!-- IA64 架构警告 -->
+    <div class="arch-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div class="warning-content">
+            <strong>⚠️ 架构特别警告</strong>
+            <br>本页面所有镜像均为 <strong>IA64（Itanium）架构</strong> 专用版本，<strong>无法在常见的 x86 / x64 / ARM 设备上直接运行</strong>。
+            <br>• 这些镜像需要 <span class="highlight">QEMU IA64 模拟器</span> 才能启动；
+            <br>• 每个压缩包已包含完整的 QEMU 环境（含专用主程序与固件）；
+            <br>• 请勿尝试在普通 PC 或常见虚拟机中加载，否则将无法引导。
+        </div>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+        <p>⚠️ 仅用于学习研究用途，严禁用于商业用途，请在下载后二十四小时内删除</p>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 说明区域 -->
+        <div class="group-desc">
+            <strong>📖 说明：</strong>
+            <br>1. 本页面提供的均为 <strong>已完整走完安装流程</strong> 的 QEMU IA64 虚拟机镜像；
+            <br>2. 每个压缩包包含：VHD 磁盘镜像、NVRAM 文件（<code>xxxx.bin</code>）、启动脚本（<code>ia64-xxxx.bat</code>）及完整 QEMU 环境；
+            <br>3. 启动脚本命名规则：<code>ia64-xxxx.bat</code>，其中 <code>xxxx</code> 为 Build 号（如 <code>ia64-4074.bat</code>）；
+            <br>4. 下载后解压，<strong>直接双击对应的 <code>ia64-xxxx.bat</code> 即可启动</strong>，无需额外配置；
+            <br>5. <span style="background:#fff3e0;color:#b84b00;padding:1px 10px;border-radius:30px;border:1px solid #e6c9a8;font-weight:600;">Itanium 1</span> 标签表示该镜像专为 Itanium 1 (Merced) 优化，<strong>必须使用 <code>qemu-system-ia64-Itanium1.EXE</code></strong>；
+            <br>6. <span style="background:#e3f0fa;color:#1f4a70;padding:1px 10px;border-radius:30px;border:1px solid #9fc3e0;font-weight:600;">Itanium 2</span> 标签表示该镜像适用于 Itanium 2 平台；
+            <br>7. 版本状态：<span style="background:#e6f7ef;color:#0d6b4f;padding:1px 10px;border-radius:30px;border:1px solid #8ed4ba;font-weight:600;">正式版</span> 与 <span style="background:#fff5f5;color:#d73a49;padding:1px 10px;border-radius:30px;border:1px solid #f5c2cc;font-weight:600;">测试版</span> 已区分标注；
+            <br>8. 所有资源仅供学习研究，请于下载后 24 小时内删除。
+        </div>
+
+        <!-- ====== 压缩包结构说明 ====== -->
+        <div class="note-box info">
+            <strong><i class="fas fa-folder-open"></i> 压缩包内部结构（以 4067 为例）：</strong>
+            <div class="struct-example">
+                <span class="folder">E:\6.0.4067.0.idx01.040312-1730_ia64_fullqemu.zip\</span><br>
+                ├── <span class="folder">Qemu Windows\</span>  &lt;— 完整 QEMU 环境<br>
+                ├── <span class="file">4067.bin</span>  &lt;— NVRAM 文件<br>
+                ├── <span class="highlight-file">4067.vhd</span>  &lt;— 磁盘镜像（核心文件）<br>
+                └── <span class="highlight-file">ia64-4067.bat</span>  &lt;— 启动脚本（双击运行）
+            </div>
+            <p style="margin-top:6px; font-size:13px; color:#586069;">每个 Build 的压缩包结构类似，<code>xxxx.vhd</code> 和 <code>ia64-xxxx.bat</code> 为必含文件。</p>
+        </div>
+
+        <!-- ====== 密码说明 ====== -->
+        <div class="note-box warning">
+            <strong><i class="fas fa-key"></i> 登录账户说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>部分镜像已预设密码：</strong> 账户 <span class="default-cred">administrator</span>，密码 <span class="default-cred">df4d3110</span>（如 4033、4074 等 Longhorn 系列）。</li>
+                <li><strong>部分镜像无密码：</strong> 如 2462、2600、3590、3790 等，直接点击登录即可进入桌面，无需输入密码。</li>
+                <li>如不确定，可先尝试空密码登录；若提示密码错误，则使用 <code>administrator / df4d3110</code>。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Itanium 1 镜像列表                                          -->
+        <!-- ============================================================ -->
+        <div class="section-title">
+            <i class="fas fa-microchip"></i>Itanium 1 (Merced) 专用镜像
+            <span class="stage-badge" style="background:#fff3e0;color:#b84b00;padding:2px 14px;border-radius:30px;border:1px solid #e6c9a8;font-size:0.75rem;font-weight:400;margin-left:10px;">共 3 个</span>
+        </div>
+
+        <div class="item">
+            <!-- 2462 -->
+            <div class="item-row">
+                <span class="ver-name">5.1.2462.0</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Server Enterprise</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-2462.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/5.1.2462.0.main.010315-1720_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.2462.0.main.010315-1720_ia64_fullqemu.zip
+            </div>
+
+            <!-- 2600 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">5.1.2600.0</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status retail">正式版</span>
+                <span class="script-name">ia64-2600.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/5.1.2600.0.xpclient.010817-1148_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.2600.0.xpclient.010817-1148_ia64_fullqemu.zip
+            </div>
+
+            <!-- 3590 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">5.1.3590.0</span>
+                <span class="itanium-tag itanium1">Itanium 1</span>
+                <span class="edition-tag">Server Enterprise 评估版</span>
+                <span class="lang-tag">ja-JP</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-3590.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/5.1.3590.0.main.011110-1652_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.1.3590.0.main.011110-1652_ia64_fullqemu.zip
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Itanium 2 镜像列表                                          -->
+        <!-- ============================================================ -->
+        <div class="section-title">
+            <i class="fas fa-microchip"></i>Itanium 2 通用镜像
+            <span class="stage-badge" style="background:#e3f0fa;color:#1f4a70;padding:2px 14px;border-radius:30px;border:1px solid #9fc3e0;font-size:0.75rem;font-weight:400;margin-left:10px;">共 5 个</span>
+        </div>
+
+        <div class="item">
+            <!-- 3790 -->
+            <div class="item-row">
+                <span class="ver-name">5.2.3790.0</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status retail">正式版</span>
+                <span class="script-name">ia64-3790.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/5.2.3790.0.srv03_rtm.030324-2048_client_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                5.2.3790.0.srv03_rtm.030324-2048_client_ia64_fullqemu.zip
+            </div>
+
+            <!-- 4033 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">6.0.4033.0</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-4033.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/6.0.4033.0.idx01.030730-1630_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4033.0.idx01.030730-1630_ia64_fullqemu.zip
+            </div>
+
+            <!-- 4051 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">6.0.4051.0</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-4051.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/6.0.4051.0.idx02.031001-1340_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4051.0.idx02.031001-1340_ia64_fullqemu.zip
+            </div>
+ 
+            <!-- 4067 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">6.0.4067.0</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-4067.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/6.0.4067.0.idx01.040312-1730_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4067.0.idx01.040312-1730_ia64_fullqemu.zip
+            </div>
+
+            <!-- 4074 -->
+            <div class="item-row" style="margin-top:8px;">
+                <span class="ver-name">6.0.4074.0</span>
+                <span class="itanium-tag itanium2">Itanium 2</span>
+                <span class="edition-tag">Client Professional</span>
+                <span class="lang-tag">en-US</span>
+                <span class="version-status beta">测试版</span>
+                <span class="script-name">ia64-4074.bat</span>
+                <a class="download-btn" target="_blank" href="https://github.com/DF4D3110/Windows-Itanium-Systems-Archive/releases/download/qemu-machine/6.0.4074.0.idx02.040425-1535_ia64_fullqemu.zip">下载</a>
+            </div>
+            <div class="full-filename">
+                <i class="fas fa-file-archive"></i>
+                6.0.4074.0.idx02.040425-1535_ia64_fullqemu.zip
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="section-title" style="margin-top:40px;">
+            <i class="fas fa-play"></i>使用说明
+        </div>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 启动步骤：</strong>
+            <ol style="margin-top:6px;padding-left:20px;">
+                <li>下载对应 Build 的 ZIP 压缩包并解压到任意目录。</li>
+                <li>找到对应的启动脚本 <code>ia64-xxxx.bat</code>（如 <code>ia64-4074.bat</code>）。</li>
+                <li><strong>直接双击运行</strong>，QEMU 将自动启动并进入系统桌面。</li>
+                <li>如需调整内存或 CPU 核心数，编辑 <code>ia64-xxxx.bat</code>，修改 <code>-m</code> 和 <code>-smp</code> 参数即可。</li>
+            </ol>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-network-wired"></i> RDP 远程桌面：</strong>
+            <p style="margin-top:4px;">启动脚本已默认开启 RDP 端口转发（宿主机端口 <code>3389x</code> → 虚拟机 <code>3389</code>）。启动后使用远程桌面连接 <code>localhost:3389x</code> 即可。</p>
+            <p style="margin-top:4px; font-size:13px; color:#586069;">如宿主机已占用 3389x 端口，请修改脚本中的 <code>hostfwd=tcp::3389x-:3389</code> 为其他端口。</p>
+        </div>
+
+        <!-- 注意事项 -->
+        <div class="section-title" style="margin-top:40px;">
+            <i class="fas fa-exclamation-triangle"></i>注意事项
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 各版本已知问题：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>5.1.2462.0：</strong> 需手动替换 <code>ia64ldr.efi</code> 和 <code>npfs.sys</code> 才能完成 GUI 安装（压缩包内已包含修复说明）。</li>
+                <li><strong>Longhorn 系列（4033/4051/4067/4074）：</strong> 启动脚本已添加 <code>-rtc base=2004-03-27</code> 参数以绕过时间炸弹。</li>
+                <li><strong>Itanium 1 镜像：</strong> 启动脚本使用 <code>qemu-system-ia64-Itanium1.EXE</code> 并已指定 <code>-cpu merced</code>，请勿修改。</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 性能提示：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>TCG 软件模拟效率较低，建议关闭宿主机上其他占用 CPU 的大型程序。</li>
+                <li>如运行卡顿，可尝试将 <code>-smp 4</code> 改为 <code>-smp 1</code> 以降低 CPU 负载。</li>
+                <li>Itanium 1 镜像建议内存不超过 1536M（脚本已默认配置）。</li>
+            </ul>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; QEMU IA64 现成镜像</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-02</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
