@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：基于 ES40 的 Alpha AXP 模拟方案 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .header .badge.success {
+            background: #e6f7ef;
+            border-color: #8ed4ba;
+            color: #0d6b4f;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fdedf0;
+            border: 1px solid #f5c2cc;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: #a3485a;
+            text-align: center;
+            font-weight: 600;
+        }
+        .warning-box i {
+            margin-right: 8px;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .param-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .param-table .cfg-key {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .result-table thead th {
+            background: #f6f8fa;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .result-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .result-table tbody tr:nth-child(even) {
+            background: #fafcff;
+        }
+        .result-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .result-table .yes {
+            color: #28a745;
+        }
+        .result-table .no {
+            color: #d73a49;
+        }
+        .result-table .partial {
+            color: #e6a700;
+        }
+        .step-list {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .step-list li {
+            margin-bottom: 6px;
+        }
+        .step-list li code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+        .highlight-box {
+            background: #e6f7ef;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+        .highlight-box strong {
+            color: #0d6b4f;
+        }
+        .compat-warning {
+            background: #fdedf0;
+            border: 2px solid #d73a49;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            color: #a3485a;
+        }
+        .compat-warning i {
+            color: #d73a49;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .compat-warning strong {
+            color: #d73a49;
+        }
+        kbd {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 1px 8px;
+            font-size: 12px;
+            font-family: inherit;
+            box-shadow: 0 1px 0 #bbb;
+        }
+        .subsection-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+        }
+        .subsection-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .file-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e1e4e8;
+        }
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+        .file-list li i {
+            color: #0366d6;
+            width: 20px;
+            margin-right: 8px;
+        }
+        .file-list li a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .file-list li a:hover {
+            text-decoration: underline;
+        }
+        .lang-toggle {
+            display: inline-block;
+            background: #e8f4ff;
+            border: 1px solid #b6cde6;
+            border-radius: 30px;
+            padding: 2px 14px;
+            font-size: 12px;
+            color: #035fc9;
+            cursor: default;
+        }
+        .ai-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 12px;
+            color: #8a94a0;
+            text-align: right;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .param-table,
+            .result-table {
+                font-size: 12px;
+            }
+            .param-table thead th,
+            .param-table tbody td,
+            .result-table thead th,
+            .result-table tbody td {
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-microchip"></i>文档：基于 ES40 的 Alpha AXP 模拟方案</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> 使用 ES40 模拟 AlphaServer ES40 运行 Windows NT/2000 Alpha 版本
+            <span class="badge">Alpha AXP</span>
+            <span class="badge">ES40</span>
+            <span class="badge">Windows NT 4.0</span>
+            <span class="badge">Windows 2000</span>
+            <span class="badge warning">⚠️ 实验性</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#about">1. 关于 ES40</a></li>
+                <li><a href="#prepare">2. 准备工作</a></li>
+                <li><a href="#config">3. 创建配置文件</a></li>
+                <li><a href="#firmware">4. 固件操作</a></li>
+                <li><a href="#install-nt4">5. 安装 Windows NT 4.0</a></li>
+                <li><a href="#install-2210">6. 安装 Windows 2000 64-bit (2210)</a></li>
+                <li><a href="#results">7. 运行结果参考</a></li>
+                <li><a href="#troubleshooting">8. 故障排除</a></li>
+                <li><a href="#networking">9. 网络配置</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 关于 ES40                                                  -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="about"><i class="fas fa-info-circle"></i>关于 ES40</h2>
+
+        <p><strong>ES40</strong> 是一个开源的 AlphaServer ES40 模拟器，能够模拟基于 Alpha AXP 架构的硬件平台。它允许在现代 x86/x64 系统上运行专为 Alpha 架构编译的 Windows NT 4.0、Windows 2000 以及 OpenVMS 等操作系统。</p>
+
+        <p>ES40 模拟 Alpha AXP EV68CB 处理器及其他相关设备，目标是在功能上作为真实 ES40 服务器的替代方案。<a href="https://github.com/kreth/es40" target="_blank">[citation:2]</a></p>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 项目信息：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>项目主页：</strong><a href="https://github.com/ES40-Emu/es40/" target="_blank">https://github.com/ES40-Emu/es40/</a></li>
+                <li><strong>当前版本：</strong>0.77</li>
+                <li><strong>许可证：</strong>GNU General Public License v2</li>
+                <li><strong>支持的宿主机：</strong>Windows / Linux</li>
+                <li><strong>依赖：</strong>需要 npcap（网络支持）和 SDL（图形界面）。无网络版本可省略 npcap。<a href="https://github.com/gdwnldsKSC/es40" target="_blank">[citation:11]</a></li>
+            </ul>
+        </div>
+
+        <div class="compat-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>⚠️ 重要提示：</strong>
+            不同于 x86 模拟，Alpha AXP 模拟的性能开销较大，请确保宿主机有足够的 CPU 资源。同时，部分 Build 的 Windows Alpha 版本存在驱动兼容性问题，安装前请仔细阅读对应的注意事项。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-tools"></i>准备工作</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 所需文件清单：</strong>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">参考来源：ZXnet ES40 指南<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></p>
+        </div>
+
+        <ul class="file-list">
+            <li><i class="fas fa-file-archive"></i> ES40 模拟器主程序 (<code>es40 Release.exe</code>) — 可从 GitHub Releases 或 CI 构建获取</li>
+            <li><i class="fas fa-file-archive"></i> SRM 固件 (<code>cl67srmrom.exe</code>) — 来自 DEC/Compaq 固件包</li>
+            <li><i class="fas fa-file-archive"></i> AlphaBIOS 固件 (<code>flash.rom</code> + <code>dpr.rom</code>) — 由 ES40 自动生成或从固件更新 CD 获取</li>
+            <li><i class="fas fa-file-archive"></i> S3 显卡 BIOS (<code>86c764x1.bin</code>) — 来自 VGABIOS 项目或 ES40 配套文件</li>
+            <li><i class="fas fa-cd"></i> 可正常安装的 Windows Alpha 架构安装镜像</li>
+            <li><i class="fas fa-cd"></i> Alpha 系统固件更新 CD (<code>v73.iso</code>) — 用于更新 AlphaBIOS，非必需但推荐<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></li>
+            <li><i class="fas fa-hdd"></i> 虚拟硬盘文件（建议 4GB，使用 <code>qemu-img</code> 或 <code>es40-cfg.exe</code> 创建）</li>
+        </ul>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-folder-open"></i> 推荐的目录结构：</strong>
+            <pre>C:\apps\es40\
+├── es40 Release.exe
+├── es40-cfg.exe
+├── es40.cfg
+├── cl67srmrom.exe
+├── rom\
+│   ├── flash.rom
+│   └── dpr.rom
+├── disks\
+│   ├── axp.vhd              (虚拟硬盘, 4GB)
+│   ├── v73.iso              (Alpha 固件更新 CD)
+│   └── install.iso          (Windows Alpha 安装镜像)
+└── vga\
+    └── 86c764x1.bin</pre>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 关于 V73 ISO：</strong>
+            首次使用 ES40 建议先通过 <code>v73.iso</code> 更新固件。此步可确保 AlphaBIOS 版本与 Windows NT/2000 兼容，但并非必须。可使用 <code>es40-cfg.exe</code> 的光驱配置直接挂载该 ISO 并引导 <code>[ES40]FWUPDATE.EXE</code> 完成更新。<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. 创建配置文件                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="config"><i class="fas fa-cog"></i>创建配置文件</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file-code"></i> 使用 <code>es40-cfg.exe</code> 配置向导：</strong>
+            <p style="margin-top:6px;">ES40 提供了独立的配置工具 <code>es40-cfg.exe</code>，运行后通过交互式问答自动生成 <code>es40.cfg</code> 文件。<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></p>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-terminal"></i> 运行方式：</strong>
+            <p style="margin-top:6px;">在 ES40 目录下打开命令行，执行：</p>
+            <pre><code>es40-cfg.exe</code></pre>
+            <p style="margin-top:6px;font-size:13px;color:#586069;">按照提示逐项回答即可生成配置文件。大部分问题直接按 <kbd>Enter</kbd> 接受默认值即可。</p>
+        </div>
+
+        <h3 class="subsection-title"><i class="fas fa-list"></i> 配置向导流程</h3>
+
+        <div class="note-box">
+            <strong><i class="fas fa-edit"></i> 完整问答记录：</strong>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">以下记录基于 ZXnet 指南，适用于 Windows NT/2000 和 Tru64 UNIX。<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></p>
+        </div>
+
+        <div style="background:#f6f8fa;border:1px solid #e1e4e8;border-radius:6px;padding:14px 16px;font-family:'Consolas','Courier New',monospace;font-size:13px;overflow-x:auto;margin:12px 0;white-space:pre-wrap;word-break:break-all;line-height:1.8;color:#24292e;">
+<span style="color:#586069;">Do you want to have a GUI? (none,SDL) [none]:</span> SDL
+<span style="color:#586069;">Do you want to set a custom scale ratio for the display output? (no,yes) [no]:</span>
+<span style="color:#586069;">Should the display output be nearest or bilinear? (nearest,bilinear) [bilinear]:</span>
+<span style="color:#586069;">Enable runtime display scale changes via hotkeys? (no,yes) [no]:</span>
+
+<span style="color:#586069;">How much RAM memory do you want to emulate? (32M,64M,128M,256M,512M,1G,2G,4G,8G) [256M]:</span> 1G
+
+<span style="color:#586069;">Where can the SRM ROM image be found? [rom\cl67srmrom.exe]:</span>
+<span style="color:#586069;">Where should the Flash ROM image be saved? [rom\flash.rom]:</span>
+<span style="color:#586069;">Where should the DPR EEPROM image be saved? [rom\dpr.rom]:</span>
+
+<span style="color:#586069;">How many CPU's do you want in the system? (1-4) [1]:</span> <span style="color:#d73a49;">（ES40 目前仅支持单 CPU，保持默认 1 即可）</span>
+<span style="color:#586069;">What should the reported to guest platform speed of the CPU's be in MHz? (10-1250) [500]:</span>
+
+<span style="color:#586069;">What telnet port should serial 0 listen? (1-65535 or 'none') [21264]:</span> none
+<span style="color:#586069;">What telnet port should serial 1 listen? (1-65535 or 'none') [21265]:</span> none
+
+<span style="color:#586069;">Do you want to add any disks to the Floppy controller? (none,0,1) [none]:</span>
+<span style="color:#586069;">Do you want to add any disks to the IDE controller? (none,0.0,0.1,1.0,1.1) [none]:</span>
+
+<span style="color:#586069;">What (if any) VGA card do you wish to add to the system? (none,S3) [S3]:</span>
+<span style="color:#586069;">What PCI slot should the s3 card be on? (0.1,0.2,0.3,0.4) [0.1]:</span>
+<span style="color:#586069;">Where can the VGA BIOS ROM image be found? [rom\CHANGE_ME_TO_CORRECT_VGA_BIOS_FOR_SELECTED_CARD_NOT_VGABIOS-0.6a.bin]:</span> rom\86c764x1.bin
+
+<span style="color:#586069;">Would you like to add another PCI card to the system? (none,nic,scsi,lsi scsi,es1370 audio) [none]:</span> scsi
+<span style="color:#586069;">In what PCI slot would you like to put the sym53c810 card? (0.2,0.3,0.4,1.1,1.2,1.3,1.4,1.5,1.6) [0.2]:</span>
+
+<span style="color:#586069;">Do you want to add any disks to the Sym53C810 controller? (none,0,1,2,3,4,5,6) [none]:</span> 0
+<span style="color:#586069;">How should disk0.0 be emulated? (file,device,ramdisk) [file]:</span> file
+<span style="color:#586069;">What file should disk0.0 use?:</span> disks\axp.vhd
+<span style="color:#586069;">Should disk0.0 be a disk or a cd-rom device? (disk,cd-rom) [disk]:</span>
+<span style="color:#586069;">If the file doesn't exist, do you want us to create it? (no,yes) [yes]:</span>
+<span style="color:#586069;">What unit do you want to use to specify the disk size? (KB,MB,GB) [MB]:</span> GB
+<span style="color:#586069;">How many GBytes should the disk be? (1-1024) [10]:</span> 4
+<span style="color:#586069;">Should disk0.0 be a read-only disk? (no,yes) [no]:</span>
+<span style="color:#586069;">Would you like to set a disk model number?:</span>
+<span style="color:#586069;">Would you like to set a revision number?:</span>
+<span style="color:#586069;">Would you like to set a serial number?:</span>
+
+<span style="color:#586069;">Do you want to add any disks to the Sym53C810 controller? (none,1,2,3,4,5,6) [none]:</span> 1
+<span style="color:#586069;">How should disk0.1 be emulated? (file,device,ramdisk) [file]:</span> file
+<span style="color:#586069;">What file should disk0.1 use?:</span> disks\v73.iso
+<span style="color:#586069;">Should disk0.1 be a disk or a cd-rom device? (disk,cd-rom) [disk]:</span> cd-rom
+<span style="color:#586069;">Would you like to set a disk model number?:</span>
+<span style="color:#586069;">Would you like to set a revision number?:</span>
+<span style="color:#586069;">Would you like to set a serial number?:</span>
+
+<span style="color:#586069;">Do you want to add any disks to the Sym53C810 controller? (none,2,3,4,5,6) [none]:</span>
+
+<span style="color:#586069;">Would you like to add another PCI card to the system? (none,nic,scsi,lsi scsi,es1370 audio) [none]:</span> nic
+<span style="color:#586069;">In what PCI slot would you like to put the dec21143 card? (0.4,0.3,0.4,1.1,1.2,1.3,1.4,1.5,1.6) [0.4]:</span>
+<span style="color:#586069;">What host network interface should we connect to? (enter ? for list):</span> ? <span style="color:#586069;">（选择对应网络接口编号）</span>
+<span style="color:#586069;">What should the NIC's MAC address be?:</span>
+
+<span style="color:#586069;">Would you like to add another PCI card to the system? (none,nic,scsi,lsi scsi,es1370 audio) [none]:</span>
+
+<span style="color:#586069;">Would you like to emulate the MPU-401 MIDI device? (no,yes) [no]:</span>
+
+<span style="color:#586069;">Where would you like console output to go? (serial,graphics) [graphics]:</span>
+<span style="color:#586069;">Where would you like printer output to go?:</span>
+
+<span style="color:#586069;">Enable the M7101 power-management / ACPI device at PCI 0:17? (yes,no) [yes]:</span>
+<span style="color:#586069;">Enable the USB OHCI controller at PCI 0:19? (yes,no) [yes]:</span> no
+
+<span style="color:#586069;">Which OS the reported year should be compatible with? (nt,vms) [vms]:</span> nt
+<span style="color:#586069;">Do you want to set a fixed date and time when the VM starts? (yes,no) [no]:</span>
+</div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>直接按 <kbd>Enter</kbd> 表示使用方括号 <code>[]</code> 中的默认值</li>
+                <li>配置文件默认保存为 <code>es40.cfg</code></li>
+                <li>如果不需要网络支持，可在网卡配置环节选择 <code>none</code> 跳过，或下载 <code>NN</code>（无网络）版本<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></li>
+                <li>如有需要，之后可直接编辑 <code>es40.cfg</code> 文件进行修改</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 生成后的配置文件示例：</strong>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">完成后可检查生成的 <code>es40.cfg</code> 文件，内容应类似：</p>
+            <pre><code>#
+# es40.cfg
+# Configuration file for the ES40 emulator
+#
+
+gui = sdl
+{
+  video.linear = true;
+  video.scale_change_enable = false;
+}
+
+sys0 = tsunami
+{
+  memory.bits = 30;
+  rom.srm = "cl67srmrom.exe";
+  rom.flash = "rom\flash.rom";
+  rom.dpr = "rom\dpr.rom";
+
+  cpu0 = ev68cb
+  {
+    speed = 500M;
+  }
+
+  fdc0 = floppy
+  {
+  }
+
+  pci0.15 = ali_ide
+  {
+  }
+
+  pci0.1 = s3
+  {
+    rom = "rom\86c764x1.bin";
+  }
+
+  pci0.2 = sym53c810
+  {
+    disk0.0 = file
+    {
+      file = "disks\axp.vhd";
+      cdrom = false;
+      read_only = false;
+    }
+
+    disk0.1 = file
+    {
+      file = "disks\v73.iso";
+      cdrom = true;
+      read_only = true;
+    }
+  }
+
+  arc_year_compat = nt;
+
+  pci0.7 = ali
+  {
+    vga_console = true;
+  }
+
+  pci0.19 = ali_usb
+  {
+  }
+
+  pci0.17 = ali_pmu
+  {
+  }
+}</code></pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 固件操作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="firmware"><i class="fas fa-microchip"></i>固件操作</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 两种固件：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>SRM 固件：</strong>用于引导 OpenVMS、Tru64 UNIX 和 Linux。提示符为 <code>P00>>></code>。</li>
+                <li><strong>AlphaBIOS：</strong>用于引导 Windows NT/2000。提供图形化界面。</li>
+            </ul>
+            <p style="margin-top:6px;">在 <code>P00>>></code> 提示符下输入 <code>arc</code> 即可切换到 AlphaBIOS。<a href="https://betawiki.net/index.php?title=Draft:Installing_Windows_NT_on_DEC_Alpha" target="_blank">[citation:3]</a></p>
+        </div>
+
+        <h3 class="subsection-title"><i class="fas fa-terminal"></i> SRM 常用命令</h3>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">命令</th>
+                    <th style="width:70%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cfg-key">arc</td>
+                    <td>切换到 AlphaBIOS（用于引导 Windows）</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">show device</td>
+                    <td>显示所有已连接的设备</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">show memory</td>
+                    <td>显示内存信息</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">show cpu</td>
+                    <td>显示 CPU 信息</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">boot</td>
+                    <td>从默认设备引导</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">boot dka0</td>
+                    <td>从特定设备引导（如 SCSI ID 0）</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="subsection-title"><i class="fas fa-cog"></i> AlphaBIOS 常用操作</h3>
+
+        <div class="note-box">
+            <strong><i class="fas fa-keyboard"></i> 键盘快捷键：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><kbd>F2</kbd> — 进入 AlphaBIOS Setup</li>
+                <li><kbd>F6</kbd> — 编辑选中的项目</li>
+                <li><kbd>F10</kbd> — 保存更改</li>
+                <li><kbd>Esc</kbd> — 返回上一级菜单</li>
+            </ul>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-list"></i> AlphaBIOS 菜单结构：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>Hard Disk Setup</strong> — 硬盘分区管理</li>
+                <li><strong>CMOS Setup</strong> — 系统时间、启动选项设置</li>
+                <li><strong>Utilities</strong> — 维护工具（含 Run Maintenance Program）</li>
+                <li><strong>OS Selection Setup</strong> — 操作系统引导项管理</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 安装 Windows NT 4.0 Alpha                                 -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="install-nt4"><i class="fab fa-windows"></i>安装 Windows NT 4.0 Alpha</h2>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 兼容性：</strong>
+            Windows NT 4.0 Alpha 版本在 ES40 上 <strong>兼容性较好</strong>，是 Alpha AXP 模拟中最稳定的 Windows 版本。<a href="https://betawiki.net/index.php?title=Draft:Installing_Windows_NT_on_DEC_Alpha" target="_blank">[citation:3]</a>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-list"></i> 安装步骤：</strong>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">参考来源：BetaWiki 和 ZXnet 指南<a href="https://betawiki.net/index.php?title=Draft:Installing_Windows_NT_on_DEC_Alpha" target="_blank">[citation:3]</a><a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></p>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>准备安装镜像：</strong>将 Windows NT 4.0 Alpha 的 ISO 镜像放入 <code>disks\</code> 目录，修改 <code>es40.cfg</code> 中 <code>disk0.1</code> 的 <code>file</code> 指向该 ISO，或将光驱挂载为安装盘。</li>
+            <li><strong>启动 ES40：</strong>运行 <code>es40 Release.exe</code>，在 <code>P00>>></code> 提示符下输入 <code>arc</code> 进入 AlphaBIOS。</li>
+            <li><strong>处理内存测试：</strong>首次启动会出现内存测试黑屏，按 <kbd>Enter</kbd> 继续。</li>
+            <li><strong>设置系统时间与禁用内存测试：</strong>进入 AlphaBIOS Setup (<kbd>F2</kbd>) → CMOS Setup → 将日期改为 <code>1998-01-01</code> → Advanced CMOS Setup (<kbd>F6</kbd>) → <strong>Power-up Memory Test</strong> 设为 <strong>Disabled</strong> → <kbd>F10</kbd> 保存。</li>
+            <li><strong>创建分区：</strong>在 AlphaBIOS 主菜单选择 <strong>Hard Disk Setup</strong> → 按 <kbd>F10</kbd> 自动创建分区 → 按 <kbd>Enter</kbd> 确认。<a href="https://betawiki.net/index.php?title=Draft:Installing_Windows_NT_on_DEC_Alpha" target="_blank">[citation:3]</a></li>
+            <li><strong>启动安装程序：</strong>主菜单 → <strong>Utilities</strong> → <strong>Run Maintenance Program</strong> → 程序名输入 <code>NT\SETUPLDR</code> → 选择 <strong>CD:</strong> → 按 <kbd>Enter</kbd>。</li>
+            <li><strong>执行安装：</strong>按照屏幕提示完成 Windows NT 4.0 安装。</li>
+            <li><strong>首次启动：</strong>安装完成后，重启时再次进入 AlphaBIOS Setup，在 <strong>OS Selection Setup</strong> 中确认引导项指向正确的分区。</li>
+        </ol>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 常见问题：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>如果安装程序提示找不到 <code>hal.dll</code>，请检查 ISO 是否为 Alpha 架构版本（而非 x86）。</li>
+                <li>如果系统安装后无法引导，在 AlphaBIOS 中重新导入引导项（参考"引导修复"部分）。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 安装 Windows 2000 64-bit (Build 2210)                    -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="install-2210"><i class="fab fa-windows"></i>安装 Windows 2000 64-bit (Build 2210)</h2>
+
+        <div class="compat-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>⚠️ 高度实验性：</strong>
+            Build 2210 是一个从未公开发布的 <strong>内部测试版</strong>，它：
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>不是成品，甚至不是 Beta 版本</li>
+                <li>无法运行常规的 32-bit Alpha 软件</li>
+                <li>NTFS 驱动存在 Bug，可能导致文件系统损坏</li>
+                <li>仅在 ES40 特定配置下才能正常工作</li>
+            </ul>
+            <p style="margin-top:6px;font-size:13px;color:#586069;">此版本来自 Virtually Fun 博客记录的泄露恢复工作。<a href="https://virtuallyfun.com/page/16/?virt" target="_blank">[citation:4]</a></p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-list"></i> 安装步骤：</strong>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">此流程基于 Virtually Fun 博客的文档整理。<a href="https://virtuallyfun.com/page/16/?virt" target="_blank">[citation:4]</a></p>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>准备环境：</strong>将 <code>axp64-2210-installable.iso</code> 放入 <code>disks\</code> 目录，修改 <code>es40.cfg</code> 中 <code>disk0.1</code> 指向该 ISO。</li>
+            <li><strong>启动进入 AlphaBIOS：</strong>启动 ES40，在 <code>P00>>></code> 输入 <code>arc</code>。</li>
+            <li><strong>处理内存测试与 NVRAM：</strong>出现 Memory Error 按 <kbd>Enter</kbd>。出现 NVRAM bad 按 <kbd>Enter</kbd>（仅首次）。</li>
+            <li><strong>设置系统时间：</strong>进入 AlphaBIOS Setup (<kbd>F2</kbd>) → CMOS Setup → 将日期改为 <code>2000-03-10</code> → Advanced CMOS Setup (<kbd>F6</kbd>) → <strong>Power-up Memory Test</strong> 设为 <strong>Disabled</strong> → <kbd>F10</kbd> 保存。</li>
+            <li><strong>创建分区：</strong>Hard Disk Setup → <kbd>F10</kbd> 自动创建分区 → <kbd>Enter</kbd> 确认。<br><strong>重要：</strong>D: 分区为 ARC 系统分区，切勿删除或格式化。</li>
+            <li><strong>启动安装程序：</strong>Utilities → Run Maintenance Program → 程序名输入 <code>AXP64\SETUPLDR</code> → 选择 <strong>CD:</strong> → <kbd>Enter</kbd>。<br><span style="font-size:13px;color:#586069;">注：Build 2210 的 <code>SETUPLDR</code> 存在硬编码的 PALcode 文件名问题，可能需要特殊处理。<a href="https://virtuallyfun.com/page/16/?virt" target="_blank">[citation:4]</a></span></li>
+            <li><strong>执行安装：</strong>按 <kbd>F8</kbd> 同意许可，选择 C: 分区进行安装（<strong>不要动 D: 分区</strong>）。可选择 NTFS 或 FAT 格式化（NTFS 有 Bug 风险）。</li>
+            <li><strong>安装完成：</strong>安装结束时可能提示错误，点击 <strong>"否"</strong> 不重启。</li>
+            <li><strong>修改启动参数：</strong>重启时按 <kbd>F2</kbd> 进入 AlphaBIOS → Utilities → OS Selection Setup → 选中启动项按 <kbd>F6</kbd> 编辑 → 将 <strong>OS Options</strong> 中的 <code>/DEBUG</code> 改为 <code>/NODEBUG</code> → <kbd>F10</kbd> 保存 → <kbd>Esc</kbd> 退出。</li>
+            <li><strong>首次启动：</strong>从 AlphaBIOS 引导菜单选择 Windows 启动。如果提示运行 <code>autochk</code>（磁盘检查），<strong>务必取消</strong>以避免 NTFS 损坏。</li>
+        </ol>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 关键提醒：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>每次启动都需要在 SRM 输入 <code>arc</code> 切换到 AlphaBIOS（Compaq 未正式支持 ES40 运行 Windows）。</li>
+                <li>如遇 "Setup is starting Windows 2000" 卡住，请检查 SCSI 控制器设置或尝试更换 HAL。</li>
+                <li>NTFS 驱动 Bug 已知可能造成数据丢失，建议定期备份。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 7. 运行结果参考                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="results"><i class="fas fa-chart-bar"></i>运行结果参考</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            以下为各 Alpha Windows 版本在 ES40 模拟环境下的运行结果，供参考。实际结果可能因 ES40 版本、固件和宿主机配置而异。
+        </div>
+
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>版本 / Build</th>
+                    <th>架构</th>
+                    <th>运行结果</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Windows NT 3.51 Alpha</td>
+                    <td>AXP (32-bit)</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                    <td>兼容性良好</td>
+                </tr>
+                <tr>
+                    <td>Windows NT 4.0 Alpha</td>
+                    <td>AXP (32-bit)</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                    <td>最稳定的 Alpha Windows 版本</td>
+                </tr>
+                <tr>
+                    <td>Windows 2000 Alpha (Beta)</td>
+                    <td>AXP (32-bit)</td>
+                    <td class="partial">⚠️ 部分可启动</td>
+                    <td>需特定 HAL</td>
+                </tr>
+                <tr>
+                    <td><strong>Windows 2000 64-bit (Build 2210)</strong></td>
+                    <td>AXP64</td>
+                    <td class="yes">✅ 可启动到桌面</td>
+                    <td>需禁用内存测试，修改启动参数</td>
+                </tr>
+                <tr>
+                    <td>OpenVMS 7.3</td>
+                    <td>AXP</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                    <td>需 SRM 固件</td>
+                </tr>
+                <tr>
+                    <td>Tru64 UNIX 5.1</td>
+                    <td>AXP</td>
+                    <td class="yes">✅ 可以正常启动</td>
+                    <td>需 SRM 固件</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ============================================================ -->
+        <!-- 8. 故障排除                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="troubleshooting"><i class="fas fa-bug"></i>故障排除</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 卡在 "Setup is starting Windows 2000"</strong>
+            <p style="margin-top:6px;"><strong>可能原因：</strong></p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>SCSI 控制器驱动不兼容</li>
+                <li>HAL 不兼容：在安装启动时按 <kbd>F5</kbd> 选择 "Standard PC" HAL</li>
+                <li>ISO 镜像损坏：重新下载并校验 MD5</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 0x0000007B 蓝屏（无法访问启动设备）</strong>
+            <p style="margin-top:6px;"><strong>解决方法：</strong></p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查 <code>es40.cfg</code> 中 <code>pci0.2</code> 的 SCSI 控制器配置是否正确</li>
+                <li>确认虚拟硬盘已正确分区并格式化</li>
+                <li>尝试在 AlphaBIOS 中重新导入引导项</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> AlphaBIOS 无法保存设置</strong>
+            <p style="margin-top:6px;">检查 <code>rom\flash.rom</code> 和 <code>rom\dpr.rom</code> 文件是否完整且可写。如果文件损坏，从备份中恢复。</p>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-search"></i> 模拟速度极慢</strong>
+            <p style="margin-top:6px;">优化建议：</p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>减少 <code>memory.bits</code> 的值（如 <code>29</code> = 512MB）</li>
+                <li>降低 <code>cpu0.speed</code> 的值（如 200M）</li>
+                <li>确保宿主机有足够的 CPU 资源，关闭其他大型程序</li>
+            </ul>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> "Could not open file" 错误</strong>
+            <p style="margin-top:6px;"><strong>原因：</strong>ES40 无法找到指定的 ISO 或 VHD 文件。</p>
+            <p style="margin-top:4px;"><strong>解决方法：</strong></p>
+            <ul style="margin-top:4px;padding-left:20px;">
+                <li>检查 <code>es40.cfg</code> 中文件路径是否正确（使用相对路径）</li>
+                <li>确认文件名大小写与实际文件一致</li>
+                <li>确认文件确实存在于指定目录</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 9. 网络配置                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="networking"><i class="fas fa-network-wired"></i>网络配置</h2>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 说明：</strong>
+            ES40 通过模拟 <strong>DEC 21143</strong> 网卡提供网络支持。Windows NT 4.0 和 Windows 2000 均自带此网卡的驱动程序。<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> 配置步骤：</strong>
+            <p style="margin-top:6px;">在运行 <code>es40-cfg.exe</code> 时，在提示 <code>Would you like to add another PCI card to the system?</code> 时选择 <code>nic</code>，然后按提示选择宿主机网络接口和 MAC 地址。<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></p>
+            <p style="margin-top:6px;font-size:13px;color:#586069;">Windows 会自动识别为 "DEC DC21143" 网卡，安装驱动后即可使用网络。</p>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 注意事项：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>网络支持需要安装 <strong>npcap</strong>（或旧版 winpcap）<a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">[citation:9]</a></li>
+                <li>如果下载的是 <code>NN</code>（无网络）版本，无法使用网络功能</li>
+                <li>选择网络接口时，输入 <code>?</code> 可查看所有可用接口列表</li>
+            </ul>
+        </div>
+
+        <!-- 引导修复 -->
+        <h2 class="section-title" id="boot-repair"><i class="fas fa-wrench"></i>引导修复（AlphaBIOS）</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 适用场景：</strong>
+            当 Windows 引导项从 AlphaBIOS 启动菜单中丢失或损坏时，可通过以下步骤修复。
+        </div>
+
+        <ol class="step-list">
+            <li><strong>进入 AlphaBIOS Setup：</strong>启动时按 <kbd>F2</kbd>。</li>
+            <li><strong>打开 OS Selection Setup：</strong>选择 <strong>Utilities</strong> → <strong>OS Selection Setup</strong>。</li>
+            <li><strong>删除损坏的引导项：</strong>选中无效的引导项，按 <kbd>Delete</kbd> 删除。</li>
+            <li><strong>创建新的引导项：</strong>按 <kbd>F10</kbd> 新建，填写以下信息：</li>
+        </ol>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">字段</th>
+                    <th style="width:70%;">值（示例）</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cfg-key">OS Name</td>
+                    <td><code>Windows NT 4.0</code> 或 <code>Windows 2000 64-bit</code></td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">Boot Drive</td>
+                    <td><code>scsi(0)disk(0)rdisk(0)partition(2)</code>（分区2为系统分区）</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">OS Path</td>
+                    <td><code>\WINNT</code>（Windows 安装目录）</td>
+                </tr>
+                <tr>
+                    <td class="cfg-key">OS Options</td>
+                    <td><code>/NODEBUG</code>（Windows 2000 64-bit 必须）</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ol class="step-list" start="5">
+            <li><strong>保存并退出：</strong><kbd>F10</kbd> 保存 → <kbd>Esc</kbd> 退出 → 选择新引导项启动。</li>
+        </ol>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：<a href="https://virtuallyfun.com/" target="_blank">Virtually Fun 博客</a> ｜ <a href="https://github.com/ES40-Emu/es40/" target="_blank">ES40 Emulator Project</a> ｜ <a href="https://betawiki.net/index.php?title=Draft:Installing_Windows_NT_on_DEC_Alpha" target="_blank">BetaWiki</a> ｜ <a href="https://www.zx.net.nz/computers/dec/axpemu-es40.shtml" target="_blank">ZXnet ES40 Guide</a>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 1.4</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-05</span>
+        </div>
+
+        <!-- AI 整理标识 -->
+        <div class="ai-footer">
+            <i class="fas fa-robot"></i> 本文档由 AI 基于 ES40 项目文档、BetaWiki、Virtually Fun 博客及 ZXnet 指南整理生成，内容仅供参考。
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
