@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档：QEMU 模拟 Windows Andromeda OS Build 17686 · WinStory</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover { background: #f6f8fa; }
+        .header h1 { font-size: 24px; font-weight: 600; }
+        .header h1 i { margin-right: 10px; color: #0366d6; }
+        .header .subtitle { color: #586069; font-size: 14px; margin-top: 4px; }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning { background: #fdedf0; border-color: #f5c2cc; color: #a3485a; }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong { display: block; margin-bottom: 6px; font-size: 15px; }
+        .toc ul { list-style: none; padding-left: 0; margin: 0; }
+        .toc ul li { display: inline-block; margin-right: 20px; }
+        .toc ul li a { color: #0366d6; text-decoration: none; font-size: 14px; }
+        .toc ul li a:hover { text-decoration: underline; }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i { margin-right: 8px; color: #0366d6; }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning { border-left-color: #d73a49; background: #fff5f5; }
+        .note-box.info { border-left-color: #0366d6; background: #f0f6ff; }
+        .note-box.success { border-left-color: #28a745; background: #f0fff4; }
+        .note-box strong { color: #993300; }
+        .note-box.warning strong { color: #d73a49; }
+        .note-box.info strong { color: #0366d6; }
+        .note-box.success strong { color: #28a745; }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code { background: none; padding: 0; }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .debug-block {
+            background: #1e1e2e;
+            color: #cdd6f4;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 1px solid #313244;
+        }
+        .debug-block .hl { color: #f9e2af; }
+        .debug-block .red { color: #f38ba8; }
+        .debug-block .cyan { color: #89b4fa; }
+        .debug-block .dim { color: #6c7086; }
+        .step-list { padding-left: 20px; margin: 8px 0; }
+        .step-list li { margin-bottom: 6px; }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td { padding: 8px 14px; border-bottom: 1px solid #e1e4e8; }
+        .param-table tbody tr:last-child td { border-bottom: none; }
+        .param-table .cmd { font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; color: #0366d6; }
+        .source-link { font-size: 13px; color: #586069; margin-top: 8px; }
+        .source-link a { color: #0366d6; text-decoration: none; }
+        .source-link a:hover { text-decoration: underline; }
+        .ms-citation {
+            background: #e8f0fe;
+            border: 1px solid #c5d8f0;
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #1a3c6a;
+        }
+        .ms-citation i { color: #0366d6; margin-right: 6px; }
+        .ai-disclaimer {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 2px dashed #d0d7de;
+            font-size: 12px;
+            color: #8a94a0;
+            text-align: right;
+        }
+        .ai-disclaimer i { color: #6c7086; margin-right: 4px; }
+        @media (max-width: 700px) {
+            .toc ul li { display: block; margin-right: 0; }
+            .header-top { flex-direction: column; align-items: flex-start; }
+            .param-table { font-size: 12px; }
+            .param-table thead th, .param-table tbody td { padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-mobile-alt"></i>文档：QEMU 模拟 Windows Andromeda OS Build 17686</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> Windows Andromeda OS Build 17686.1003 · ARM32
+            <span class="badge">QEMU v11.0.50</span>
+            <span class="badge">ARM</span>
+            <span class="badge warning">⚠️ 内核调试</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#prepare">1. 准备工作</a></li>
+                <li><a href="#debug">2. 内核调试方案</a></li>
+                <li><a href="#xhci">3. 设备模拟问题 (xHCI)</a></li>
+                <li><a href="#boot">4. 启动参数参考</a></li>
+                <li><a href="#notes">5. 备注与致谢</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 准备工作                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="prepare"><i class="fas fa-box"></i>准备工作</h2>
+        <p>本方案旨在为具有一定操作经验的朋友对 <strong>Windows Andromeda OS Build 17686.1003</strong> 在 QEMU 模拟器进行模拟。</p>
+
+        <div class="ms-citation">
+            <i class="fas fa-info-circle"></i> <strong>关于 Andromeda OS：</strong>
+            Andromeda 是 Windows Core OS 衍生版本，面向双屏移动设备（如 Surface Duo 原型机），基于 ARM32 (ARMv7) 架构，于 2018 年前后开发，后因未知原因取消，微软最终转向 Android。<a href="https://betawiki.net/index.php?title=Windows_Andromeda_OS" target="_blank"></a>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-file"></i> 需要准备：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>没有启动过的系统镜像，并自行刷写到一个 VHD 文件</li>
+                <li>QEMU（lzw_29107 下的项目）及 EDK2（修改者同人）</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. 内核调试方案                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="debug"><i class="fas fa-bug"></i>内核调试方案</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 已知问题：</strong>
+            系统第一次启动通过 OOBE 后会出现蓝屏崩溃，内核调试会输出以下内容：
+        </div>
+
+        <div class="debug-block">
+<span class="red">*** Fatal System Error: 0x000000d1</span>
+<span class="cyan">(0x47AB2194,0x000000FF,0x00000000,0x881541E9)</span>
+Break instruction exception - code 80000003 (first chance)
+A fatal system error has occurred.
+Debugger entered on first try; Bugcheck callbacks have not been invoked.
+A fatal system error has occurred.
+For analysis of this file, run !analyze -v
+nt!DbgBreakPointWithStatus:
+81431d80 defe     __debugbreak
+Unable to load image ntdll.dll, Win32 error 0n2
+3: kd&gt; !analyze -v
+Connected to Windows 10 17686 ARM (NT) Thumb-2 target at (Tue Aug 4 13:20:23.329 2026 (UTC + 8:00)), ptr64 FALSE
+Unable to load image ntkrnlmp.exe, Win32 error 0n2
+DRIVER_IRQL_NOT_LESS_OR_EQUAL (d1)
+An attempt was made to access a pageable (or completely invalid) address at an
+interrupt request level (IRQL) that is too high. This is usually
+caused by drivers using improper addresses.
+If kernel debugger is available get stack backtrace.
+Arguments:
+Arg1: 47ab2194, memory referenced
+Arg2: 000000ff, IRQL
+Arg3: 00000000, value 0 = read operation, 1 = write operation
+Arg4: 881541e9, address which referenced memory
+Debugging Details:
+------------------------------------------
+<span class="dim">***** Kernel symbols are WRONG. Please fix symbols to do analysis.</span>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-info-circle"></i> 问题分析：</strong>
+            由于该分支的系统符号未公开，只能确定 <code>A.sys</code>（系统中不存在该文件）发生崩溃，甚至导致崩溃的进程也无从得知。
+            在此需要替换为 <strong>10.0.17686.1003.rs_prerelease.180603-1447</strong> 的 <code>ntoskrnl.exe</code> 以实现内核调试查询具体问题所在。
+        </div>
+
+        <div class="ms-citation">
+            <i class="fas fa-file-archive"></i> <strong>ntoskrnl.exe 来源：</strong>
+            <code>10.0.17686.1003.rs_prerelease.180603-1447</code> 的 <code>ntoskrnl.exe</code> 提取自同版本的 <strong>Windows ADK (Assessment and Deployment Kit)</strong> 中的 ARM PE 文件。ADK 中包含了该 Build 的调试符号和内核文件，可用于替换系统内对应文件以获取完整的调试信息。
+        </div>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 替换内核后，继续通过 OOBE 即可获取以下内容：</strong>
+        </div>
+
+        <div class="debug-block">
+BUGCHECK_CODE:  d1
+BUGCHECK_P1: 47ab2194
+BUGCHECK_P2: ff
+BUGCHECK_P3: 0
+BUGCHECK_P4: ffffffff875541e9
+FAULTING_THREAD: ffffffff92133080
+READ_ADDRESS: Target machine operating system not supported
+47ab2194
+ADDITIONAL_DEBUG_TEXT: The fault occurred while interrupts were disabled on the processor.
+<span class="hl">PROCESS_NAME:  EnableWcosUefiSbTest.exe</span>
+MISALIGNED_IP:
+nt!DbgBreakPointWithStatus+1
+80c3bbc0 defe     __debugbreak
+TRAP_FRAME: 92b43550 -- (.trap 0x92b43550)
+ReadVirtual: 92b43550 not properly sign extended
+NOTE: The trap frame does not contain all registers.
+Some register values may be zeroed or incorrect.
+r0=00000004 r1=0000060d r2=92b436f4 r3=47ab2168 r4=00000000 r5=00000000
+r6=00000000 r7=00000000 r8=00000000 r9=00000000 r10=00000000 r11=00000000
+r12=00000000 sp=92b436f0 lr=87554211 pc=875541e8 psr=000001f3 --- Thumb
+875541e8 6adb        ldr     r3,[r3,#0x2C] 47ab2194=????????
+Resetting default scope
+STACK_TEXT:
+Unable to load image C:\windows\SYSTEM32\ntdll.dll, Win32 error 0n2
+92b431d8 80c76af6 : 80e5ff68 80dfcc40 92b43208 80d36f67 : nt!DbgBreakPointWithStatus
+92b431d8 80c776b4 : 80e5ff68 80dfcc40 92b43208 80d36f67 : nt!KiBugCheckDebugBreak+0x1a
+92b43220 80c7799c : 47ab2194 000000ff 00000000 875541e9 : nt!KeBugCheck2+0x5f4
+92b43500 80c3a73a : 875541e9 00000000 00000000 0000060d : nt!KiBugCheckDispatch+0x12
+92b43518 80c39dac : 875541e9 92b43628 00000000 00000001 : nt!KiCommonMemoryManagementAbort+0x13c
+92b43550 875541e8 : 8093e530 00000000 47ab2194 80c39660 : 0x875541e8
+92b436f0 87554210 : 00000004 0000060d 92b43760 87554211 : 0x875541e8
+92b436f0 00000000 : 00000004 0000060d 92b43760 87554211 : 0x87554210
+SYMBOL_NAME:  nt!KiCommonMemoryManagementAbort+13c
+<span class="hl">MODULE_NAME:  A</span>
+<span class="hl">IMAGE_NAME:  A.sys</span>
+STACK_COMMAND:  .process /r /p 0xffffffff92173080; .thread /r /p 0xffffffff92133080 ; kb
+FAILURE_BUCKET_ID:  IP_MISALIGNED_A.sys
+OS_VERSION:  10.0.17686.1003
+BUILDLAB_STR:  rs_onecore_dep_uxp_dev
+OSPLATFORM_TYPE:  arm
+OSNAME:  Windows 10
+FAILURE_ID_HASH:  {b879a59d-72d3-a5d8-09a4-774c6aa7b1ba}
+Followup: MachineOwner
+        </div>
+
+        <div class="ms-citation">
+            <i class="fas fa-file-code"></i> <strong>关于 EnableUefiSbTest.exe：</strong>
+            这是 Windows 驱动程序工具包 (WDK) 中的工具，用于为测试预生产 WHQL/WHCP 签名驱动程序而预配安全启动测试密钥。该工具会禁用安全启动、清除已有密钥、预配测试密钥并重新启用安全启动，为测试环境加载非生产签名驱动提供支持。<a href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/preproduction-driver-signing-and-install" target="_blank"></a>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-check-circle"></i> 结论：</strong>
+            已确定发生问题的程序为 <strong>EnableWcosUefiSbTest.exe</strong>（用于测试安全启动的程序），定位到文件删除即可。
+        </div>
+
+        <h3 style="margin-top:16px; font-size:17px;">配置内核调试</h3>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> QEMU 启动脚本（含调试管道）：</strong>
+        </div>
+
+        <pre><code>set path=%~dp0
+cd /d "D:\Emulator\QEMU v11.0.50-3c5e763 (ucrt64 dynamic build)"
+qemu-system-arm ^
+    -M virt,xhci=on,pci=on,force_el3=on,force_psci=on,highmem-mmio=off ^
+    -cpu cortex-a15 ^
+    -smp cores=2,threads=4 ^
+    --accel tcg ^
+    -bios "D:\Emulator\QEMU v11.0.50-3c5e763 (ucrt64 dynamic build)\QEMU_EFI_ArmVirtQemu_ARM_RELEASE.fd" ^
+    -device VGA ^
+    -device virtio-rng-pci ^
+    -device usb-kbd ^
+    -device usb-tablet ^
+    -drive id=sys,if=none,file=D:\test.vhd ^
+    -device usb-storage,drive=sys ^
+    -rtc base=2018-08-13,clock=vm ^
+    -m 2048 ^
+    -serial pipe:debug ^
+    -no-reboot</code></pre>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-plug"></i> Windbg 连接配置：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>Attach to kernel 内勾选 <strong>Pipe</strong> 和 <strong>Break on connection</strong></li>
+                <li>通道使用：<code>\\.\pipe\debug</code></li>
+                <li>其他保持默认</li>
+                <li>只有 Windbg 连接到 QEMU 时，主程序才会继续运行</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-terminal"></i> BCD 调试配置：</strong>
+        </div>
+        <pre><code>bcdedit /store &lt;path to BCD&gt; /set {default} debug on
+bcdedit /store &lt;path to BCD&gt; /set {default} debugtype serial
+bcdedit /store &lt;path to BCD&gt; /set {default} debugport 1
+bcdedit /store &lt;path to BCD&gt; /set {default} baudrate 115200</code></pre>
+
+        <!-- ============================================================ -->
+        <!-- 3. 设备模拟问题 (xHCI)                                       -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="xhci"><i class="fas fa-usb"></i>设备模拟问题 (xHCI)</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> xHCI 驱动兼容性：</strong>
+            由于 ARM 系统在 Build 18362 之前的系统自带 xHCI 驱动存在问题，如果需要使用 xHCI 进行输入，需要将MainOS分区中的 <code>\Windows\System32\drivers\Ucx01000.sys</code> 替换为 <strong>Build 18362 及之后版本</strong>。
+            <p style="margin-top:6px;">虽然直接 Patch 也可以，但为避免签名问题，建议使用替换方式。</p>
+        </div>
+
+        <div class="ms-citation">
+            <i class="fas fa-microchip"></i> <strong>关于 Ucx01000.sys：</strong>
+            这是 Windows 系统提供的 USB 主机控制器扩展驱动 (UCX)，位于 <code>Windows\System32\drivers\Ucx01000.sys</code>。它作为主控制器驱动和 USB 集线器驱动之间的抽象层，负责将 USB 请求排队到底层主控制器驱动。如果 xHCI 硬件不完全符合规范或存在兼容性问题，可能需要替换此驱动或编写自定义主控制器驱动。<a href="https://learn.microsoft.com/zh-hk/windows-hardware/drivers/usbcon/developing-windows-drivers-for-usb-host-controllers" target="_blank"></a>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-hdd"></i> SD 设备替代方案：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>使用 SD 设备也可以，需要将 VHD 容量改为 <strong>32GB</strong>。</li>
+                <li>如果设置 <code>xhci=off</code>，此时默认使用 EHCI，但不可进行 USB 启动。</li>
+                <li>xHCI 必须替换上述 <code>.sys</code> 文件后才能进行 USB 启动并使用 USB 输入。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 启动参数参考                                               -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="boot"><i class="fas fa-play"></i>启动参数参考</h2>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 作者使用 xHCI + USB 启动：</strong>
+            已替换 <code>Ucx01000.sys</code>，完整启动脚本如下。
+        </div>
+
+        <pre><code>set path=%~dp0
+cd /d "D:\Emulator\QEMU v11.0.50-3c5e763 (ucrt64 dynamic build)"
+qemu-system-arm ^
+    -M virt,xhci=on,pci=on,force_el3=on,force_psci=on,highmem-mmio=off ^
+    -cpu cortex-a15 ^
+    -smp cores=2,threads=4 ^
+    --accel tcg ^
+    -bios "D:\Emulator\QEMU v11.0.50-3c5e763 (ucrt64 dynamic build)\QEMU_EFI_ArmVirtQemu_ARM_RELEASE.fd" ^
+    -device VGA ^
+    -device virtio-rng-pci ^
+    -device usb-kbd ^
+    -device usb-tablet ^
+    -drive id=sys,if=none,file=D:\test.vhd ^
+    -device usb-storage,drive=sys ^
+    -rtc base=2018-08-13,clock=vm ^
+    -m 2048 ^
+    -serial pipe:debug ^
+    -no-reboot</code></pre>
+
+        <div class="ms-citation">
+            <i class="fas fa-clock"></i> <strong>关于 RTC 时间参数：</strong>
+            <code>-rtc base=2018-08-13</code> 用于绕过 Windows 预览版的时间炸弹。Build 17686 作为 2018 年 6 月发布的预览版，其时间限制通常从编译日期开始计算，将此参数设为 2018-08-13 可确保系统在 OOBE 阶段不会因时间过期而强制重启。
+        </div>
+
+        <div class="note-box">
+            <strong><i class="fas fa-sd-card"></i> SD 卡启动替代：</strong>
+            如果需要 SD 启动，将 <code>-device usb-storage,drive=sys</code> 改为 <code>-device sd-card,drive=sys</code> 即可。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 备注与致谢                                                 -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="notes"><i class="fas fa-flag"></i>备注与致谢</h2>
+
+        <div class="note-box">
+            <strong><i class="fas fa-clock"></i> 性能与稳定性：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>系统模拟可能偏慢，需要耐心等待。</li>
+                <li>通过 OOBE 后不会重启，会直接进入系统。</li>
+                <li>重启后第二次启动不一定能够进入系统，由于当前还在测试探索，不再叙述过多缘由。</li>
+            </ul>
+        </div>
+
+        <div class="ms-citation">
+            <i class="fas fa-project-diagram"></i> <strong>Andromeda 与 Windows Core OS：</strong>
+            Andromeda OS 基于 Windows Core OS (WCOS) 构建，WCOS 是微软内部旨在提供模块化通用操作系统基础的努力。WCOS 移除了传统桌面 Windows 的大量遗留功能，采用基于 DirectX 和 UWP/WinUI 的新 GUI 栈。Andromeda 项目的取消最终导致 Surface Duo 转向 Android 系统。<a href="https://betawiki.net/index.php?title=Windows_Core_OS" target="_blank"></a>
+        </div>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-heart"></i> 致谢：</strong>
+            在此感谢 <strong>lzw_29107</strong> 提供的帮助。
+        </div>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：WinStory 社区 · 基于 lzw_29107 的 QEMU 分支及内核调试记录<br>
+            <i class="fas fa-link"></i> Microsoft Docs: <a href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/preproduction-driver-signing-and-install" target="_blank">预生产驱动签名与安装</a> ·
+            <a href="https://learn.microsoft.com/zh-hk/windows-hardware/drivers/usbcon/developing-windows-drivers-for-usb-host-controllers" target="_blank">USB 主控制器驱动开发</a> ·
+            <a href="https://betawiki.net/index.php?title=Windows_Andromeda_OS" target="_blank">BetaWiki: Windows Andromeda OS</a>
+        </div>
+
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.2</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-06</span>
+        </div>
+
+        <div class="ai-disclaimer">
+            <i class="fas fa-robot"></i> 以下内容由 AI 辅助整理添加：Andromeda OS 背景介绍、Ucx01000.sys 技术说明、EnableUefiSbTest.exe 用途描述、RTC 参数说明及 Windows Core OS 相关背景信息。
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>
