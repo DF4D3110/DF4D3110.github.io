@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>异架构系统模拟指南 · WinStory</title>
+    <title>非常规体系结构系统模拟指南 · WinStory</title>
     <style>
         * {
             box-sizing: border-box;
@@ -149,6 +149,12 @@
         .tutorial-card .card-icon.vm {
             color: #0366d6;
         }
+        .tutorial-card .card-icon.alpha {
+            color: #d73a49;
+        }
+        .tutorial-card .card-icon.andromeda {
+            color: #6a1b9a;
+        }
         .tutorial-card h3 {
             font-size: 17px;
             font-weight: 600;
@@ -213,6 +219,16 @@
             color: #0d6b4f;
             border-color: #8ed4ba;
         }
+        .tutorial-card .card-tags .tag.alpha {
+            background: #fdedf0;
+            color: #a3485a;
+            border-color: #f5c2cc;
+        }
+        .tutorial-card .card-tags .tag.debug {
+            background: #f0e6ff;
+            color: #6a1b9a;
+            border-color: #ce93d8;
+        }
         .footer-meta {
             margin-top: 30px;
             padding-top: 20px;
@@ -254,6 +270,7 @@
             <i class="fas fa-list"></i> 在模拟环境中运行跨体系结构 Windows 系统的完整指引
             <span class="badge">ARM32</span>
             <span class="badge">IA64</span>
+            <span class="badge">Alpha AXP</span>
             <span class="badge warning">仅供研究</span>
         </div>
     </div>
@@ -263,8 +280,8 @@
         <!-- 说明 -->
         <div style="background: #eef7ff; padding: 14px; border-radius: 5px; margin-bottom: 22px; color: #024080; line-height: 1.7;">
             <strong><i class="fas fa-info-circle"></i> 说明：</strong>
-            <br>1. 本页面汇集了在不同模拟器中运行跨架构（ARM / IA64）Windows 系统的实践指南；
-            <br>2. 模拟方式涵盖 QEMU、SKI 等多种模拟器，针对不同系统版本提供对应方案；
+            <br>1. 本页面汇集了在不同模拟器中运行跨架构（ARM / IA64 / Alpha）Windows 系统的实践指南；
+            <br>2. 模拟方式涵盖 QEMU、SKI、ES40 等多种模拟器，针对不同系统版本提供对应方案；
             <br>3. 所有教程仅供学习研究，请于下载后 24 小时内删除；
             <br>4. 部分内容为AI所创建，内容可能存在有误，大致步骤本人已经测试，但是请按照这里写的进行操作；
             <br>5. 如果你本身技术力很强，这些教程对你来说纯粹是废话连篇，找茬有本事来B站评论区聊，我不想和你扯新手看不懂而且不明不白的内容。
@@ -275,9 +292,9 @@
         <!-- ============================================================ -->
         <div class="section-title">
             <i class="fas fa-sitemap"></i>非常规体系结构模拟指南
-            <span class="count-badge">共 6 个</span>
+            <span class="count-badge">共 8 个</span>
         </div>
-        <div class="section-desc">在不同模拟器中运行 ARM32 / IA64 架构 Windows 系统的实践方案</div>
+        <div class="section-desc">在不同模拟器中运行 ARM32 / IA64 / Alpha AXP 架构 Windows 系统的实践方案</div>
 
         <div class="tutorial-grid">
 
@@ -373,6 +390,37 @@
                 </div>
             </a>
 
+            <!-- 卡片 7 (新增)：QEMU 模拟 Windows Andromeda OS Build 17686 -->
+            <a href="https://df4d3110.github.io/system/emulator/qemuads17686.html" class="tutorial-card">
+                <div class="card-icon andromeda"><i class="fas fa-mobile-alt"></i></div>
+                <h3>QEMU 模拟 Windows Andromeda OS</h3>
+                <div class="card-subtitle">QEMU · ARM32 · Build 17686</div>
+                <div class="card-desc">
+                    Windows Andromeda OS 是 Windows Core OS 的双屏移动设备衍生版本。本方案基于 QEMU v11.0.50 + EDK2 进行模拟，涵盖内核调试配置与 xHCI 设备兼容性处理。
+                </div>
+                <div class="card-tags">
+                    <span class="tag arm">ARM32</span>
+                    <span class="tag qemu">QEMU</span>
+                    <span class="tag debug">内核调试</span>
+                    <span class="tag warning">实验性</span>
+                </div>
+            </a>
+
+            <!-- 卡片 8 (新增)：基于 ES40 的 Alpha AXP 模拟方案 -->
+            <a href="https://df4d3110.github.io/system/emulator/es40alpha.html" class="tutorial-card">
+                <div class="card-icon alpha"><i class="fas fa-microchip"></i></div>
+                <h3>ES40 Alpha AXP 模拟方案</h3>
+                <div class="card-subtitle">ES40 · Alpha AXP</div>
+                <div class="card-desc">
+                    使用 ES40 模拟器模拟 DEC AlphaServer ES40 平台，运行 Windows NT 4.0 及 Windows 2000 64-bit (Build 2210) 的 Alpha 版本，包含详细的配置与安装流程。
+                </div>
+                <div class="card-tags">
+                    <span class="tag alpha">Alpha AXP</span>
+                    <span class="tag warning">实验性</span>
+                    <span class="tag">ES40</span>
+                </div>
+            </a>
+
         </div>
 
         <!-- ============================================================ -->
@@ -385,7 +433,7 @@
         <div class="section-desc">已完整走完安装流程的 QEMU 虚拟机镜像，下载解压后直接运行即可</div>
 
         <div class="tutorial-grid">
-            <!-- 卡片 7：QEMU IA64 现成虚拟机镜像下载 -->
+            <!-- 卡片 9：QEMU IA64 现成虚拟机镜像下载 -->
             <a href="https://df4d3110.github.io/system/emulator/qemumachine.html" class="tutorial-card">
                 <div class="card-icon vm"><i class="fas fa-box-open"></i></div>
                 <h3>QEMU IA64 现成虚拟机镜像</h3>
@@ -411,7 +459,7 @@
         <div class="section-desc">使用微软官方工具集构建定制化 Windows 系统映像</div>
 
         <div class="tutorial-grid">
-            <!-- 卡片 8：Windows System Kit (WSK) 构建指南 -->
+            <!-- 卡片 10：Windows System Kit (WSK) 构建指南 -->
             <a href="https://df4d3110.github.io/system/emulator/wskbuild.html" class="tutorial-card">
                 <div class="card-icon tools"><i class="fas fa-tools"></i></div>
                 <h3>Windows System Kit (WSK) 构建指南</h3>
@@ -436,8 +484,8 @@
 
         <!-- 底部 -->
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 3.0</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-02</span>
+            <span><i class="fas fa-database"></i> 来源: WinStory 维基 &nbsp;|&nbsp; 文档版本: 3.1</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-07</span>
         </div>
     </div>
 </div>
