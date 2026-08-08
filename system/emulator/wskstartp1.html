@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows System Kit (WSK) 工具入门 · WinStory</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-back:hover {
+            background: #f6f8fa;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header h1 i {
+            margin-right: 10px;
+            color: #0366d6;
+        }
+        .header .subtitle {
+            color: #586069;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .header .badge {
+            display: inline-block;
+            background: #dce8f7;
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid #b6cde6;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #15406a;
+            margin-left: 8px;
+        }
+        .header .badge.warning {
+            background: #fdedf0;
+            border-color: #f5c2cc;
+            color: #a3485a;
+        }
+        .content-box {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 25px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 30px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #0366d6;
+        }
+        .note-box {
+            background: #fff8f0;
+            border-left: 4px solid #e6a700;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        .note-box.warning {
+            border-left-color: #d73a49;
+            background: #fff5f5;
+        }
+        .note-box.info {
+            border-left-color: #0366d6;
+            background: #f0f6ff;
+        }
+        .note-box.success {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .note-box strong {
+            color: #993300;
+        }
+        .note-box.warning strong {
+            color: #d73a49;
+        }
+        .note-box.info strong {
+            color: #0366d6;
+        }
+        .note-box.success strong {
+            color: #28a745;
+        }
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+        .param-table thead th {
+            background: #f6f8fa;
+            padding: 8px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e1e4e8;
+            font-weight: 600;
+        }
+        .param-table tbody td {
+            padding: 8px 14px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .param-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .param-table .cmd {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13px;
+            color: #0366d6;
+        }
+        .footer-meta {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e4e8;
+            font-size: 13px;
+            color: #586069;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .source-link {
+            font-size: 13px;
+            color: #586069;
+            margin-top: 8px;
+        }
+        .source-link a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+        .ms-citation {
+            background: #e8f0fe;
+            border: 1px solid #c5d8f0;
+            border-radius: 4px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #1a3c6a;
+        }
+        .ms-citation i {
+            color: #0366d6;
+            margin-right: 6px;
+        }
+        .step-list {
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+        .step-list li {
+            margin-bottom: 6px;
+        }
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 25px;
+        }
+        .toc strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .toc ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .toc ul li a {
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 700px) {
+            .toc ul li {
+                display: block;
+                margin-right: 0;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .param-table {
+                font-size: 12px;
+            }
+            .param-table thead th,
+            .param-table tbody td {
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-top">
+            <a href="https://df4d3110.github.io/index.html" class="btn-back">← 返回首页</a>
+            <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
+            <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
+        </div>
+        <h1><i class="fas fa-tools"></i>Windows System Kit (WSK) 工具入门</h1>
+        <div class="subtitle">
+            <i class="fas fa-tag"></i> ImageApp 与 UpdateApp 基础用法 — Factory OS 镜像构建
+            <span class="badge">WSK</span>
+            <span class="badge">ImageApp</span>
+            <span class="badge">UpdateApp</span>
+            <span class="badge warning">开发向</span>
+        </div>
+    </div>
+
+    <div class="content-box">
+
+        <div class="toc">
+            <strong><i class="fas fa-list"></i> 目录</strong>
+            <ul>
+                <li><a href="#intro">1. 工具概述</a></li>
+                <li><a href="#imageapp">2. ImageApp — 映像构建与修补</a></li>
+                <li><a href="#imggen">3. ImgGen — 简化构建工具</a></li>
+                <li><a href="#updateapp">4. UpdateApp — 包管理与更新</a></li>
+                <li><a href="#best-practice">5. 最佳实践与注意事项</a></li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 工具概述                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="intro"><i class="fas fa-info-circle"></i>工具概述</h2>
+
+        <p>在 Windows System Kit (WSK) 环境中，<strong>ImageApp</strong> 和 <strong>UpdateApp</strong> 是构建和修改 Factory OS 映像的核心工具。它们位于 Windows ADK 的 <code>Windows Kits\10\tools\bin\i386\</code> 目录下。</p>
+
+        <div class="ms-citation">
+            <i class="fas fa-file-alt"></i> <strong>官方参考：</strong>
+            ImageApp 和 UpdateApp 是 Windows ADK 中用于处理 FFU (Full Flash Update) 映像和包管理的底层工具。有关 Factory OS 工作区的更多信息，请参阅
+            <a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/prepare-a-workspace?view=windows-11" target="_blank">Microsoft Learn — 工作区入门</a>。
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 工具定位：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>ImageApp：</strong> 底层映像构建引擎，负责从 OEMInput.xml 生成 FFU 映像，或向现有映像注入驱动/自定义内容。</li>
+                <li><strong>ImgGen：</strong> ImageApp 的简化封装，适用于快速构建场景。</li>
+                <li><strong>UpdateApp：</strong> 包管理工具，用于向已挂载的 VHD 映像安装、暂存或提交 CAB 包。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. ImageApp                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="imageapp"><i class="fas fa-cog"></i>ImageApp — 映像构建与修补</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 必选参数：</strong>
+            <code>/CPUType</code> 必须显式指定，可选值为 <code>x86</code>、<code>ARM</code>、<code>ARM64</code>、<code>AMD64</code>。
+        </div>
+
+        <h3 style="font-size:17px; margin:16px 0 8px 0;">完整语法</h3>
+        <pre><code>imageapp OutputFile [OEMInputXML] [MSPackageRoot] [/MountAndInstall:x] [[+|-]StrictSettingPolicies] [[+|-]SkipImageCreation] [[+|-]RandomizeGptIDs] [[+|-]Recovery] [[+|-]ShowDebugMessages] /CPUType:x [/ChunkMappingFile:x] [/ScratchDir:x] [[+|-]Patch] [/Drivers:x] [/Customizations:x] [/TestContent:x] [/ ?]</code></pre>
+
+        <h3 style="font-size:17px; margin:16px 0 8px 0;">参数说明</h3>
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">参数</th>
+                    <th style="width:70%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cmd">输出文件</td>
+                    <td>要创建或修改的映像文件路径。<strong>（必填）</strong></td>
+                </tr>
+                <tr>
+                    <td class="cmd">[OEMInputXML]</td>
+                    <td>OEM 输入 XML 文件的路径。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[MSPackageRoot]</td>
+                    <td>Microsoft 包文件根目录路径。仅在使用 OEMInputXML 时需要。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/MountAndInstall]</td>
+                    <td>要安装的内容列表（文件或目录），以分号分隔。会递归尝试安装内容。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[StrictSettingPolicies]</td>
+                    <td>使没有策略的设置产生错误。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>False</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[SkipImageCreation]</td>
+                    <td>仅生成 OEM 自定义包，而不生成完整映像。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>False</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[RandomizeGptIDs]</td>
+                    <td>随机化 GPT 磁盘和分区 ID（用于并行运行 ImageApp）。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>True</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[Recovery]</td>
+                    <td>创建恢复 FFU 而非完整 FFU。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>False</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[ShowDebugMessages]</td>
+                    <td>显示额外的调试信息。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>False</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd"><strong>/CPUType</strong></td>
+                    <td><strong>（必填）</strong> 指定目标 CPU 类型：<code>x86</code>、<code>ARM</code>、<code>ARM64</code>、<code>AMD64</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/ChunkMappingFile]</td>
+                    <td>（保留参数）默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/ScratchDir]</td>
+                    <td>指定所有写入操作的临时文件夹路径。默认值为空。建议指定以避免 C 盘空间被占满。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[Patch]</td>
+                    <td>用新内容修补现有映像，需要至少指定 <code>/Drivers</code>、<code>/Customizations</code> 或 <code>/TestContent</code> 中的一个。使用 <code>+</code> 启用，<code>-</code> 禁用。默认 <code>False</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/Drivers]</td>
+                    <td>要修补到现有映像中的驱动程序文件夹路径。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/Customizations]</td>
+                    <td>要修补到现有映像中的自定义包文件夹路径。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/TestContent]</td>
+                    <td>要修补到现有映像中的测试内容文件夹（复制到 <code>DATA\TestContent</code>）。默认值为空。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">[/?]</td>
+                    <td>显示此帮助信息。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="font-size:17px; margin:20px 0 8px 0;"><i class="fas fa-hammer"></i>常用场景</h3>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> A. 构建完整映像：</strong>
+            <pre style="margin-top:6px;"><code>imageapp C:\output.ffu C:\oem.xml C:\packages /CPUType:arm64</code></pre>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">此命令会根据 <code>oem.xml</code> 和 <code>packages</code> 目录中的包，生成一个 ARM64 架构的 FFU 映像。</p>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">如需指定临时目录，可追加 <code>/ScratchDir:C:\temp</code>。</p>
+        </div>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> B. 驱动修补：</strong>
+            <pre style="margin-top:6px;"><code>imageapp C:\existing.ffu /CPUType:amd64 /Patch /Drivers:C:\drivers</code></pre>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">将 <code>C:\drivers</code> 目录下的驱动注入到现有 FFU 映像中。</p>
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 关于 <code>/ScratchDir</code>：</strong>
+            如果未指定 <code>/ScratchDir</code>，临时文件会写入系统盘（通常为 C 盘）。当构建大映像时，可能占用数十 GB 空间。建议始终指定到一个有足够空间的独立分区。在某些特定情况下构建失败可能无法卸载构建时产生的虚拟磁盘 ( 通常在具有存储池时会产生 ) 进而无法删除临时文件，这里需要读者自行寻找文件所在位置进行删除。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. ImgGen                                                     -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="imggen"><i class="fas fa-bolt"></i>ImgGen — 简化构建工具</h2>
+
+        <p><strong>ImgGen</strong> 是 ImageApp 的简化封装，适用于快速构建 FFU 映像。语法更简洁，适合不需要复杂参数配置的场景。</p>
+
+        <h3 style="font-size:17px; margin:16px 0 8px 0;">语法</h3>
+        <pre><code>ImgGen OutputFile OEMInputXML MSPackageRoot [CPUType] Recovery</code></pre>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">参数</th>
+                    <th style="width:70%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cmd">OutputFile</td>
+                    <td>输出映像文件路径。<strong>（必填）</strong></td>
+                </tr>
+                <tr>
+                    <td class="cmd">OEMInputXML</td>
+                    <td>OEM 输入 XML 文件路径。<strong>（必填）</strong></td>
+                </tr>
+                <tr>
+                    <td class="cmd">MSPackageRoot</td>
+                    <td>Microsoft 包文件根目录路径。<strong>（必填）</strong></td>
+                </tr>
+                <tr>
+                    <td class="cmd">[CPUType]</td>
+                    <td>可选 CPU 类型覆盖：<code>X86</code>、<code>AMD64</code>、<code>ARM</code> 或 <code>ARM64</code>。</td>
+                </tr>
+                <tr>
+                    <td class="cmd">Recovery</td>
+                    <td>可选参数，指定创建恢复 FFU 而非完整 FFU。</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 示例：</strong>
+            <pre style="margin-top:6px;"><code>ImgGen C:\output.ffu C:\oem.xml C:\packages ARM64</code></pre>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. UpdateApp                                                  -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="updateapp"><i class="fas fa-boxes"></i>UpdateApp — 包管理与更新</h2>
+
+        <p><strong>UpdateApp</strong> 主要用于向已挂载的 VHD 映像添加 CAB 包，而无需重新构建整个 FFU。这对于快速迭代和测试非常有用。有关映像创建的更多信息，可参考 <a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/create-images?view=windows-11" target="_blank">Microsoft Learn — 创建映像</a>。</p>
+
+        <h3 style="font-size:17px; margin:16px 0 8px 0;"><i class="fas fa-cog"></i>最常用命令</h3>
+
+        <div class="note-box success">
+            <strong><i class="fas fa-check-circle"></i> 挂载并安装包：</strong>
+            <pre style="margin-top:6px;"><code>UpdateApp.exe mountandinstall &lt;VHD路径&gt; &lt;CAB文件夹路径&gt;</code></pre>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">此命令会挂载 VHD，安装指定文件夹中的所有 CAB 包，然后卸载 VHD。</p>
+            <p style="font-size:13px;color:#586069;margin-top:4px;">这适用于向已释放系统的 VHD 中额外添加驱动或功能包。</p>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 完整命令列表：</strong>
+            <p style="margin-top:6px;">UpdateApp 支持丰富的子命令，包括分步操作（stage/commit/finalizecommit/rollback）、查询、功能管理、日志管理等。详细说明参见下方完整参数表。</p>
+        </div>
+
+        <h3 style="font-size:17px; margin:20px 0 8px 0;">完整参数列表</h3>
+
+        <p style="font-size:13px;color:#586069;margin-bottom:8px;">以下为 UpdateApp 所有子命令的简要说明：</p>
+
+        <table class="param-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">命令</th>
+                    <th style="width:70%;">说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="cmd">install [finalize]</td><td>将包列表安装到现有/已挂载的映像中（stage + commit）。<br><code>finalize</code> 设置不可回滚点。</td></tr>
+                <tr><td class="cmd">mountandinstall [finalize]</td><td>挂载映像 → 执行 install → 卸载映像。最常用的命令。</td></tr>
+                <tr><td class="cmd">stage [...]</td><td>暂存包列表到映像中，之后需执行 commit 提交。</td></tr>
+                <tr><td class="cmd">commit [noreboot] [finalize]</td><td>提交先前暂存的更新。<br><code>noreboot</code> 阻止自动重启。</td></tr>
+                <tr><td class="cmd">finalizecommit</td><td>执行最终提交操作，设置不可回滚点，升级池版本（如支持）。</td></tr>
+                <tr><td class="cmd">rollback</td><td>对具有待处理提交的映像执行回滚。</td></tr>
+                <tr><td class="cmd">cleanup</td><td>清理所有更新相关的文件。</td></tr>
+                <tr><td class="cmd">renamepackages &lt;folder&gt;</td><td>将 CAB 文件名重命名为 <code>PackageName.cab</code>。</td></tr>
+                <tr><td class="cmd">getfeatures [pending] [product] [verbose]</td><td>显示映像中所有已知功能。</td></tr>
+                <tr><td class="cmd">getinstalledfeatures [pending] [product] [verbose]</td><td>显示映像中已安装的功能。</td></tr>
+                <tr><td class="cmd">getinstalledpackages</td><td>显示映像中已安装的包。</td></tr>
+                <tr><td class="cmd">installfeatures &lt;ids&gt;</td><td>安装指定 ID 的功能。</td></tr>
+                <tr><td class="cmd">uninstallfeatures &lt;ids&gt;</td><td>卸载指定 ID 的功能。</td></tr>
+                <tr><td class="cmd">getdeferredupdates [verbose]</td><td>显示下次维护可应用的延迟更新。</td></tr>
+                <tr><td class="cmd">dumpfilesystem</td><td>将文件和目录转储到单个组件清单。</td></tr>
+                <tr><td class="cmd">getservicingstatus</td><td>获取当前维护状态。</td></tr>
+                <tr><td class="cmd">getupdateresults</td><td>获取上次提交的更新结果。</td></tr>
+                <tr><td class="cmd">getfullupdateresults</td><td>打印完整的更新结果信息。</td></tr>
+                <tr><td class="cmd">reset [...]</td><td>执行设备重置（如适用将重启设备）。</td></tr>
+                <tr><td class="cmd">getdeviceinventory &lt;folder&gt;</td><td>生成设备清单 XML。</td></tr>
+                <tr><td class="cmd">logstorage</td><td>记录所有空间和卷信息。</td></tr>
+                <tr><td class="cmd">getlatestlogs &lt;cab&gt;</td><td>将最新维护日志保存到 CAB 文件。</td></tr>
+                <tr><td class="cmd">attachspaces</td><td>根据覆盖/活动标志设置空间，使其与启动时状态匹配。</td></tr>
+            </tbody>
+        </table>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 通配符支持：</strong>
+            任何包含包列表的选项都支持通配符模式。
+            <pre style="margin-top:6px;"><code>UpdateApp.exe mountandinstall C:\image.vhd C:\packages\</code></pre>
+            仅指定目录将包含该目录下的所有文件（非递归），等效于 <code>C:\packages\ *</code>。
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. 最佳实践                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="best-practice"><i class="fas fa-star"></i>最佳实践与注意事项</h2>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 核心原则：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li><strong>使用同期的 ADK 工具：</strong> 构建时尽可能使用同一时期的 ADK 中的 ImageTools，以避免因不同时期的系统差距导致构建失败。</li>
+                <li><strong>指定 ScratchDir：</strong> 建议始终为 ImageApp 指定 <code>/ScratchDir</code> 参数，避免临时文件占满系统盘。</li>
+                <li><strong>备份现有映像：</strong> 使用 Patch 或 UpdateApp 修改现有映像前，请先备份原始文件。</li>
+                <li><strong>理解 finalize 的含义：</strong> 启用 <code>finalize</code> 后将无法回滚，在生产环境中谨慎使用。</li>
+            </ul>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. 拓展阅读                                                   -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="further-reading"><i class="fas fa-book-open"></i>拓展阅读</h2>
+
+        <p>以下 Microsoft Learn 官方文档提供了关于 Factory OS 映像构建的更详细信息：</p>
+        <ul style="margin-top:8px;padding-left:20px;list-style:disc;line-height:1.8;">
+            <li><a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/build-a-factoryos-image?view=windows-11" target="_blank">创建工厂 OS 映像</a> — 完整的实验室指南，涵盖从创建工作区、添加驱动/应用到生成映像的全流程。</li>
+            <li><a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/image-building-walkthrough?view=windows-11" target="_blank">使用 WSK 创建基本 VM 映像</a> — 通过演练逐步学习在虚拟机上生成基线工厂 OS 映像。</li>
+            <li><a href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/factoryos/add-a-test-driver?view=windows-11" target="_blank">修补工厂 OS 映像以进行测试</a> — 了解如何使用 <code>/Patch</code> 参数向现有测试映像中添加驱动、自定义包或测试内容。</li>
+        </ul>
+        <p style="margin-top:8px;font-size:13px;color:#586069;">这些文档基于 Windows 11 版本的 WSK，内容与您当前使用的工具版本可能略有差异，但核心概念与操作流程保持一致。</p>
+
+        <div class="source-link">
+            <i class="fas fa-link"></i> 参考来源：Microsoft Learn 官方文档 ｜ Windows ADK 工具 ｜ WinStory 社区整理
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer-meta">
+            <span><i class="fas fa-database"></i> 来源: Microsoft Learn &amp; WinStory &nbsp;|&nbsp; 文档版本: 1.2</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-08</span>
+        </div>
+    </div>
+</div>
+<!-- Font Awesome 图标库 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css.all.min.css">
+</body>
+</html>
