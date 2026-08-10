@@ -201,9 +201,9 @@
             <a href="https://df4d3110.github.io/emulator.html" class="btn-back">← 返回 异架构Windows模拟方案</a>
             <span style="margin-left: auto; font-size: 13px; color: #586069;"><i class="fas fa-globe"></i> WinStory</span>
         </div>
-        <h1><i class="fas fa-mobile-alt"></i>文档：QEMU 模拟 Windows Andromeda OS Build 17686</h1>
+        <h1><i class="fas fa-mobile-alt"></i>文档：QEMU 模拟 Windows Andromeda OS Build 17686 、 17054</h1>
         <div class="subtitle">
-            <i class="fas fa-tag"></i> Windows Andromeda OS Build 17686.1003 · ARM32
+            <i class="fas fa-tag"></i> Windows Andromeda OS Build 17686.1003 / 17054.1000 · ARM32
             <span class="badge">QEMU v11.0.50</span>
             <span class="badge">ARM</span>
             <span class="badge warning">⚠️ 内核调试</span>
@@ -217,9 +217,10 @@
             <ul>
                 <li><a href="#prepare">1. 准备工作</a></li>
                 <li><a href="#debug">2. 内核调试方案</a></li>
-                <li><a href="#xhci">3. 设备模拟问题 (xHCI)</a></li>
-                <li><a href="#boot">4. 启动参数参考</a></li>
-                <li><a href="#notes">5. 备注与致谢</a></li>
+                <li><a href="#build17054">3. Build 17054 特殊处理</a></li>
+                <li><a href="#xhci">4. 设备模拟问题 (xHCI)</a></li>
+                <li><a href="#boot">5. 启动参数参考</a></li>
+                <li><a href="#notes">6. 备注与致谢</a></li>
             </ul>
         </div>
 
@@ -227,7 +228,7 @@
         <!-- 1. 准备工作                                                   -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="prepare"><i class="fas fa-box"></i>准备工作</h2>
-        <p>本方案旨在为具有一定操作经验的朋友对 <strong>Windows Andromeda OS Build 17686.1003</strong> 在 QEMU 模拟器进行模拟。</p>
+        <p>本方案旨在为具有一定操作经验的朋友对 <strong>Windows Andromeda OS Build 17686.1003 与 17054.1000</strong> 在 QEMU 模拟器进行模拟。</p>
 
         <div class="ms-citation">
             <i class="fas fa-info-circle"></i> <strong>关于 Andromeda OS：</strong>
@@ -396,7 +397,45 @@ bcdedit /store &lt;path to BCD&gt; /set {default} debugport 1
 bcdedit /store &lt;path to BCD&gt; /set {default} baudrate 115200</code></pre>
 
         <!-- ============================================================ -->
-        <!-- 3. 设备模拟问题 (xHCI)                                       -->
+        <!-- 3. Build 17054 特殊处理                                       -->
+        <!-- ============================================================ -->
+        <h2 class="section-title" id="build17054"><i class="fas fa-code-branch"></i>Build 10.0.17054.1000 特殊处理</h2>
+
+        <div class="ms-citation">
+            <i class="fas fa-info-circle"></i> <strong>Build 信息：</strong>
+            10.0.17054.1000.rs_apps_people.171205-1800 — 属于 Windows AndromedaOS 开发分支，同样为 ARM32 架构，此版本分区为传统wp分区，并不需要OSPool。
+        </div>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-circle"></i> 已知问题与处理流程：</strong>
+            <p style="margin-top:6px;">Build 17054 与 Build 17686 存在类似问题，但处理方式更为复杂。需要按以下步骤操作才能正常启动：</p>
+        </div>
+
+        <ol class="step-list">
+            <li><strong>删除问题文件：</strong> 与 Build 17686 类似，需要删除 <code>EnableWcosUefiSbTest.exe</code> 以保证系统能够正常启动。</li>
+            <li><strong>覆盖 MainOS 分区：</strong> 将 Build 17054 的 MainOS 分区内容，<strong>单独覆盖</strong>到 <strong>Build 10.0.17110.1000.rs4_release.180223-1515</strong> 的 MainOS 分区中。此操作需要保留 17110 版本的其他非MainOS分区，仅替换MainOS分区的内容。</li>
+            <li><strong>重设 Data 分区入口：</strong> 覆盖完成后，需要手动重设 Data 分区的入口点，确保系统能够正常读取部分内容并成功启动。</li>
+            <li><strong>启动验证：</strong> 完成上述步骤后，系统应能正常启动。但请注意，部分 Appx 应用（如 Edge 浏览器）可能会运行异常或不存在。</li>
+        </ol>
+
+        <div class="note-box warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 关于内核调试的建议：</strong>
+            <p style="margin-top:6px;">由于 Build 17054 属于开发中版本，系统功能尚不稳定。在测试过程中，因系统内部错误导致崩溃的可能性较高。建议在测试该 Build 时 <strong>始终启用内核调试</strong>，以便在发生崩溃时能够及时捕获错误信息进行分析。</p>
+        </div>
+
+        <div class="note-box info">
+            <strong><i class="fas fa-info-circle"></i> 操作要点总结：</strong>
+            <ul style="margin-top:6px;padding-left:20px;">
+                <li>删除 <code>EnableWcosUefiSbTest.exe</code>（位于 MainOS 分区）</li>
+                <li>将 17054 的 MainOS 覆盖到 17110 的 MainOS（<strong>注意：</strong>是 17054 → 17110，方向不可反）</li>
+                <li>重设 Data 分区入口</li>
+                <li>建议全程启用内核调试</li>
+            </ul>
+            <p style="margin-top:6px; font-size:13px; color:#586069;">由于该流程涉及手动文件替换和引导配置，操作前请充分阅读该教程的内容。</p>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. 设备模拟问题 (xHCI)                                       -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="xhci"><i class="fas fa-usb"></i>设备模拟问题 (xHCI)</h2>
 
@@ -421,7 +460,7 @@ bcdedit /store &lt;path to BCD&gt; /set {default} baudrate 115200</code></pre>
         </div>
 
         <!-- ============================================================ -->
-        <!-- 4. 启动参数参考                                               -->
+        <!-- 5. 启动参数参考                                               -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="boot"><i class="fas fa-play"></i>启动参数参考</h2>
 
@@ -460,7 +499,7 @@ qemu-system-arm ^
         </div>
 
         <!-- ============================================================ -->
-        <!-- 5. 备注与致谢                                                 -->
+        <!-- 6. 备注与致谢                                                 -->
         <!-- ============================================================ -->
         <h2 class="section-title" id="notes"><i class="fas fa-flag"></i>备注与致谢</h2>
 
@@ -491,12 +530,12 @@ qemu-system-arm ^
         </div>
 
         <div class="footer-meta">
-            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.2</span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-06</span>
+            <span><i class="fas fa-database"></i> 来源: 社区整理 &nbsp;|&nbsp; 文档版本: 1.3</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-10</span>
         </div>
 
         <div class="ai-disclaimer">
-            <i class="fas fa-robot"></i> 以下内容由 AI 辅助整理添加：Andromeda OS 背景介绍、Ucx01000.sys 技术说明、EnableUefiSbTest.exe 用途描述、RTC 参数说明及 Windows Core OS 相关背景信息。
+            <i class="fas fa-robot"></i> 以下内容由 AI 辅助整理添加：Andromeda OS 背景介绍、Ucx01000.sys 技术说明、EnableUefiSbTest.exe 用途描述、RTC 参数说明、Build 17054 特殊处理流程及 Windows Core OS 相关背景信息。
         </div>
     </div>
 </div>
