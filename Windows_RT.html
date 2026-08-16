@@ -470,15 +470,15 @@
         <div class="section-title">
             <i class="fas fa-code-branch"></i>Windows 8 RT Milestone 1 ~ 3
             <span class="stage-badge">ARM32</span>
-            <span class="count-badge">共 11 个</span>
+            <span class="count-badge">共 27 个</span>
         </div>
 
         <div class="item">
-            <!-- 7792 - NVIDIA -->
+            <!-- 7792 - 通用 -->
             <div class="item-row">
                 <span class="ver-name">6.1.7792.0.winmain.100802-1750</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag nvidia">NVIDIA</span>
+                <span class="soc-tag generic">Generic</span>
                 <span class="version-status unstaged">Unstaged</span>
             </div>
             <div class="full-filename">
@@ -486,11 +486,11 @@
                 6.1.7792.0.winmain.100802-1750.7z
             </div>
 
-            <!-- 7822 - NVIDIA -->
+            <!-- 7822 - 通用 -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.1.7822.0.fbl_core1_kernel_npc_ext.100930-1700</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag nvidia">NVIDIA</span>
+                <span class="soc-tag generic">Generic</span>
                 <span class="version-status unstaged">Unstaged</span>
                 <span class="toolkit-note">🧰 OEM 工具包</span>
             </div>
@@ -499,7 +499,7 @@
                 6.1.7822.0.fbl_core1_kernel_npc_ext.100930-1700.7z
             </div>
 
-            <!-- 7867 - 三平台 Unstaged -->
+            <!-- 7867 - 三平台 -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7867.0.fbl_core1_kernel_npc_ext.101101-1728</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
@@ -537,7 +537,7 @@
                 </div>
             </div>
 
-            <!-- 7898 - 三平台 Unstaged -->
+            <!-- 7898 - 三平台 -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7898.0.fbl_core1_kernel_npc_ext.101209-1746</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
@@ -575,7 +575,7 @@
                 </div>
             </div>
 
-            <!-- 7915 - Qualcomm + TI (Unstaged) -->
+            <!-- 7915 - Qualcomm + TI -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7915.0.fbl_core1_kernel_npc_ext.110131-1820</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
@@ -603,7 +603,7 @@
                 </div>
             </div>
 
-            <!-- 7957 - 三平台 (Beta) -->
+            <!-- 7957 - 三平台 -->
             <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7957.0.fbl_core1_kernel_npc.110302-1700</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
@@ -652,123 +652,191 @@
                 6.2.7968.0.fbl_multimedia_media_sndproc.110322-1700_Qualcomm.7z
             </div>
 
-            <!-- 7969 -->
-            <div class="item-row" style="margin-top:4px;">
+            <!-- 7969 - 三平台 -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7969.0.fbl_core1_kernel_npc.110323-1848</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
                 <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.7969.0.fbl_core1_kernel_npc.110323-1848
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">NVIDIA</span>
+                    <span class="soc-tag nvidia">NVIDIA</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7969.0.fbl_core1_kernel_npc.110323-1848_nvidia.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Qualcomm</span>
+                    <span class="soc-tag qualcomm">Qualcomm</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7969.0.fbl_core1_kernel_npc.110323-1848_Qualcomm.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Texas Instruments</span>
+                    <span class="soc-tag ti">Texas Instruments</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7969.0.fbl_core1_kernel_npc.110323-1848_Texas_Instruments.7z
+                </div>
             </div>
 
-            <!-- 7970 -->
-            <div class="item-row" style="margin-top:4px;">
+            <!-- 7970 - WPE (仅限) -->
+            <div class="item-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7970.0.winmain.110323-1830</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
                 <span class="soc-tag generic">Generic</span>
-                <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
+                <span class="version-status unstaged">Unstaged</span>
+                <span class="toolkit-note">🧰 Windows Preinstallation Environment</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
+            <div class="full-filename">
                 <i class="fas fa-file-archive"></i>
-                6.2.7970.0.winmain.110323-1830
+                6.2.7970.0.winmain.110323-1830.zip
             </div>
 
-            <!-- 7996 -->
-            <div class="item-row" style="margin-top:4px;">
+            <!-- 7996 - 三平台 -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.7996.0.fbl_multimedia_media_sndproc.110504-1700</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
                 <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.7996.0.fbl_multimedia_media_sndproc.110504-1700
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">NVIDIA</span>
+                    <span class="soc-tag nvidia">NVIDIA</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7996.0.fbl_multimedia_media_sndproc.110504-1700_nvidia.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Qualcomm</span>
+                    <span class="soc-tag qualcomm">Qualcomm</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7996.0.fbl_multimedia_media_sndproc.110504-1700_Qualcomm.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Texas Instruments</span>
+                    <span class="soc-tag ti">Texas Instruments</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.7996.0.fbl_multimedia_media_sndproc.110504-1700_Texas_Instruments.7z
+                </div>
             </div>
 
-            <!-- 8020 (1840) -->
-            <div class="item-row" style="margin-top:4px;">
-                <span class="ver-name">6.2.8020.0.winmain.110602-1840</span>
-                <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
-                <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
-            </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.8020.0.winmain.110602-1840
-            </div>
-
-            <!-- 8020 (1845) -->
-            <div class="item-row" style="margin-top:4px;">
+            <!-- 8020 - 三平台 (1845) -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.8020.0.winmain.110602-1845</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
                 <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.8020.0.winmain.110602-1845
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">NVIDIA</span>
+                    <span class="soc-tag nvidia">NVIDIA</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8020.0.winmain.110602-1845_nvidia.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Qualcomm</span>
+                    <span class="soc-tag qualcomm">Qualcomm</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8020.0.winmain.110602-1845_Qualcomm.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Texas Instruments</span>
+                    <span class="soc-tag ti">Texas Instruments</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8020.0.winmain.110602-1845_Texas_Instruments.7z
+                </div>
             </div>
 
-            <!-- 8028 -->
-            <div class="item-row" style="margin-top:4px;">
-                <span class="ver-name">6.2.8028.0.winmain.110614-2150</span>
-                <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
-                <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
-            </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.8028.0.winmain.110614-2150
-            </div>
-
-            <!-- 8038 -->
-            <div class="item-row" style="margin-top:4px;">
+            <!-- 8038 - 三平台 -->
+            <div class="item-row build-header-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.8038.0.winmain.110630-1810</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag generic">Generic</span>
                 <span class="version-status beta">测试版</span>
-                <span class="no-download-note">📋 仅清单</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
-                <i class="fas fa-file-archive"></i>
-                6.2.8038.0.winmain.110630-1810
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">NVIDIA</span>
+                    <span class="soc-tag nvidia">NVIDIA</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8038.0.winmain.110630-1810_nvidia.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Qualcomm</span>
+                    <span class="soc-tag qualcomm">Qualcomm</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8038.0.winmain.110630-1810_Qualcomm.7z
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="item-row">
+                    <span class="ver-name" style="min-width:200px;">Texas Instruments</span>
+                    <span class="soc-tag ti">Texas Instruments</span>
+                </div>
+                <div class="full-filename" style="padding-left:20px;">
+                    <i class="fas fa-file-archive"></i>
+                    6.2.8038.0.winmain.110630-1810_Texas_Instruments.7z
+                </div>
             </div>
 
-            <!-- 8054 - Generic (Unstaged) -->
+            <!-- 8054 - ADK (仅限) -->
             <div class="item-row" style="margin-top:8px;">
                 <span class="ver-name">6.2.8054.0.winmain.110722-1912</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag oem">OEM</span>
+                <span class="soc-tag generic">Generic</span>
                 <span class="version-status unstaged">Unstaged</span>
-                <span class="toolkit-note">🧰 OEM 工具包</span>
-                <span class="no-download-note">📋 仅清单</span>
+                <span class="toolkit-note">🧰 ADK 工具包</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
+            <div class="full-filename">
                 <i class="fas fa-file-archive"></i>
-                6.2.8054.0.winmain.110722-1912
+                6.2.8054.0.winmain.110722-1912_ADK.zip
             </div>
 
-            <!-- 8061 - Unstaged -->
+            <!-- 8061 - 通用 -->
             <div class="item-row" style="margin-top:4px;">
                 <span class="ver-name">6.2.8061.0.fbl_core1_soc.110803-1830</span>
                 <span class="arch-tag"><i class="fas fa-microchip"></i> ARM32</span>
-                <span class="soc-tag oem">OEM</span>
+                <span class="soc-tag generic">Generic</span>
                 <span class="version-status unstaged">Unstaged</span>
                 <span class="toolkit-note">🧰 OEM 工具包</span>
-                <span class="no-download-note">📋 仅清单</span>
             </div>
-            <div class="full-filename" style="color:#586069;">
+            <div class="full-filename">
                 <i class="fas fa-file-archive"></i>
-                6.2.8061.0.fbl_core1_soc.110803-1830
+                6.2.8061.0.fbl_core1_soc.110803-1830.7z
             </div>
         </div>
 
@@ -1386,7 +1454,7 @@
         <!-- 底部信息 -->
         <div style="margin-top:30px;padding-top:20px;border-top:1px solid #e1e4e8;font-size:13px;color:#586069;display:flex;justify-content:space-between;flex-wrap:wrap;">
             <span><i class="fas fa-database"></i> 来源: WinStory &nbsp;|&nbsp; Windows RT (ARM32) &nbsp;|&nbsp; <span style="background:#f6f8fa;padding:0 8px;border-radius:4px;border:1px solid #e1e4e8;">📋 仅清单 = 待上传或外部链接</span> &nbsp;|&nbsp; <span class="unstaged-badge" style="display:inline-block;">Unstaged = 早期未定稿版本</span></span>
-            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-09</span>
+            <span><i class="far fa-calendar-alt"></i> 数据同步: 2026-08-16</span>
         </div>
     </div>
 </div>
