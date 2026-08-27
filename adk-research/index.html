@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADK 10.0.17704.1000 深度研究文档</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: #f6f8fa;
+            color: #24292e;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container { max-width: 960px; margin: 0 auto; }
+        .header {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 1.5em; margin-bottom: 8px; }
+        .header .subtitle { color: #586069; font-size: 14px; margin-bottom: 12px; }
+        .header .meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: #6a737d;
+        }
+        .header .meta span { display: flex; align-items: center; gap: 4px; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #dcffe4; color: #22863a; }
+        .badge-blue { background: #dbedff; color: #0366d6; }
+        .badge-purple { background: #f5f0ff; color: #6f42c1; }
+        .section {
+            background: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f6f8fa;
+            border-bottom: 1px solid #e1e4e8;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-header .count {
+            font-size: 12px;
+            color: #6a737d;
+            font-weight: normal;
+        }
+        .doc-list { list-style: none; }
+        .doc-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 14px 20px;
+            transition: background 0.15s;
+        }
+        .doc-item:last-child { border-bottom: none; }
+        .doc-item:hover { background: #f6f8fa; }
+        .doc-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .doc-num {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: #0366d6;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .doc-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0366d6;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .doc-item:hover .doc-title { text-decoration: underline; }
+        .doc-desc {
+            font-size: 13px;
+            color: #586069;
+            margin-left: 38px;
+        }
+        .doc-meta {
+            font-size: 12px;
+            color: #959da5;
+            margin-left: 38px;
+            margin-top: 4px;
+            font-family: "SFMono-Regular", Consolas, monospace;
+        }
+        .index-item .doc-num { background: #24292e; }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #959da5;
+            font-size: 13px;
+        }
+        .footer a { color: #0366d6; text-decoration: none; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            .doc-desc, .doc-meta { margin-left: 0; margin-top: 6px; }
+            .doc-title { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">&larr; 返回首页</a>
+
+        <div class="header">
+            <h1>ADK 10.0.17704.1000 深度研究文档</h1>
+            <div class="subtitle">Windows 10 RS5 ADK (Assessment and Deployment Kit) 工具链完整逆向分析</div>
+            <div class="meta">
+                <span><span class="badge badge-green">17 份文档</span></span>
+                <span><span class="badge badge-blue">~510 KB</span></span>
+                <span><span class="badge badge-purple">功能文件 100%</span></span>
+                <span>24 EXE + 98 DLL 全部分析</span>
+            </div>
+        </div>
+
+        <!-- 总索引 -->
+        <div class="section">
+            <div class="section-header">📑 总索引 <span class="count">1 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item index-item">
+                    <a href="viewer.html?file=00_INDEX_MASTER.md">
+                        <div class="doc-title"><span class="doc-num">00</span>总索引 (Master Index)</div>
+                        <div class="doc-desc">全部文档分类索引、关键发现速查、源码路径索引、重建项目路线图、分析完成状态确认</div>
+                        <div class="doc-meta">00_INDEX_MASTER.md · 17.2 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第一阶段 -->
+        <div class="section">
+            <div class="section-header">🔭 第一阶段：整体概览 <span class="count">2 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=01_ADK_17704_toolchain_mechanism_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">01</span>工具链机制深度分析</div>
+                        <div class="doc-desc">两条核心流水线（包构建 PkgGen→spkggen→ConvertDSM，镜像构建 imageapp→imaging→UpdateDLL）、关键组件架构、重建策略建议</div>
+                        <div class="doc-meta">01_ADK_17704_toolchain_mechanism_deep_dive.md · 34.6 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=02_ADK_17704_complete_toolchain_analysis_early.md">
+                        <div class="doc-title"><span class="doc-num">02</span>完整工具链分析（早期版）</div>
+                        <div class="doc-desc">早期版本，与 #01 有重叠但视角不同，保留供参考</div>
+                        <div class="doc-meta">02_ADK_17704_complete_toolchain_analysis_early.md · 33.1 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第二阶段 -->
+        <div class="section">
+            <div class="section-header">🔐 第二阶段：CAB 包 Hash 与证书验证 <span class="count">3 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=03_ADK_17704_cab_hash_cert_verification_v1.md">
+                        <div class="doc-title"><span class="doc-num">03</span>CAB hash/证书验证 v1</div>
+                        <div class="doc-desc">ImageSigner 类、4 个硬编码 Microsoft 证书指纹、Package.LoadFromCab、FileEntryBase、PkgManifest.Load_CBS</div>
+                        <div class="doc-meta">03_ADK_17704_cab_hash_cert_verification_v1.md · 29.1 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=04_ADK_17704_cab_hash_cert_deep_dive_v2.md">
+                        <div class="doc-title"><span class="doc-num">04</span>CAB hash/证书深度 v2</div>
+                        <div class="doc-desc">wcp.dll!CCSDirectTransaction::VerifyFileHashes 完整原生实现、RtlGetHashAlgorithmHashLength 算法 ID 映射、CCatalog 类、三层 hash 链</div>
+                        <div class="doc-meta">04_ADK_17704_cab_hash_cert_deep_dive_v2.md · 31.1 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=05_ADK_17704_wcp_dll_complete_deep_dive_v3.md">
+                        <div class="doc-title"><span class="doc-num">05</span>wcp.dll 完整逆向 v3</div>
+                        <div class="doc-desc">CCatalog类5个核心方法、CertCreateCTLContext+CertFindSubjectInCTL+CryptMsgGetAndVerifySigner+CertGetCertificateChain+CertVerifyCertificateChainPolicy完整调用链</div>
+                        <div class="doc-meta">05_ADK_17704_wcp_dll_complete_deep_dive_v3.md · 37.5 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第三阶段 -->
+        <div class="section">
+            <div class="section-header">🧩 第三阶段：核心 DLL 深度分析 <span class="count">4 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=06_ADK_17704_imaging_dll_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">06</span>imaging.dll 深度研究</div>
+                        <div class="doc-desc">ProcessImage 全流程、UpdateMain 完整 P/Invoke（21个 UpdateDLL + 4个 wcp）、MinFreeSectors 动态分区公式、FinalizeImage FFU wrapper 链</div>
+                        <div class="doc-meta">06_ADK_17704_imaging_dll_deep_dive.md · 33.4 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=07_ADK_17704_imagestorageservice_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">07</span>imagestorageservice.dll 深度研究</div>
+                        <div class="doc-desc">81个导出函数9类分类、CreateVirtualDisk/PartitionVirtualHardDisk/CreateStoragePool/CreateStorageSpace、VDS COM API、virtio API</div>
+                        <div class="doc-meta">07_ADK_17704_imagestorageservice_deep_dive.md · 18.8 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=08_ADK_17704_updatedll_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">08</span>updatedll.dll 两阶段更新机制</div>
+                        <div class="doc-desc">116个导出函数、CUpdateContext 数据结构、PrepareUpdateWithFlags（包验证→空间预留→文件准备）、ExecuteUpdate（核心提交→BCD复制→A/B交换）</div>
+                        <div class="doc-meta">08_ADK_17704_updatedll_deep_dive.md · 32.8 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=09_ADK_17704_cabapi_cbscore_cbs_core_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">09</span>cabapi.dll + cbscore.dll CBS核心</div>
+                        <div class="doc-desc">cabapi 415函数(WIL框架/6种子阶段映射)、cbscore 230+核心类(CCbsSession状态机/CCbsSessionManager/CCbsStack XML解析/CCbsLockMonitor死锁检测)</div>
+                        <div class="doc-meta">09_ADK_17704_cabapi_cbscore_cbs_core_deep_dive.md · 13.4 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第四阶段 -->
+        <div class="section">
+            <div class="section-header">📦 第四阶段：包构建流水线 <span class="count">2 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=10_ADK_17704_pkggen_plugin_architecture_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">10</span>PkgGen 插件架构与包构建流水线</div>
+                        <div class="doc-desc">MEF 插件体系（IPkgPlugin/PkgPlugin/PkgBldrLoader）、6种 PluginType、宏系统（5层宏表）、pkg2cab 完整流水线、Wow64交叉编译、卫星构建</div>
+                        <div class="doc-meta">10_ADK_17704_pkggen_plugin_architecture_deep_dive.md · 29.3 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=11_ADK_17704_spkggen_convertdsm_pkg2cab_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">11</span>spkggen.exe + ConvertDSM.exe 深度逆向</div>
+                        <div class="doc-desc">spkggen .NET 完整逆向（Program.Main/19个命令行参数/MEF插件）、ConvertDSM native 完整逆向（RunConvertDSM/AddFileEntry/UpdateCatAndSign）、FNV-1a文件名哈希</div>
+                        <div class="doc-meta">11_ADK_17704_spkggen_convertdsm_pkg2cab_deep_dive.md · 35.7 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第五阶段 -->
+        <div class="section">
+            <div class="section-header">💿 第五阶段：镜像格式与输入配置 <span class="count">3 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=12_ADK_17704_ffu_image_format_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">12</span>FFU 镜像格式深度研究</div>
+                        <div class="doc-desc">完整文件物理布局（SecurityHeader→Catalog→HashTable→ImageHeader→Manifest→Payload）、三层 hash 链、存储层次结构、最小 FFU 生成器伪代码</div>
+                        <div class="doc-meta">12_ADK_17704_ffu_image_format_deep_dive.md · 28.5 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=13_ADK_17704_input_config_formats_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">13</span>输入配置格式深度研究</div>
+                        <div class="doc-desc">DeviceLayout (ImageGeneratorParameters/InputStore/InputPartition)、OEMInput、FeatureManifest、CompDB、四层配置数据流、关键分区类型GUID</div>
+                        <div class="doc-meta">13_ADK_17704_input_config_formats_deep_dive.md · 26.6 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=14_ADK_17704_appx_preinstallation_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">14</span>AppX 预安装机制</div>
+                        <div class="doc-desc">两阶段模型（Stage用MakeAppx解压/Commit复制+注册表）、appxpackaging.dll COM API、AppxInfoManager包管理、RegLoadAppKey离线注册表hive</div>
+                        <div class="doc-meta">14_ADK_17704_appx_preinstallation_deep_dive.md · 19.1 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 第六阶段 -->
+        <div class="section">
+            <div class="section-header">🛠️ 第六阶段：工具清单与 spaceutil <span class="count">3 份</span></div>
+            <ul class="doc-list">
+                <li class="doc-item">
+                    <a href="viewer.html?file=15_ADK_17704_complete_tool_inventory_and_analysis.md">
+                        <div class="doc-title"><span class="doc-num">15</span>ADK 完整工具清单与分析</div>
+                        <div class="doc-desc">全部24个EXE分类详解、secwimtool.exe完整逆向(.secwim格式)、ffutool设备状态机、99个非运行时DLL分类(14大类)、完整工具依赖关系图</div>
+                        <div class="doc-meta">15_ADK_17704_complete_tool_inventory_and_analysis.md · 28.2 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=16_ADK_17704_spaceutil_and_remaining_tools_deep_dive.md">
+                        <div class="doc-title"><span class="doc-num">16</span>spaceutil.exe 深度逆向 + 剩余工具</div>
+                        <div class="doc-desc">rs5_spaceutil.exe wmain完整还原(38命令)、53个IOCTL码、3个设备路径、注册表交互、6种参数类型、剩余12个EXE详解、剩余DLL分类分析</div>
+                        <div class="doc-meta">16_ADK_17704_spaceutil_and_remaining_tools_deep_dive.md · 31.0 KB</div>
+                    </a>
+                </li>
+                <li class="doc-item">
+                    <a href="viewer.html?file=17_ADK_17704_spaceutil_five_versions_deep_comparison.md">
+                        <div class="doc-title"><span class="doc-num">17</span>spaceutil.exe 五版本深度对比</div>
+                        <div class="doc-desc">rs1-rs5五版本对比、38个Su*命令完整还原(7大类)、53个IOCTL码100%跨版本相同、版本演化(函数数216→303、rs3开始命令名混淆)、关键数据结构推断</div>
+                        <div class="doc-meta">17_ADK_17704_spaceutil_five_versions_deep_comparison.md · 30.0 KB</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            ADK 10.0.17704.1000 深度研究 · 17 份文档 · ~510 KB<br>
+            分析完成率：功能文件 100% (131/131) · 2026-08-27
+        </div>
+    </div>
+</body>
+</html>
