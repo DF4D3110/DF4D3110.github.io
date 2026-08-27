@@ -42,9 +42,10 @@
             font-family: "SFMono-Regular", Consolas, monospace;
         }
         .container {
-            max-width: 980px;
+            width: 94%;
+            max-width: 1400px;
             margin: 20px auto;
-            padding: 0 16px;
+            padding: 0;
         }
         .markdown-body {
             background: #fff;
@@ -121,7 +122,12 @@
             gap: 12px;
             margin-left: auto;
         }
+        @media (max-width: 1024px) {
+            .container { width: 96%; }
+            .markdown-body { padding: 24px; }
+        }
         @media (max-width: 640px) {
+            .container { width: 98%; margin: 10px auto; }
             .markdown-body { padding: 16px; }
             .topbar { padding: 10px 12px; }
             .nav-links { margin-left: 0; width: 100%; }
